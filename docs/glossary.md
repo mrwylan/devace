@@ -23,5 +23,5 @@ Quelle: `docs/vision.md` (Entwurf 0.7). Pro Konzept gilt genau ein Begriff. Spal
 | Radar-Chart | Darstellung der Scores aller Handlungsfelder je MAG und Rolle als Netzdiagramm. | Spinnendiagramm |
 | Textreport | Textdokument zum Abschluss eines Assessments. Die Befragte erhält es einmalig zum Download und verwaltet es selbst. | Bericht |
 | Einladung | Eindeutige Referenz, die eine Teamleitung für eine Befragte erstellt, einer MAG und Rolle zuordnet und per E-Mail verschickt. Sie berechtigt zu genau einem Assessment. | Token |
-| Startinweis | Information, die jede Befragte vor dem Assessment erhält: eingesetzte KI-Modelle, nicht zu erfassende Angaben und Geltung der Firmenweisungen zum Umgang mit KI. | |
+| Starthinweis | Information, die jede Befragte vor dem Assessment erhält: eingesetzte KI-Modelle, nicht zu erfassende Angaben und Geltung der Firmenweisungen zum Umgang mit KI. | |
 | Testfall | Vorgegebene Antwort mit erwarteter Stufe, mit dem die KI-Bewertung abgesichert wird. | |
