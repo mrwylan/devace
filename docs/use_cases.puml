@@ -1,0 +1,50 @@
+@startuml Use Cases Overview
+left to right direction
+
+actor "Teamleitung" as teamleitung
+actor "Befragte" as befragte
+actor "Schulungsverantwortliche" as schulung
+actor "Administrator" as admin
+actor "KI-Modell" as ki <<system>>
+actor "E-Mail-System" as mail <<system>>
+
+rectangle "devace" {
+    ' FR-001, FR-002
+    usecase "UC-001\nEinladung erstellen und versenden" as UC001
+    ' FR-003, FR-004, FR-005, FR-006
+    usecase "UC-002\nAssessment durchführen" as UC002
+    ' FR-007, FR-008, FR-009
+    usecase "UC-003\nAssessment abschließen und\nTextreport herunterladen" as UC003
+    ' FR-010
+    usecase "UC-004\nRadar-Chart einer MAG auswerten" as UC004
+    ' FR-011
+    usecase "UC-005\nRadar-Charts für die\nSchulungsplanung auswerten" as UC005
+    ' FR-012, FR-013
+    usecase "UC-006\nFragenkatalog und\nEntscheidungsmodell erstellen" as UC006
+    ' FR-014
+    usecase "UC-007\nFragenkatalog freigeben" as UC007
+    ' FR-015
+    usecase "UC-008\nMAGs und Rollen verwalten" as UC008
+    ' FR-016
+    usecase "UC-009\nKI-Bewertung mit\nTestfällen absichern" as UC009
+    ' FR-017
+    usecase "UC-010\nKompetenzmatrix-Zuordnung\ndokumentieren" as UC010
+}
+
+teamleitung --> UC001
+teamleitung --> UC004
+befragte --> UC002
+befragte --> UC003
+schulung --> UC005
+admin --> UC006
+admin --> UC007
+admin --> UC008
+admin --> UC009
+admin --> UC010
+
+UC001 --> mail
+UC002 --> ki
+UC006 --> ki
+UC009 --> ki
+
+@enduml
