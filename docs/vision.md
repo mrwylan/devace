@@ -1,6 +1,6 @@
-# Vision: devace – Kompetenz-Assessment für Entwicklungsteams
+# Vision: devace – KI-gestütztes Kompetenz-Assessment für Entwicklungsteams
 
-**Status:** Entwurf 0.2 – zur gemeinsamen Erarbeitung
+**Status:** Entwurf 0.3 – zur gemeinsamen Erarbeitung
 **Arbeitstitel:** devace (zu bestätigen)
 **Geltungsbereich:** Fachlicher Inhalt. Technische Umsetzung steht nicht in diesem Dokument.
 
@@ -20,11 +20,20 @@ Die Kompetenzmatrix zeigt viele Einzelwerte, aber kein Gesamtbild. Die Teamleitu
 
 ## 3. Vision
 
-devace überführt die bestehende Kompetenzmatrix in ein **interaktives Assessment**. Die Detaildaten werden auf **sechs Handlungsfelder** verdichtet und je Mitarbeitergruppe als **Radar-Chart** dargestellt.
+devace ist ein **KI-gestütztes Assessment**. Es erstellt einen Fragenkatalog, der die sechs Handlungsfelder gezielt prüft, führt die Befragten im Dialog durch die Fragen und bewertet die Antworten nach einem festen Entscheidungsmodell.
 
-Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschritte, nicht um einzelne Werkzeuge.
+Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die sechs Handlungsfelder. Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschritte, nicht um einzelne Werkzeuge.
 
-## 4. Zielgruppen und Nutzen
+## 4. Begriffe
+
+| Begriff | Bedeutung |
+|---|---|
+| **MAG** (Mitarbeitergruppe) | Setzt sich aus der Matrix zusammen: Scrum Team, Linienteam und Rolle (z. B. Entwicklung, DevEx). |
+| **Handlungsfeld** | Eine von sechs Kompetenzdimensionen, die das Assessment bewertet (§5). |
+| **Stufe** | Ausprägung je Handlungsfeld auf der Skala 0–5 (§6). |
+| **Entscheidungsmodell** | Festes Regelwerk, nach dem die KI aus den Antworten die Stufe ableitet. |
+
+## 5. Zielgruppen und Nutzen
 
 | Rolle | Nutzen |
 |---|---|
@@ -32,7 +41,9 @@ Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschri
 | Entwickler, Tester, Scrum Master | Eigene Einschätzung im Assessment; klare Sicht auf das Zielbild |
 | Schulungsverantwortliche | Schulungsbedarf anhand der Lücken priorisieren |
 
-## 5. Die sechs Handlungsfelder
+## 6. Die fünf Handlungsfelder
+
+Die Bewertung erfolgt getrennt je Rolle (siehe §11, Entscheidung 3).
 
 | # | Handlungsfeld | Fokus | Inhalt |
 |---|---|---|---|
@@ -41,52 +52,64 @@ Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschri
 | 3 | Qualität & Testing | iSTQB Foundation anwenden | Teststrategien, Testautomatisierung, Shift-Left; Tester treiben, Entwickler ziehen mit, Scrum Master achten auf die Definition of Done |
 | 4 | Security & DevSecOps | Momentum aus dem CTF-Labor halten | Secure Coding, Schwachstellenanalyse, CI/CD-Pipelines, Automatisierung, Container- und Plattformkenntnisse |
 | 5 | Methodik & Agile Delivery | Effizient und transparent Wert liefern | Agile Praktiken, Requirements Engineering, Teamzusammenarbeit, Flow-Metriken |
-| 6 | Future Skills & AI | Blick Richtung 2030 | Agentenbasierte Entwicklung, KI-Werkzeuge im Alltag, Offenheit für neue Architekturparadigmen |
+| 6 | Future Skills & AI | Blick Richtung 2030 | Agentenbasierte Entwicklung, KI-Werkzeuge im Alltag |
 
 **Hinweis zum Umfang:** Die Handlungsfelder beschreiben Kompetenzen der Teams, nicht die Technologien, mit denen das Assessment selbst gebaut wird. Das Assessment deckt alle Technologien ab, die in den Teams tatsächlich vorkommen, auch Altsysteme und Sprachen außerhalb des Zielstacks. Beispiel: Eine Frage zu PHP gehört in den Katalog, wenn die Teams damit arbeiten.
 
-Die Zuordnung der Matrix-Spalten zu den Handlungsfeldern ist noch nicht erarbeitet (siehe §10).
+Die Zuordnung der Matrix-Spalten zu den Handlungsfeldern ist noch nicht erarbeitet (siehe §11).
 
-## 6. Bewertungsskala
+## 7. Bewertungsskala
 
-Die bestehende Skala aus Tabelle 1 wird übernommen:
+Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Grundlage für das Entscheidungsmodell.
 
-| Stufe | Bedeutung |
-|---|---|
-| 0 | Nie gehört |
-| 1–4 | *noch zu definieren* |
-| 5 | Expert / Lehrniveau |
+| Stufe | Bezeichnung | Beschreibung |
+|---|---|---|
+| 0 | Nie gehört | Ich habe dieses Thema noch nie gehört oder bewusst wahrgenommen. Ich kenne keine Begriffe oder Zusammenhänge dazu. |
+| 1 | Schon mal gehört | Ich habe davon gehört und habe eine sehr grobe Vorstellung, worum es geht. Ich könnte es nicht erklären oder anwenden. |
+| 2 | Grundverständnis | Ich kenne die Grundlagen, habe erste Erfahrungen gesammelt, kann einfachen Erklärungen folgen, brauche aber Anleitung bei der Umsetzung. |
+| 3 | Sicherer Umgang | Ich kann selbstständig mit dem Thema arbeiten, typische Aufgaben lösen und weiß, wo ich mir Hilfe holen kann. Ich könnte Kolleg:innen erste Fragen beantworten. |
+| 4 | Fortgeschrittene Expertise | Ich habe vertiefte Kenntnisse, kann komplexe Probleme lösen und andere anleiten oder coachen. Ich erkenne Zusammenhänge mit angrenzenden Themen. |
+| 5 | Expert:in / Lehrniveau | Ich beherrsche das Thema in der Tiefe, kann es strukturiert vermitteln, weiterentwickeln oder an einer Hochschule unterrichten. Ich werde im Team als Ansprechperson dafür gesehen. |
 
-## 7. Erfolgskriterien (vorläufig)
+## 8. Ablauf des Assessments (Fachsicht)
 
-1. Für jede MAG lässt sich ein Radar-Chart mit den sechs Handlungsfeldern erzeugen.
+1. **Fragenkatalog:** Das System erstellt mit KI-Unterstützung einen Fragenkatalog, der die Handlungsfelder gezielt prüft.
+2. **Dialog:** Die befragte Person beantwortet die Fragen im Dialog mit dem System. Antworten sind Freitext.
+3. **Bewertung:** Die KI leitet aus den Antworten je Handlungsfeld eine Stufe ab. Grundlage ist das Entscheidungsmodell und die Stufenbeschreibungen aus §7.
+4. **Ergebnis:** Die Stufen werden je MAG und Rolle als Radar-Chart dargestellt.
+
+## 9. Erfolgskriterien (vorläufig)
+
+1. Für jede MAG und Rolle lässt sich ein Radar-Chart mit den sechs Handlungsfeldern erzeugen.
 2. Die Verdichtung von Matrix-Spalten zu Handlungsfeldern ist dokumentiert und nachvollziehbar.
-3. Ein Pilot mit einer MAG zeigt, dass die Teamleitung die Gespräche auf Handlungsfelder und Entwicklungsschritte fokussieren kann.
-4. Das Assessment erfasst Kompetenzen, die die Matrix heute nicht sichtbar macht. Das wird nach dem Pilot geprüft.
+3. Die Stufen aus dem Dialog stimmen mit einer unabhängigen Einschätzung überein. Das wird im Pilot geprüft.
+4. Ein Pilot mit einer MAG zeigt, dass die Teamleitung die Gespräche auf Handlungsfelder und Entwicklungsschritte fokussieren kann.
+5. Das Assessment erfasst Kompetenzen, die die Matrix heute nicht sichtbar macht.
 
-## 8. Fachliche Rahmenbedingungen
+## 10. Fachliche Rahmenbedingungen
 
 - **Personendaten:** Assessment-Ergebnisse beziehen sich auf einzelne Mitarbeitende. Zugriff, Aufbewahrung und Löschfristen sind vor dem Pilot zu klären.
+- **Antworten an externe KI:** Die Antworten werden zur Bewertung an KI-Modelle übergeben. Ob und in welchem Umfang das zulässig ist, muss geklärt sein, bevor der Pilot startet.
 - **Zweck:** Die Ergebnisse dienen der Entwicklung und Schulungsplanung. Sie sind (Vorschlag) keine Grundlage für Leistungsbeurteilungen.
 
-## 9. Nicht-Ziele (vorläufig)
+## 11. Offene Fragen und Nicht-Ziele
+
+### Nicht-Ziele (vorläufig)
 
 - Verwaltung von Zertifikaten oder Schulungsbuchungen.
 - Anbindung an HR-Systeme.
-- Pflege der Kompetenzmatrix selbst. Die Matrix bleibt die fachliche Quelle; ihre Pflege ist nicht Teil des Assessments.
+- Pflege der Kompetenzmatrix selbst. Die Matrix bleibt die fachliche Quelle.
+- **Später:** Selbst- und Fremdbeurteilung als ergänzende Sicht. Das ist für eine spätere Phase vorgesehen.
 
-## 10. Offene Fragen
+### Offene Fragen
 
-1. **Bewertungsart:** Selbsteinschätzung, Fremdbeurteilung durch die Teamleitung oder beides?
-2. **Abkürzung MAG:** Ist „Mitarbeitergruppe“ gemeint? Bitte bestätigen.
-3. **Rollen in Handlungsfeld 2 und 3:** Sollen Entwickler, Tester und Scrum Master getrennt bewertet werden? Die Felder vermischen heute mehrere Rollen.
-4. **Handlungsfeld 6:** „Offenheit für neue Architekturparadigmen“ ist eher eine Haltung als Wissen. Eigene Achse, eigene Frage oder streichen?
+1. **Entscheidungsmodell:** Wie werden die Stufen aus den Antworten abgeleitet? Welche Kriterien gelten je Stufe?
+2. **Prüfung der KI-Bewertung:** Wer prüft die von der KI vergebene Stufe, bevor sie gespeichert oder der Teamleitung gezeigt wird?
+3. **Datenschutz:** Wer sieht Einzelergebnisse, wie lange werden sie gespeichert, und ist die Nutzung für Leistungsbeurteilungen ausgeschlossen?
+4. **Externe KI:** Dürfen Antworttexte von Mitarbeitenden an externe KI-Modelle übergeben werden? Falls ja: unter welchen Bedingungen?
 5. **Umfang des Fragenkatalogs:** Sollen alle Technologien der Matrix abgedeckt werden, auch Altsysteme wie PHP, oder nur die aktuellen Schwerpunkte?
-6. **Skala 1–4:** Die Zwischenstufen fehlen in der Vorlage. Bitte definieren.
-7. **Datenschutz:** Wer sieht Einzelergebnisse, wie lange werden sie gespeichert, und ist die Nutzung für Leistungsbeurteilungen ausgeschlossen?
-8. **Fragenform:** Fester Fragenkatalog, oder sollen Fragen je nach bisherigen Antworten variieren und Freitextantworten ausgewertet werden?
-9. **Pilot:** Welche MAG und welcher Zeitrahmen?
-10. **Name:** Ist „devace“ der endgültige Name?
+6. **Pilot:** Welche MAG und welcher Zeitrahmen?
+7. **Name:** Ist „devace“ der endgültige Name?
 
 ---
 
@@ -95,4 +118,5 @@ Die bestehende Skala aus Tabelle 1 wird übernommen:
 | Version | Datum | Änderung |
 |---|---|---|
 | 0.1 | 2026-11-07 | Erster Entwurf aus der Vorlage der Teamleitung |
-| 0.2 | 2026-11-07 | Umsetzungsdetails entfernt; Fachinhalt getrennt von technischer Umsetzung; Fragen zu Technologien auf Fachfragen umformuliert |
+| 0.2 | 2026-11-07 | Umsetzungsdetails entfernt; Fachinhalt getrennt von technischer Umsetzung |
+| 0.3 | 2026-11-07 | Antworten eingearbeitet: KI-gestützter Fragenkatalog und Dialog, Entscheidungsmodell, getrennte Bewertung je Rolle, MAG-Definition, Skala 0–5 mit Stufenbeschreibungen, Handlungsfeld „Haltung“ gestrichen |
