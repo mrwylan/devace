@@ -8,6 +8,26 @@ If a request conflicts with this file, stop and ask. Do not silently deviate.
 
 ---
 
+## 0. Grundregel: Fachinhalt ist nicht Umsetzung
+
+Diese Trennung gilt für jede Aufgabe und jedes Dokument. Sie ist nicht verhandelbar.
+
+- **Umsetzung** (§1 und §3 dieser Datei) regelt ausschließlich, wie devace gebaut und betrieben wird.
+  Der Stack in §1 gilt nur dafür.
+- **Fachinhalt** beschreibt die Kompetenzen der Teams und das Transgourmet-Umfeld. Dazu gehören
+  Handlungsfelder, Matrix-Spalten, Fragen des Assessments, Fachbegriffe (z. B. ProlixPro, ProShop).
+  Technologien, die darin vorkommen (z. B. PHP, Angular, Docker, OpenShift), sind **Gegenstand des
+  Assessments**, keine Vorgabe für devace.
+- **Aus einer Technologie im Fachinhalt darf nie abgeleitet werden, dass devace sie einsetzt.**
+  Eine Frage zu PHP im Katalog heißt nicht, dass devace in PHP geschrieben wird.
+- Fachdokumente (`docs/vision.md`, `docs/requirements.md`, `docs/use_cases/UC-*.md`) beschreiben das
+  Was und Warum auf Fachebene. Sie nennen keine Frameworks, Bibliotheken, Datenbanken, Cloud- oder
+  Build-Werkzeuge der Umsetzung. Technische Entscheidungen gehören in ADRs und in §1.
+- Umgekehrt gilt: Der Stack aus §1 beschränkt den Fachkatalog nicht. Eine Kompetenz wird nicht
+  gestrichen, weil devace sie nicht verwendet.
+
+---
+
 ## 1. Enforced technology stack
 
 These choices are fixed. Do not add an alternative, a second framework for the same job, or an
