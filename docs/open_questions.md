@@ -103,3 +103,43 @@ Die Vision nennt weder Sprache noch Zugänglichkeitsstufe.
 **Assumed:** Weisungen in der jeweils gültigen Fassung.
 
 Die Vision nennt die Weisungen ohne Dokument und Version, die Source-Spalte bleibt daher unvollständig.
+
+## OQ-011: Gehört die Rolle zur MAG?
+
+**Element:** Glossary: MAG
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** MAG besteht aus Scrum Team und Linienteam; die Rolle ist ein eigener Wert daneben.
+
+Das Glossar und die Vision §4 sagen, die MAG setze sich aus Scrum Team, Linienteam und Rolle zusammen. Gleichzeitig werden Radar-Charts "je MAG und Rolle" gebildet. Das Entity-Modell trennt MAG und ROLLE.
+
+## OQ-012: Wird die E-Mail-Adresse der Befragten gespeichert?
+
+**Element:** Entity: EINLADUNG
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Die Adresse wird nur zum Versand verwendet und nicht gespeichert.
+
+Die Teamleitung versendet die Einladung per E-Mail. Eine gespeicherte Adresse würde neben der Einladung einen Personenbezug schaffen.
+
+## OQ-013: Wann wird das Assessment selbst gelöscht?
+
+**Element:** Entity: ASSESSMENT
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Das Assessment wird zusammen mit seinen Antworten und Bewertungen gelöscht; die Einladung bleibt mit Status Eingelöst.
+
+Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Zeitstempel könnte mit dem Score korreliert werden.
+
+## OQ-014: Maximale Länge einer Freitext-Antwort?
+
+**Element:** Entity: ANTWORT.text
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** 500 Zeichen.
+
+Die Vision nennt keine Grenze.
