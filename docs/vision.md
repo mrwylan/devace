@@ -1,7 +1,7 @@
 # Vision: devace – KI-gestütztes Kompetenz-Assessment für Entwicklungsteams
 
-**Status:** Entwurf 0.3 – zur gemeinsamen Erarbeitung
-**Arbeitstitel:** devace (zu bestätigen)
+**Status:** Entwurf 0.4 – zur gemeinsamen Erarbeitung
+**Name:** devace
 **Geltungsbereich:** Fachlicher Inhalt. Technische Umsetzung steht nicht in diesem Dokument.
 
 Offene Punkte sind in §10 gesammelt.
@@ -109,7 +109,6 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 4. **Externe KI:** Dürfen Antworttexte von Mitarbeitenden an externe KI-Modelle übergeben werden? Falls ja: unter welchen Bedingungen?
 5. **Umfang des Fragenkatalogs:** Sollen alle Technologien der Matrix abgedeckt werden, auch Altsysteme wie PHP, oder nur die aktuellen Schwerpunkte?
 6. **Pilot:** Welche MAG und welcher Zeitrahmen?
-7. **Name:** Ist „devace“ der endgültige Name?
 
 ---
 
@@ -120,3 +119,4 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 | 0.1 | 2026-11-07 | Erster Entwurf aus der Vorlage der Teamleitung |
 | 0.2 | 2026-11-07 | Umsetzungsdetails entfernt; Fachinhalt getrennt von technischer Umsetzung |
 | 0.3 | 2026-11-07 | Antworten eingearbeitet: KI-gestützter Fragenkatalog und Dialog, Entscheidungsmodell, getrennte Bewertung je Rolle, MAG-Definition, Skala 0–5 mit Stufenbeschreibungen, Handlungsfeld „Haltung“ gestrichen |
+| 0.4 | 2026-11-07 | Name „devace“ festgelegt |
