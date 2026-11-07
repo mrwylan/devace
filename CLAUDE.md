@@ -20,9 +20,9 @@ older version. Changing any of them requires a new accepted ADR (see §2.4) and 
 | Build | **Maven** with the committed wrapper (`./mvnw`) | Gradle, Ant, a globally installed Maven |
 | Web UI | **Vaadin 25** (Flow, server-side Java views) via `vaadin-spring-boot-starter` | Angular, React, Vue, Thymeleaf pages, hand-written SPA frontends |
 | Persistence | **PostgreSQL** (runtime and dev), schema managed by **Flyway** migrations under `src/main/resources/db/migration` | H2 or any in-memory DB for tests; `ddl-auto=update|create` in any profile; hand-edited schema |
-| Data access | **Decision pending:** Spring Data JPA *or* jOOQ. Pick one in an ADR before the first entity is implemented. Do not mix both. | Mixing JPA and jOOQ for the same aggregate |
+| Data access | **jOOQ** for all queries, with Java classes generated from the Flyway-migrated schema (`jooq-codegen-maven`) | Spring Data JPA, Hibernate, Spring Data repositories; raw SQL strings in application code where the jOOQ DSL can express the query |
 | LLM access | **Spring AI** only, routed through **OpenRouter** as the single model gateway | Direct provider SDKs (OpenAI, Anthropic, Google, etc.) for production calls; hard-coded API keys |
-| Deployment artifact | **A container image** built from the Maven build (Jib or Spring Boot buildpacks; pick one in an ADR) | Shipping a bare JAR, or a hand-maintained Dockerfile that duplicates the Maven build without an ADR |
+| Deployment artifact | **A container image** built with **Spring Boot buildpacks** (`spring-boot-maven-plugin`, goal `build-image`) | Shipping a bare JAR; Jib or a hand-maintained Dockerfile; any other image builder without an ADR |
 | CI/CD | **GitHub Actions** (`.github/workflows/`) | Other CI systems, manual deploys from a laptop |
 | Database for tests | **Testcontainers** with a PostgreSQL image matching production major version | Embedded/in-memory databases |
 
@@ -40,7 +40,8 @@ The POM must enforce the stack, not just document it. The following must be conf
 fail the build on violation:
 
 - `maven-enforcer-plugin`: `requireJavaVersion` ≥ 25, `requireMavenVersion`, `requireUpperBoundDeps`,
-  `banDuplicateClasses`, and `bannedDependencies` for the forbidden persistence and LLM SDKs.
+  `banDuplicateClasses`, and `bannedDependencies` for `spring-boot-starter-data-jpa`, `hibernate-core`,
+  and direct model-provider SDKs.
 - `spring-boot-starter-parent` pinned to `4.1.2`; no version overrides for Spring-managed artifacts
   unless documented in an ADR.
 - Vaadin BOM pinned to a single explicit version property, shared with the Vaadin Maven plugin.
@@ -66,7 +67,7 @@ AIUP plugins for the process steps; do not invent a parallel process.
 /plugin install aiup-vaadin@ai-unified-process
 /plugin install aiup-flyway@ai-unified-process
 /plugin install aiup-playwright@ai-unified-process
-# plus aiup-jpa or aiup-jooq, matching the persistence decision in §1
+/plugin install aiup-jooq@ai-unified-process
 ```
 
 Use layer plugins. Do not also install a combined stack plugin (`aiup-vaadin-jooq`,
@@ -107,8 +108,8 @@ from memory.
 
 Record every decision that changes the stack, a non-functional requirement, or a cross-cutting
 pattern with `/architecture-decision`. The ADR must link to the requirement or constraint it serves.
-Accepted ADRs override conflicting code. Decisions still open in §1 (persistence layer, container
-build tool) are the first ADRs to write.
+Accepted ADRs override conflicting code. The persistence layer (jOOQ) and container build
+(Spring Boot buildpacks) are fixed in §1; an ADR is needed only to change them.
 
 ---
 
@@ -124,10 +125,11 @@ Required jobs, in order:
    - Fail on enforcer violations, failing tests, or dependency-convergence errors.
    - Upload test reports and JaCoCo coverage as artifacts.
 2. **image** — on pushes to the default branch only, after `verify` passes:
-   - Build the container image with the tool chosen in the container ADR.
+   - Build the image with Spring Boot buildpacks, in one step with the push:
+     `./mvnw -B spring-boot:build-image -Dspring-boot.build-image.imageName=ghcr.io/<owner>/<repo>:<sha> -Dspring-boot.build-image.publish=true`
    - Tag with the commit SHA and the version from the POM. Never publish `latest` alone.
-   - Push to GitHub Container Registry (`ghcr.io`) using the built-in `GITHUB_TOKEN` with
-     `packages: write`.
+   - Push to GitHub Container Registry (`ghcr.io`), logging in with the built-in `GITHUB_TOKEN`
+     (`packages: write`).
 
 Pipeline rules:
 
@@ -145,6 +147,8 @@ Pipeline rules:
   upgrades go through an ADR), or Maven replaced by another build tool.
 - A second UI technology, or Vaadin Flow replaced by Vaadin Fusion-only or a JavaScript SPA.
 - An in-memory database in any profile, including tests.
+- Spring Data JPA or Hibernate. jOOQ is the persistence layer.
+- A container image built by Jib or a hand-written Dockerfile instead of buildpacks.
 - Direct calls to a model provider's SDK bypassing OpenRouter.
 - Disabling tests, enforcer rules, NullAway, ErrorProne, or static analysis to get a build green.
 - Committing secrets, API keys, or `.env` files with real values.
