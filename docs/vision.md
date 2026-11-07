@@ -1,10 +1,10 @@
 # Vision: devace – KI-gestütztes Kompetenz-Assessment für Entwicklungsteams
 
-**Status:** Entwurf 0.4 – zur gemeinsamen Erarbeitung
+**Status:** Entwurf 0.5 – zur gemeinsamen Erarbeitung
 **Name:** devace
 **Geltungsbereich:** Fachlicher Inhalt. Technische Umsetzung steht nicht in diesem Dokument.
 
-Offene Punkte sind in §10 gesammelt.
+Offene Punkte sind in §11 gesammelt.
 
 ---
 
@@ -20,18 +20,18 @@ Die Kompetenzmatrix zeigt viele Einzelwerte, aber kein Gesamtbild. Die Teamleitu
 
 ## 3. Vision
 
-devace ist ein **KI-gestütztes Assessment**. Es erstellt einen Fragenkatalog, der die sechs Handlungsfelder gezielt prüft, führt die Befragten im Dialog durch die Fragen und bewertet die Antworten nach einem festen Entscheidungsmodell.
+devace ist ein **KI-gestütztes Assessment**. Es erstellt einen Fragenkatalog, der die Handlungsfelder gezielt prüft, führt die Befragten im Dialog durch die Fragen und bewertet die Antworten nach einem festen Entscheidungsmodell.
 
-Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die sechs Handlungsfelder. Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschritte, nicht um einzelne Werkzeuge.
+Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die Handlungsfelder. Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschritte, nicht um einzelne Werkzeuge.
 
 ## 4. Begriffe
 
 | Begriff | Bedeutung |
 |---|---|
 | **MAG** (Mitarbeitergruppe) | Setzt sich aus der Matrix zusammen: Scrum Team, Linienteam und Rolle (z. B. Entwicklung, DevEx). |
-| **Handlungsfeld** | Eine von sechs Kompetenzdimensionen, die das Assessment bewertet (§5). |
-| **Stufe** | Ausprägung je Handlungsfeld auf der Skala 0–5 (§6). |
-| **Entscheidungsmodell** | Festes Regelwerk, nach dem die KI aus den Antworten die Stufe ableitet. |
+| **Handlungsfeld** | Eine von fünf Kompetenzdimensionen, die das Assessment bewertet (§6). |
+| **Stufe** | Ausprägung je Handlungsfeld auf der Skala 0–5 (§7). |
+| **Entscheidungsmodell** | Je Handlungsfeld und Frage ist vorgegeben, welcher Stufe eine Antwort entspricht. Die KI ordnet die Antworten diesen Vorgaben zu. |
 
 ## 5. Zielgruppen und Nutzen
 
@@ -43,7 +43,7 @@ Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die sechs Handlu
 
 ## 6. Die fünf Handlungsfelder
 
-Die Bewertung erfolgt getrennt je Rolle (siehe §11, Entscheidung 3).
+Die Bewertung erfolgt getrennt je Rolle.
 
 | # | Handlungsfeld | Fokus | Inhalt |
 |---|---|---|---|
@@ -54,7 +54,9 @@ Die Bewertung erfolgt getrennt je Rolle (siehe §11, Entscheidung 3).
 | 5 | Methodik & Agile Delivery | Effizient und transparent Wert liefern | Agile Praktiken, Requirements Engineering, Teamzusammenarbeit, Flow-Metriken |
 | 6 | Future Skills & AI | Blick Richtung 2030 | Agentenbasierte Entwicklung, KI-Werkzeuge im Alltag |
 
-**Hinweis zum Umfang:** Die Handlungsfelder beschreiben Kompetenzen der Teams, nicht die Technologien, mit denen das Assessment selbst gebaut wird. Das Assessment deckt alle Technologien ab, die in den Teams tatsächlich vorkommen, auch Altsysteme und Sprachen außerhalb des Zielstacks. Beispiel: Eine Frage zu PHP gehört in den Katalog, wenn die Teams damit arbeiten.
+**Umfang des Fragenkatalogs:** Der Katalog fokussiert Technologien und Grundlagen mit Alltagsrelevanz für die Teams. Nicht jede Technologie der Matrix wird abgefragt. Maßstab für die Aufnahme ist die Relevanz im Alltag, nicht der Eintrag in der Matrix.
+
+**Trennung zur Umsetzung:** Die Handlungsfelder beschreiben Kompetenzen der Teams, nicht die Technologien, mit denen devace selbst gebaut wird.
 
 Die Zuordnung der Matrix-Spalten zu den Handlungsfeldern ist noch nicht erarbeitet (siehe §11).
 
@@ -73,42 +75,43 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 
 ## 8. Ablauf des Assessments (Fachsicht)
 
-1. **Fragenkatalog:** Das System erstellt mit KI-Unterstützung einen Fragenkatalog, der die Handlungsfelder gezielt prüft.
-2. **Dialog:** Die befragte Person beantwortet die Fragen im Dialog mit dem System. Antworten sind Freitext.
-3. **Bewertung:** Die KI leitet aus den Antworten je Handlungsfeld eine Stufe ab. Grundlage ist das Entscheidungsmodell und die Stufenbeschreibungen aus §7.
-4. **Ergebnis:** Die Stufen werden je MAG und Rolle als Radar-Chart dargestellt.
+1. **Fragenkatalog:** Das System erstellt mit KI-Unterstützung einen Fragenkatalog, der die Handlungsfelder gezielt prüft. Zu jeder Frage ist vorgegeben, welcher Stufe welche Antwort entspricht.
+2. **Dialog:** Die befragte Person beantwortet die Fragen im Dialog mit dem System. Antworten sind Freitext. Die Interaktion mit der KI ist anonymisiert und lässt keinen Rückschluss auf die Person zu.
+3. **Bewertung:** Die KI ordnet die Antworten den vorgegebenen Stufen zu und leitet daraus je Handlungsfeld eine Stufe ab.
+4. **Report:** Nach Abschluss liegt je Handlungsfeld der Score vor. Daraus kann ein Textreport erstellt werden. Danach werden die einzelnen Antworten gelöscht.
+5. **Ergebnis:** Die Stufen werden je MAG und Rolle als Radar-Chart dargestellt.
 
 ## 9. Erfolgskriterien (vorläufig)
 
-1. Für jede MAG und Rolle lässt sich ein Radar-Chart mit den sechs Handlungsfeldern erzeugen.
+1. Für jede MAG und Rolle lässt sich ein Radar-Chart mit den Handlungsfeldern erzeugen.
 2. Die Verdichtung von Matrix-Spalten zu Handlungsfeldern ist dokumentiert und nachvollziehbar.
-3. Die Stufen aus dem Dialog stimmen mit einer unabhängigen Einschätzung überein. Das wird im Pilot geprüft.
-4. Ein Pilot mit einer MAG zeigt, dass die Teamleitung die Gespräche auf Handlungsfelder und Entwicklungsschritte fokussieren kann.
+3. Die KI-Bewertung besteht Testfälle, die Fehler eingrenzen. Die Testfälle und ihre Ergebnisse sind dokumentiert.
+4. Ein Pilot mit den Lernenden zeigt, dass die Ergebnisse für die Entwicklungsgespräche nutzbar sind.
 5. Das Assessment erfasst Kompetenzen, die die Matrix heute nicht sichtbar macht.
 
 ## 10. Fachliche Rahmenbedingungen
 
-- **Personendaten:** Assessment-Ergebnisse beziehen sich auf einzelne Mitarbeitende. Zugriff, Aufbewahrung und Löschfristen sind vor dem Pilot zu klären.
-- **Antworten an externe KI:** Die Antworten werden zur Bewertung an KI-Modelle übergeben. Ob und in welchem Umfang das zulässig ist, muss geklärt sein, bevor der Pilot startet.
-- **Zweck:** Die Ergebnisse dienen der Entwicklung und Schulungsplanung. Sie sind (Vorschlag) keine Grundlage für Leistungsbeurteilungen.
+- **Anonymität:** Die Interaktion mit der KI ist anonymisiert. Sie lässt keinen Rückschluss auf die Person zu.
+- **Faire Bewertung:** Die Bewertung wird durch Testfälle abgesichert und die Vorgaben werden so verfeinert, dass sie fair sind.
+- **Aufbewahrung:** Einzelne Antworten werden nach Abschluss gelöscht. Es bleiben die Scores je Handlungsfeld und der Textreport.
+- **Keine Leistungsbeurteilung:** Das Assessment ist kein Bestandteil der Leistungsbeurteilung. Diese erfolgt unabhängig davon, nach Abschluss des Assessments.
 
 ## 11. Offene Fragen und Nicht-Ziele
 
 ### Nicht-Ziele (vorläufig)
 
+- Leistungsbeurteilung (erfolgt unabhängig vom Assessment).
 - Verwaltung von Zertifikaten oder Schulungsbuchungen.
 - Anbindung an HR-Systeme.
 - Pflege der Kompetenzmatrix selbst. Die Matrix bleibt die fachliche Quelle.
-- **Später:** Selbst- und Fremdbeurteilung als ergänzende Sicht. Das ist für eine spätere Phase vorgesehen.
+- **Später:** Selbst- und Fremdbeurteilung als ergänzende Sicht.
 
 ### Offene Fragen
 
-1. **Entscheidungsmodell:** Wie werden die Stufen aus den Antworten abgeleitet? Welche Kriterien gelten je Stufe?
-2. **Prüfung der KI-Bewertung:** Wer prüft die von der KI vergebene Stufe, bevor sie gespeichert oder der Teamleitung gezeigt wird?
-3. **Datenschutz:** Wer sieht Einzelergebnisse, wie lange werden sie gespeichert, und ist die Nutzung für Leistungsbeurteilungen ausgeschlossen?
-4. **Externe KI:** Dürfen Antworttexte von Mitarbeitenden an externe KI-Modelle übergeben werden? Falls ja: unter welchen Bedingungen?
-5. **Umfang des Fragenkatalogs:** Sollen alle Technologien der Matrix abgedeckt werden, auch Altsysteme wie PHP, oder nur die aktuellen Schwerpunkte?
-6. **Pilot:** Welche MAG und welcher Zeitrahmen?
+1. **Anonymisierung:** Welche Merkmale der Antworten müssen entfernt werden, damit kein Rückschluss auf die Person möglich ist?
+2. **Mindestgröße:** Ab welcher Anzahl Personen zeigt ein Radar-Chart je MAG und Rolle, damit kein Rückschluss auf Einzelne möglich ist?
+3. **Aufbewahrung:** Wie lange werden Scores und Textreports gespeichert?
+4. **Pilot:** Welche Lernenden-Gruppe und welcher Zeitrahmen?
 
 ---
 
@@ -120,3 +123,4 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 | 0.2 | 2026-11-07 | Umsetzungsdetails entfernt; Fachinhalt getrennt von technischer Umsetzung |
 | 0.3 | 2026-11-07 | Antworten eingearbeitet: KI-gestützter Fragenkatalog und Dialog, Entscheidungsmodell, getrennte Bewertung je Rolle, MAG-Definition, Skala 0–5 mit Stufenbeschreibungen, Handlungsfeld „Haltung“ gestrichen |
 | 0.4 | 2026-11-07 | Name „devace“ festgelegt |
+| 0.5 | 2026-11-07 | Anonymisierung, Aufbewahrung nach Abschluss, Trennung von Leistungsbeurteilung, Fragenumfang nach Alltagsrelevanz, Pilot mit Lernenden, Vorgabe der Stufen je Frage; Fragen zur Prüfung der KI-Bewertung durch Testfälle ersetzt |

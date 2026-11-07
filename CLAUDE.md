@@ -16,10 +16,10 @@ Diese Trennung gilt für jede Aufgabe und jedes Dokument. Sie ist nicht verhande
   Der Stack in §1 gilt nur dafür.
 - **Fachinhalt** beschreibt die Kompetenzen der Teams und das Transgourmet-Umfeld. Dazu gehören
   Handlungsfelder, Matrix-Spalten, Fragen des Assessments, Fachbegriffe (z. B. ProlixPro, ProShop).
-  Technologien, die darin vorkommen (z. B. PHP, Angular, Docker, OpenShift), sind **Gegenstand des
+  Technologien, die darin vorkommen (z. B. Angular, Docker, OpenShift), sind **Gegenstand des
   Assessments**, keine Vorgabe für devace.
 - **Aus einer Technologie im Fachinhalt darf nie abgeleitet werden, dass devace sie einsetzt.**
-  Eine Frage zu PHP im Katalog heißt nicht, dass devace in PHP geschrieben wird.
+  Eine Frage zu einer Technologie im Katalog heißt nicht, dass devace damit gebaut wird.
 - Fachdokumente (`docs/vision.md`, `docs/requirements.md`, `docs/use_cases/UC-*.md`) beschreiben das
   Was und Warum auf Fachebene. Sie nennen keine Frameworks, Bibliotheken, Datenbanken, Cloud- oder
   Build-Werkzeuge der Umsetzung. Technische Entscheidungen gehören in ADRs und in §1.
