@@ -1,6 +1,6 @@
 # Vision: devace – KI-gestütztes Kompetenz-Assessment für Entwicklungsteams
 
-**Status:** Entwurf 0.5 – zur gemeinsamen Erarbeitung
+**Status:** Entwurf 0.6 – zur gemeinsamen Erarbeitung
 **Name:** devace
 **Geltungsbereich:** Fachlicher Inhalt. Technische Umsetzung steht nicht in diesem Dokument.
 
@@ -30,7 +30,8 @@ Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die Handlungsfel
 |---|---|
 | **MAG** (Mitarbeitergruppe) | Setzt sich aus der Matrix zusammen: Scrum Team, Linienteam und Rolle (z. B. Entwicklung, DevEx). |
 | **Handlungsfeld** | Eine von fünf Kompetenzdimensionen, die das Assessment bewertet (§6). |
-| **Stufe** | Ausprägung je Handlungsfeld auf der Skala 0–5 (§7). |
+| **Stufe** | Ausprägung je Antwort auf der Skala 0–5 (§7). |
+| **Score** | Ergebnis je Handlungsfeld: Mittelwert der Stufen aller Fragen dieses Handlungsfelds. Liegt immer zwischen 0 und 5. |
 | **Entscheidungsmodell** | Je Handlungsfeld und Frage ist vorgegeben, welcher Stufe eine Antwort entspricht. Die KI ordnet die Antworten diesen Vorgaben zu. |
 
 ## 5. Zielgruppen und Nutzen
@@ -62,7 +63,7 @@ Die Zuordnung der Matrix-Spalten zu den Handlungsfeldern ist noch nicht erarbeit
 
 ## 7. Bewertungsskala
 
-Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Grundlage für das Entscheidungsmodell.
+Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage für das Entscheidungsmodell.
 
 | Stufe | Bezeichnung | Beschreibung |
 |---|---|---|
@@ -77,9 +78,10 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 
 1. **Fragenkatalog:** Das System erstellt mit KI-Unterstützung einen Fragenkatalog, der die Handlungsfelder gezielt prüft. Zu jeder Frage ist vorgegeben, welcher Stufe welche Antwort entspricht.
 2. **Dialog:** Die befragte Person beantwortet die Fragen im Dialog mit dem System. Antworten sind Freitext. Die Interaktion mit der KI ist anonymisiert und lässt keinen Rückschluss auf die Person zu.
-3. **Bewertung:** Die KI ordnet die Antworten den vorgegebenen Stufen zu und leitet daraus je Handlungsfeld eine Stufe ab.
-4. **Report:** Nach Abschluss liegt je Handlungsfeld der Score vor. Daraus kann ein Textreport erstellt werden. Danach werden die einzelnen Antworten gelöscht.
-5. **Ergebnis:** Die Stufen werden je MAG und Rolle als Radar-Chart dargestellt.
+3. **Bewertung:** Die KI ordnet die Antworten den vorgegebenen Stufen zu.
+4. **Score:** Je Handlungsfeld werden die Stufen der Fragen aufsummiert und durch die Anzahl der Fragen geteilt. Das Ergebnis ist der Score des Handlungsfelds, zwischen 0 und 5. Nur die Scores werden auf Handlungsfeld-Ebene gespeichert.
+5. **Textreport:** Nach Abschluss wird ein Textreport erstellt. Er wird der befragten Person einmalig zum Download angeboten; sie verwaltet ihn selbst. Danach werden die einzelnen Antworten gelöscht.
+6. **Ergebnis:** Die Scores werden je MAG und Rolle als Radar-Chart dargestellt.
 
 ## 9. Erfolgskriterien (vorläufig)
 
@@ -88,12 +90,17 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 3. Die KI-Bewertung besteht Testfälle, die Fehler eingrenzen. Die Testfälle und ihre Ergebnisse sind dokumentiert.
 4. Ein Pilot mit den Lernenden zeigt, dass die Ergebnisse für die Entwicklungsgespräche nutzbar sind.
 5. Das Assessment erfasst Kompetenzen, die die Matrix heute nicht sichtbar macht.
+6. Das Programm läuft bis 2030. Der Erfolg ist nachzuweisen; dafür stehen die Scores über fünf Jahre zur Verfügung.
 
 ## 10. Fachliche Rahmenbedingungen
 
 - **Anonymität:** Die Interaktion mit der KI ist anonymisiert. Sie lässt keinen Rückschluss auf die Person zu.
 - **Faire Bewertung:** Die Bewertung wird durch Testfälle abgesichert und die Vorgaben werden so verfeinert, dass sie fair sind.
-- **Aufbewahrung:** Einzelne Antworten werden nach Abschluss gelöscht. Es bleiben die Scores je Handlungsfeld und der Textreport.
+- **Aufbewahrung:**
+  - Einzelne Antworten werden nach Erstellung des Textreports gelöscht.
+  - Gespeichert werden die Scores je Handlungsfeld. Sie werden fünf Jahre aufbewahrt, damit der Erfolg des Programms bis 2030 nachweisbar ist.
+  - Der Textreport wird einmalig zum Download angeboten. Die weitere Verwaltung liegt bei der befragten Person.
+- **Kleine Gruppen:** Der Radar-Chart wird auch für kleine MAGs erstellt. Diese Gruppen erhalten gezielte Förderung.
 - **Keine Leistungsbeurteilung:** Das Assessment ist kein Bestandteil der Leistungsbeurteilung. Diese erfolgt unabhängig davon, nach Abschluss des Assessments.
 
 ## 11. Offene Fragen und Nicht-Ziele
@@ -109,9 +116,6 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 ### Offene Fragen
 
 1. **Anonymisierung:** Welche Merkmale der Antworten müssen entfernt werden, damit kein Rückschluss auf die Person möglich ist?
-2. **Mindestgröße:** Ab welcher Anzahl Personen zeigt ein Radar-Chart je MAG und Rolle, damit kein Rückschluss auf Einzelne möglich ist?
-3. **Aufbewahrung:** Wie lange werden Scores und Textreports gespeichert?
-4. **Pilot:** Welche Lernenden-Gruppe und welcher Zeitrahmen?
 
 ---
 
@@ -123,4 +127,5 @@ Die Stufen gelten je Handlungsfeld. Die Beschreibungen sind die verbindliche Gru
 | 0.2 | 2026-11-07 | Umsetzungsdetails entfernt; Fachinhalt getrennt von technischer Umsetzung |
 | 0.3 | 2026-11-07 | Antworten eingearbeitet: KI-gestützter Fragenkatalog und Dialog, Entscheidungsmodell, getrennte Bewertung je Rolle, MAG-Definition, Skala 0–5 mit Stufenbeschreibungen, Handlungsfeld „Haltung“ gestrichen |
 | 0.4 | 2026-11-07 | Name „devace“ festgelegt |
-| 0.5 | 2026-11-07 | Anonymisierung, Aufbewahrung nach Abschluss, Trennung von Leistungsbeurteilung, Fragenumfang nach Alltagsrelevanz, Pilot mit Lernenden, Vorgabe der Stufen je Frage; Fragen zur Prüfung der KI-Bewertung durch Testfälle ersetzt |
+| 0.5 | 2026-11-07 | Anonymisierung, Aufbewahrung nach Abschluss, Trennung von Leistungsbeurteilung, Fragenumfang nach Alltagsrelevanz, Pilot mit Lernenden, Vorgabe der Stufen je Frage |
+| 0.6 | 2026-11-07 | Score-Berechnung je Handlungsfeld, Textreport als einmaliger Download, Aufbewahrung der Scores über fünf Jahre bis 2030, Radar-Chart auch für kleine Gruppen; Pilot- und Aufbewahrungsfragen entfernt |
