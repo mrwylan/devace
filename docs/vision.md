@@ -1,6 +1,6 @@
 # Vision: devace – KI-gestütztes Kompetenz-Assessment für Entwicklungsteams
 
-**Status:** Entwurf 0.6 – zur gemeinsamen Erarbeitung
+**Status:** Entwurf 0.7 – zur gemeinsamen Erarbeitung
 **Name:** devace
 **Geltungsbereich:** Fachlicher Inhalt. Technische Umsetzung steht nicht in diesem Dokument.
 
@@ -94,7 +94,11 @@ Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage
 
 ## 10. Fachliche Rahmenbedingungen
 
-- **Anonymität:** Die Interaktion mit der KI ist anonymisiert. Sie lässt keinen Rückschluss auf die Person zu.
+- **Anonymität:** Die Interaktion mit der KI ist anonymisiert. Sie lässt keinen Rückschluss auf die Person zu. Es wird kein Identifikator zur Person übergeben.
+- **Hinweis beim Start:** Vor jedem Assessment wird die befragte Person informiert:
+  - welche KI-Modelle eingesetzt werden,
+  - welche Angaben sie nicht erfassen soll (z. B. Namen von Personen oder Kundenprojekte),
+  - dass die allgemeinen Firmenweisungen zum Umgang mit KI bei Textantworten gelten.
 - **Faire Bewertung:** Die Bewertung wird durch Testfälle abgesichert und die Vorgaben werden so verfeinert, dass sie fair sind.
 - **Aufbewahrung:**
   - Einzelne Antworten werden nach Erstellung des Textreports gelöscht.
@@ -112,10 +116,11 @@ Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage
 - Anbindung an HR-Systeme.
 - Pflege der Kompetenzmatrix selbst. Die Matrix bleibt die fachliche Quelle.
 - **Später:** Selbst- und Fremdbeurteilung als ergänzende Sicht.
+- **Später:** Prompt-Validierung, um Missbrauch der Eingaben zu verhindern.
 
 ### Offene Fragen
 
-1. **Anonymisierung:** Welche Merkmale der Antworten müssen entfernt werden, damit kein Rückschluss auf die Person möglich ist?
+Keine. (Die Anonymisierungsfrage ist durch den Start-Hinweis und den fehlenden Identifikator beantwortet.)
 
 ---
 
@@ -129,3 +134,4 @@ Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage
 | 0.4 | 2026-11-07 | Name „devace“ festgelegt |
 | 0.5 | 2026-11-07 | Anonymisierung, Aufbewahrung nach Abschluss, Trennung von Leistungsbeurteilung, Fragenumfang nach Alltagsrelevanz, Pilot mit Lernenden, Vorgabe der Stufen je Frage |
 | 0.6 | 2026-11-07 | Score-Berechnung je Handlungsfeld, Textreport als einmaliger Download, Aufbewahrung der Scores über fünf Jahre bis 2030, Radar-Chart auch für kleine Gruppen; Pilot- und Aufbewahrungsfragen entfernt |
+| 0.7 | 2026-11-07 | Hinweis beim Start des Assessments (Modelle, nicht zu erfassende Angaben, Firmenweisungen zu KI-Textantworten); Prompt-Validierung als späterer Ausbau; Anonymisierungsfrage entfällt |
