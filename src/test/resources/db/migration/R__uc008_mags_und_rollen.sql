@@ -5,7 +5,8 @@
 
 INSERT INTO benutzer (id, benutzername, passwort_hash, berechtigung)
 VALUES (9001, 'uc008-teamleitung-a', 'unused', 'Teamleitung'),
-       (9002, 'uc008-teamleitung-b', 'unused', 'Teamleitung')
+       (9002, 'uc008-teamleitung-b', 'unused', 'Teamleitung'),
+       (9003, 'uc008-schulung', 'unused', 'Schulungsverantwortliche')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO mag (id, scrum_team, linienteam, teamleitung_id)

@@ -338,3 +338,12 @@ Das Entity-Modell nennt BENUTZER nur als externe Systemgrenze mit der Spalte id.
 
 **Answer:** Tabelle benutzer mit id, benutzername (eindeutig), passwort_hash und berechtigung (Teamleitung, Schulungsverantwortliche, Administrator). Der erste Administrator entsteht beim Start aus den Umgebungsvariablen DEVACE_ADMIN_USERNAME und DEVACE_ADMIN_PASSWORD, wenn es noch keinen Administrator gibt; das Passwort wird gehasht gespeichert und nie ins Repository geschrieben.
 **Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-032: Welchen Wortlaut hat der Hinweis, wenn eine MAG eine nicht vorhandene Teamleitung erhält?
+
+**Element:** UC-008 GR-004
+**Raised by:** /spring-service-test, 2026-11-08
+**Blocking:** No
+**Status:** Open
+
+GR-004 verlangt, dass die Teamleitung aus den vorhandenen Teamleitungen ausgewählt wird. Kein Ablauf und kein Wortlaut sagt, was geschieht, wenn eine Angabe außerhalb der Oberfläche eine nicht vorhandene Person oder einen Benutzer ohne Funktion Teamleitung nennt. Der Dienst lehnt sie mit dem Hinweis "Die Teamleitung ist nicht vorhanden." ab; der Wortlaut stammt aus der Umsetzung, nicht aus der Spezifikation. Der Test prüft deshalb nur die Ablehnung, nicht den Text.
