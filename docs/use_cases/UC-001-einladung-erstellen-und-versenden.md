@@ -15,7 +15,7 @@
 
 ## Vorbedingungen
 
-- Die Teamleitung ist angemeldet.
+- Die Teamleitung ist mit Benutzername und Passwort angemeldet.
 - Der Teamleitung ist mindestens eine MAG zugeordnet.
 - Die Rollen sind angelegt.
 
@@ -108,8 +108,12 @@ Eine Adresse ist gültig, wenn sie aus einem lokalen Teil, dem Zeichen @ und ein
 
 ### GR-007: Inhalt der E-Mail
 
-Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt.
+Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt: den Betreff "Einladung zum devace-Assessment", einen kurzen Text und den Link zur Einladung.
 
 ### GR-008: Gültigkeitsdauer
 
 Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung.
+
+### GR-009: Nur für angemeldete Teamleitungen
+
+Nur die angemeldete Teamleitung erstellt Einladungen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen.
