@@ -48,7 +48,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	// ---------------------------------------------------------------- Hauptablauf
 
 	@Test
-	@UseCase(id = "UC-008")
+	@UseCase(id = "UC-008", scenario = "Steps 1-2: Übersicht")
 	void uebersicht_zeigt_mags_mit_teamleitung_und_rollen_mit_fragenkatalogen() {
 		navigate(MagsUndRollenView.class);
 
@@ -68,7 +68,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008")
+	@UseCase(id = "UC-008", scenario = "Step 2: Teamleitungen zur Zuordnung")
 	void teamleitungen_werden_zur_zuordnung_angeboten() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -80,7 +80,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG anlegen", businessRules = { "GR-004" })
 	void mag_mit_teamleitung_anlegen() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -99,7 +99,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG ohne Teamleitung anlegen", businessRules = { "GR-004" })
 	void mag_ohne_teamleitung_ist_zulaessig() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -115,7 +115,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008")
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: Rolle anlegen")
 	void rolle_anlegen() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("rolle-anlegen").single()).click();
@@ -132,7 +132,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-006" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG ändern", businessRules = { "GR-006" })
 	void mag_aendern_behaelt_die_identitaet() {
 		navigate(MagsUndRollenView.class);
 		legeMagAn(PRAEFIX + " Eps", PRAEFIX + " Mitte");
@@ -154,7 +154,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-006" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: Rolle ändern", businessRules = { "GR-006" })
 	void rolle_aendern_laesst_fragenkatalog_zugeordnet() {
 		navigate(MagsUndRollenView.class);
 
