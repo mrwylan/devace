@@ -7,26 +7,26 @@ column from the integration layer up, and `/use-case-coverage` searches for the 
 
 **Last updated:** 2026-11-08
 
-Die Technologien folgen `CLAUDE.md` §1 (verbindlicher Stack). Die Spalten Skill und Test skill bleiben `–`, bis die Layer-Plugins installiert sind (`aiup-flyway`, `aiup-jooq`, `aiup-spring-boot`, `aiup-vaadin`, `aiup-playwright`, siehe `CLAUDE.md` §2.1).
-
 ## Layers
 
-| Layer       | Technology                                   | Skill | Test skill | Location                                  |
-|-------------|----------------------------------------------|-------|------------|-------------------------------------------|
-| Migration   | Flyway, PostgreSQL                           | –     | –          | `src/main/resources/db/migration`         |
-| Persistence | jOOQ (generated from the migrated schema)    | –     | –          | `info.wylan.devace.persistence`                  |
-| Client      | Spring AI via OpenRouter; e-mail dispatch    | –     | –          | `info.wylan.devace.client`                       |
-| Service     | Spring Boot services                         | –     | –          | `info.wylan.devace.service`                      |
-| API         | –                                            | –     | –          | –                                         |
-| UI          | Vaadin 25 Flow                               | –     | –          | `info.wylan.devace.ui`                           |
-| E2E         | Playwright                                   | –     | –          | `src/test/java/info/wylan/devace/e2e`            |
+| Layer       | Technology                                                       | Skill              | Test skill              | Location                                  |
+|-------------|------------------------------------------------------------------|--------------------|-------------------------|-------------------------------------------|
+| Migration   | Flyway, PostgreSQL                                               | `flyway-schema`    | –                       | `src/main/resources/db/migration`         |
+| Persistence | jOOQ (generated from the migrated schema)                        | `jooq-persistence` | `jooq-persistence-test` | `info.wylan.devace.persistence`           |
+| Client      | Spring AI via OpenRouter; e-mail dispatch                        | `spring-client`    | `spring-client-test`    | `info.wylan.devace.client`                |
+| Service     | Spring Boot services                                             | `spring-service`   | `spring-service-test`   | `info.wylan.devace.service`               |
+| API         | –                                                                | –                  | –                       | –                                         |
+| UI          | Vaadin 25 Flow, Aura theme, dark color scheme                    | `vaadin-flow-ui`   | `vaadin-flow-ui-test`   | `info.wylan.devace.ui`                    |
+| E2E         | Playwright for Java (Drama Finder)                               | –                  | `vaadin-e2e-test`       | `src/test/java/info/wylan/devace/e2e`     |
+
+**UI theme:** Aura, always in the dark color scheme. The `AppShellConfigurator` of the application carries `@StyleSheet(Aura.STYLESHEET)` and `@ColorScheme(ColorScheme.Value.DARK)`, and the theme is loaded before any other stylesheet. Colors of the application's own styles are checked in the dark scheme.
 
 **Integration layer:**
 
 | Use case offered through | Tested in | Test skill |
 |--------------------------|-----------|------------|
-| UI                       | UI        | –          |
-| Service                  | Service   | –          |
+| UI                       | UI        | `vaadin-flow-ui-test` |
+| Service                  | Service   | `spring-service-test` |
 
 A layer the project does not have is marked `–` in every column (a UI layer in a REST service). The Integration
 layer table keeps only the rows of the entry layers the project has — a REST service drops the UI row — and its
