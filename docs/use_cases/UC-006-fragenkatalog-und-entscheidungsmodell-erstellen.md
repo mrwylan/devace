@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Der Administrator erstellt für eine Rolle einen Entwurf des Fragenkatalogs mit dem Entscheidungsmodell jeder Frage, damit die Handlungsfelder gezielt und fair geprüft werden können.  
 **Auslösendes Ereignis:** Der Administrator fordert die Erstellung eines Fragenkatalogs für eine Rolle an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-012, FR-013, NFR-005, NFR-010, C-006](../requirements.md)  
 **Schichten:** UI
@@ -16,7 +16,8 @@
 ## Vorbedingungen
 
 - Der Administrator ist angemeldet.
-- Die Rollen und die sechs Handlungsfelder sind angelegt.
+- Die Rollen sind angelegt.
+- Die sechs Handlungsfelder sind als feste Stammdaten vorgegeben.
 
 ## Hauptablauf
 
@@ -25,7 +26,7 @@
 3. Der Administrator wählt eine Rolle und legt fest, womit er beginnt: mit einem leeren Entwurf, mit der freigegebenen Version der Rolle als neuer Version oder mit dem vorhandenen Entwurf der Rolle.
 4. Das System zeigt den gewählten Ausgangspunkt je Handlungsfeld an.
 5. Der Administrator gibt optional Schwerpunkte und die Zahl der Fragen je Handlungsfeld an und fordert einen KI-Entwurf an.
-6. Das System lässt das KI-Modell Fragen mit je einem Entscheidungsmodell für die Handlungsfelder der Rolle entwerfen.
+6. Das System lässt das KI-Modell zusätzliche Fragen mit je einem Entscheidungsmodell für die Handlungsfelder der Rolle entwerfen und ergänzt den Entwurf um sie.
 7. Das System zeigt den Entwurf je Handlungsfeld an.
 8. Der Administrator prüft den Entwurf und ändert, ergänzt oder entfernt Fragen und die Entscheidungsmodelle.
 9. Der Administrator speichert den Entwurf.
@@ -45,7 +46,7 @@
 
 ### A2: KI-Modell liefert keinen Entwurf
 
-**Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert keinen verwertbaren Entwurf (Schritt 6)  
+**Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert keine Frage, obwohl Fragen offen sind (Schritt 6)  
 **Ablauf:**
 
 1. Das System weist darauf hin, dass kein Entwurf entstanden ist.
@@ -54,7 +55,7 @@
 
 ### A3: Angaben für den KI-Entwurf ungültig
 
-**Auslöser:** Die Zahl der Fragen je Handlungsfeld liegt außerhalb des zulässigen Bereichs (Schritt 5)  
+**Auslöser:** Die Zahl der Fragen je Handlungsfeld liegt außerhalb des zulässigen Bereichs oder die Schwerpunkte sind zu lang (Schritt 5)  
 **Ablauf:**
 
 1. Das System weist auf die ungültige Angabe hin.
@@ -77,6 +78,24 @@
 
 1. Das System verwirft die Änderungen dieser Sitzung.
 2. Der Use Case endet.
+
+### A6: Genügend Fragen vorhanden
+
+**Auslöser:** Jedes Handlungsfeld hat bereits mindestens die angegebene Zahl an Fragen (Schritt 6)  
+**Ablauf:**
+
+1. Das System weist darauf hin, dass genügend Fragen vorhanden sind, und bietet an, die KI-Anforderung abzubrechen oder weitere Fragen zu ergänzen.
+2. Der Administrator wählt, weitere Fragen zu ergänzen, und gibt an, wie viele weitere Fragen je Handlungsfeld das KI-Modell entwerfen soll. Ist die Zahl ungültig, weist das System darauf hin, und der Administrator korrigiert sie.
+3. Das System lässt das KI-Modell die weiteren Fragen mit je einem Entscheidungsmodell entwerfen und ergänzt den Entwurf um sie.
+4. Der Use Case wird bei Schritt 7 fortgesetzt.
+
+### A7: Administrator bricht die KI-Anforderung ab
+
+**Auslöser:** Der Administrator wählt nach dem Hinweis auf genügend Fragen, keine weiteren Fragen zu ergänzen (Schritt 6)  
+**Ablauf:**
+
+1. Das System verwirft die KI-Anforderung und lässt den Entwurf unverändert.
+2. Der Use Case wird bei Schritt 8 fortgesetzt.
 
 ## Nachbedingungen
 
@@ -102,9 +121,9 @@ Jede Frage hat genau eine Vorgabe je Stufe von 0 bis 5. Jede Vorgabe beschreibt,
 
 Eine Frage gehört zu genau einem Handlungsfeld. Der Wortlaut ist eine Pflichtangabe mit höchstens 500 Zeichen. Die Position einer Frage im Fragenkatalog ist eindeutig.
 
-### GR-003: Fragenzahl für den KI-Entwurf
+### GR-003: Angaben für den KI-Entwurf
 
-Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10. Vorgeschlagen werden 3.
+Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10. Vorgeschlagen werden 3. Dieselbe Grenze gilt für die Zahl weiterer Fragen je Handlungsfeld. Die Schwerpunkte sind optional und haben höchstens 2000 Zeichen.
 
 ### GR-004: Versionen und Entwurf
 
@@ -129,3 +148,11 @@ Der Fragenkatalog nimmt Technologien und Grundlagen nach Relevanz im Alltag der 
 ### GR-009: Nur für Administratoren
 
 Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen.
+
+### GR-010: KI-Entwurf ergänzt den Entwurf
+
+Der KI-Entwurf ändert und entfernt keine vorhandene Frage. Er ergänzt je Handlungsfeld so viele Fragen, bis die angegebene Zahl erreicht ist. Hat ein Handlungsfeld bereits mindestens so viele Fragen, ergänzt er dort keine. Hat jedes Handlungsfeld bereits mindestens so viele Fragen, fragt das System das KI-Modell nicht an, sondern weist darauf hin.
+
+### GR-011: Unvollständige Frage aus dem KI-Entwurf
+
+Eine Frage des KI-Entwurfs, deren Entscheidungsmodell nicht für jede Stufe von 0 bis 5 eine Vorgabe enthält, erscheint im Entwurf und muss vor dem Speichern ergänzt werden. Als nicht verwertbar gilt nur ein KI-Entwurf ohne Frage.
