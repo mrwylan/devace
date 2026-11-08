@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: devace
+  # Secrets and environment-specific values come from environment variables only.
+  # Datasource, mail and OpenRouter settings are added by the layers that need them.
+
+server:
+  port: ${SERVER_PORT:8080}
