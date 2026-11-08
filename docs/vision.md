@@ -1,6 +1,6 @@
 # Vision: devace – KI-gestütztes Kompetenz-Assessment für Entwicklungsteams
 
-**Status:** Entwurf 0.7 – zur gemeinsamen Erarbeitung
+**Status:** Entwurf 0.8 – zur gemeinsamen Erarbeitung
 **Name:** devace
 **Geltungsbereich:** Fachlicher Inhalt. Technische Umsetzung steht nicht in diesem Dokument.
 
@@ -28,8 +28,8 @@ Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die Handlungsfel
 
 | Begriff | Bedeutung |
 |---|---|
-| **MAG** (Mitarbeitergruppe) | Setzt sich aus der Matrix zusammen: Scrum Team, Linienteam und Rolle (z. B. Entwicklung, DevEx). |
-| **Handlungsfeld** | Eine von fünf Kompetenzdimensionen, die das Assessment bewertet (§6). |
+| **MAG** (Mitarbeitergruppe) | Setzt sich aus der Matrix zusammen: Scrum Team und Linienteam. Die Rolle (z. B. Entwicklung, DevEx) ist ein eigener Wert daneben; Auswertungen erfolgen je MAG und Rolle. |
+| **Handlungsfeld** | Eine von sechs Kompetenzdimensionen, die das Assessment bewertet (§6). |
 | **Stufe** | Ausprägung je Antwort auf der Skala 0–5 (§7). |
 | **Score** | Ergebnis je Handlungsfeld: Mittelwert der Stufen aller Fragen dieses Handlungsfelds. Liegt immer zwischen 0 und 5. |
 | **Entscheidungsmodell** | Je Handlungsfeld und Frage ist vorgegeben, welcher Stufe eine Antwort entspricht. Die KI ordnet die Antworten diesen Vorgaben zu. |
@@ -42,7 +42,7 @@ Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die Handlungsfel
 | Entwickler, Tester, Scrum Master | Eigene Einschätzung im Assessment; klare Sicht auf das Zielbild |
 | Schulungsverantwortliche | Schulungsbedarf anhand der Lücken priorisieren |
 
-## 6. Die fünf Handlungsfelder
+## 6. Die sechs Handlungsfelder
 
 Die Bewertung erfolgt getrennt je Rolle.
 
@@ -135,3 +135,4 @@ Keine. (Die Anonymisierungsfrage ist durch den Start-Hinweis und den fehlenden I
 | 0.5 | 2026-11-07 | Anonymisierung, Aufbewahrung nach Abschluss, Trennung von Leistungsbeurteilung, Fragenumfang nach Alltagsrelevanz, Pilot mit Lernenden, Vorgabe der Stufen je Frage |
 | 0.6 | 2026-11-07 | Score-Berechnung je Handlungsfeld, Textreport als einmaliger Download, Aufbewahrung der Scores über fünf Jahre bis 2030, Radar-Chart auch für kleine Gruppen; Pilot- und Aufbewahrungsfragen entfernt |
 | 0.7 | 2026-11-07 | Hinweis beim Start des Assessments (Modelle, nicht zu erfassende Angaben, Firmenweisungen zu KI-Textantworten); Prompt-Validierung als späterer Ausbau; Anonymisierungsfrage entfällt |
+| 0.8 | 2026-11-08 | MAG besteht aus Scrum Team und Linienteam, Rolle ist ein eigener Wert; Anzahl der Handlungsfelder von fünf auf sechs korrigiert |
