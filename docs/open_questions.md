@@ -282,3 +282,33 @@ Die Anmeldung (OQ-023) setzt Benutzerkonten voraus. Keine Anforderung und kein U
 **Assumed:** Nein, Groß- und Kleinschreibung sowie umgebende Leerzeichen bleiben beim Vergleich unberücksichtigt.
 
 Ohne diese Regel entstünden "Entwicklung" und "entwicklung" als zwei Rollen mit getrennten Radar-Charts.
+
+## OQ-027: Wie viele Entwürfe hat eine Rolle?
+
+**Element:** UC-006 GR-004
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Höchstens einen. Besteht ein Entwurf, setzt der Administrator ihn fort; ein weiterer Entwurf entsteht nicht.
+
+Das Entity-Modell begrenzt nur die freigegebenen Fragenkataloge je Rolle auf einen. Mehrere parallele Entwürfe würden die Freigabe (UC-007) mehrdeutig machen.
+
+## OQ-028: Wie viele Fragen je Handlungsfeld darf der Administrator für den KI-Entwurf anfordern?
+
+**Element:** UC-006 GR-003
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** 1 bis 10, Vorschlag 3.
+
+Die Vision nennt keine Zahl. Die Grenze ist ein Vorschlag für den Pilot mit Lernenden.
+
+## OQ-029: Darf ein Entwurf Handlungsfelder ohne Frage enthalten?
+
+**Element:** UC-006 GR-006
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Ja. Ob ein Fragenkatalog vollständig genug für die Freigabe ist (zum Beispiel mindestens eine Frage je Handlungsfeld), prüft UC-007.
+
+Ohne Frage in einem Handlungsfeld ließe sich kein Score für dieses Handlungsfeld berechnen. Das betrifft die Freigabe, nicht die Erstellung.
