@@ -73,3 +73,18 @@ reference and corrects them. Do not edit the rows by hand; rerun the layer skill
 | Layer | Skill | Kind | Marker to grep for |
 |-------|-------|------|--------------------|
 | All   | –     | Code | `// UC-XXX BR-YYY:` directly above the method, query condition, or validator that enforces the rule |
+| Migration | flyway-schema | Code | `-- UC-XXX BR-YYY:` directly above the `CHECK`, `UNIQUE`, index, or trigger that enforces the rule |
+| Migration | flyway-schema | Name | `<location>/V*__*.sql`, named after the tables they change, never after a use case — search them by table and column |
+| Persistence | jooq-persistence | Code | `// UC-XXX BR-YYY:` directly above the jOOQ `.where(...)`/`.and(...)` condition or query that enforces the rule |
+| Persistence | jooq-persistence | Name | `<Aggregate>Repository` (`@Repository` with a `DSLContext`, or the adapter implementing that outbound port in a hexagonal layout), named after the aggregate root, never a use case |
+| Service | spring-service | Code | `// UC-XXX BR-YYY:` directly above the service method or guard clause that enforces the rule |
+| Service | spring-service | Code | `UC-XXX` in the Javadoc of the public service method that realizes a step or an alternative flow |
+| Service | spring-service | Name | `<Entity>Service` classes annotated `@Service`; domain exceptions `<Reason>Exception` |
+| UI | vaadin-flow-ui | Code | `UC-XXX` in the view's class Javadoc (`/** UC-XXX <Use Case Name>. */`) |
+| UI | vaadin-flow-ui | Code | `// UC-XXX BR-YYY:` directly above the `Binder` validator or UI guard that enforces the rule |
+| UI | vaadin-flow-ui | Name | `@Route` view class `<Name>View` named after the use case (`ManagePersonsView` for "Manage Persons") |
+| UI | vaadin-flow-ui-test | Test | `@UseCase(id = "UC-XXX", scenario = "…", businessRules = {"BR-YYY"}, requirements = {"NFR-XXX"})` on every Browserless test method |
+| UI | vaadin-flow-ui-test | Name | `UC<id><Name>Test`, e.g. `UC001ManagePersonsTest`, extending `SpringBrowserlessTest` or the project's subclass of it |
+| E2E | vaadin-e2e-test | Test | `@DisplayName("UC-XXX: …")` on the class and one `@Nested` `@DisplayName("A<n>: …")` per alternative flow |
+| E2E | vaadin-e2e-test | Test | `@TestCase(id = "TC-XXX", useCases = {…})` on the class, `@DisplayName("TC-XXX: …")`, and one `// Step <n>: <name>` comment per Flow row |
+| E2E | vaadin-e2e-test | Name | `UC<id><Name>IT` for a use case, `TC<id><Name>IT` for a test case journey |

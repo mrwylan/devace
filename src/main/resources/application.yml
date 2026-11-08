@@ -2,7 +2,18 @@ spring:
   application:
     name: devace
   # Secrets and environment-specific values come from environment variables only.
-  # Datasource, mail and OpenRouter settings are added by the layers that need them.
+  datasource:
+    url: ${DEVACE_DB_URL}
+    username: ${DEVACE_DB_USER}
+    password: ${DEVACE_DB_PASSWORD}
+  flyway:
+    locations: classpath:db/migration
 
 server:
   port: ${SERVER_PORT:8080}
+
+devace:
+  admin:
+    # Optional first administrator, created at startup when none exists (OQ-031).
+    username: ${DEVACE_ADMIN_USERNAME:}
+    password: ${DEVACE_ADMIN_PASSWORD:}
