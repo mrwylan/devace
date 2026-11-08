@@ -314,3 +314,27 @@ Die Vision nennt keine Zahl. Die Grenze ist ein Vorschlag für den Pilot mit Ler
 **Assumed:** Ja. Ob ein Fragenkatalog vollständig genug für die Freigabe ist (zum Beispiel mindestens eine Frage je Handlungsfeld), prüft UC-007.
 
 Ohne Frage in einem Handlungsfeld ließe sich kein Score für dieses Handlungsfeld berechnen. Das betrifft die Freigabe, nicht die Erstellung.
+
+## OQ-030: Welchen Wortlaut haben die Hinweise bei fehlenden oder ungültigen Angaben und bei bestehender MAG oder Rolle?
+
+**Element:** UC-008 A1
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Answered
+
+A1 und A2 sagen nur, das System weise auf fehlende oder ungültige Angaben bzw. darauf hin, dass die MAG oder die Rolle bereits besteht. Ein Wortlaut fehlt.
+
+**Answer:** Hinweise am jeweiligen Feld: "Pflichtangabe fehlt." bzw. "Höchstens 100 Zeichen." (Rolle: 50) für A1, "Diese MAG besteht bereits." bzw. "Diese Rolle besteht bereits." für A2.
+**Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-031: Welche Tabelle hält die Benutzerkonten, und wie entsteht der erste Administrator?
+
+**Element:** Entity: BENUTZER
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Answered
+
+Das Entity-Modell nennt BENUTZER nur als externe Systemgrenze mit der Spalte id. Die Anmeldung (OQ-023) braucht Benutzername, Passwort und die Funktion der Person (Teamleitung, Schulungsverantwortliche, Administrator). Wer weitere Konten anlegt, ist in OQ-025 offen.
+
+**Answer:** Tabelle benutzer mit id, benutzername (eindeutig), passwort_hash und berechtigung (Teamleitung, Schulungsverantwortliche, Administrator). Der erste Administrator entsteht beim Start aus den Umgebungsvariablen DEVACE_ADMIN_USERNAME und DEVACE_ADMIN_PASSWORD, wenn es noch keinen Administrator gibt; das Passwort wird gehasht gespeichert und nie ins Repository geschrieben.
+**Answered by:** Jakob Albrecht, 2026-11-08
