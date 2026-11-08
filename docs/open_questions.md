@@ -49,10 +49,13 @@ Die Vision nennt ihren Nutzen (Bedarf priorisieren), aber nicht den Umfang ihrer
 **Element:** FR-003
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** Eine Einladung erlaubt genau ein Assessment; Gültigkeitsdauer nicht begrenzt; Wiederaufnahme vor Abschluss möglich.
+**Status:** Resolved
 
 Die Antwort legt fest, dass die Einladung zu einer Befragten gehört. Gültigkeitsdauer und Wiederaufnahme eines abgebrochenen Assessments sind offen.
+
+**Answer:** Unbegrenzt, mit Wiederaufnahme: Eine Einladung erlaubt genau ein Assessment ohne Ablauf; vor dem Abschluss kann die Befragte weitermachen, solange ihre Antworten nicht nach NFR-004 gelöscht wurden.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** FR-003
 
 ## OQ-006: Gibt es einen Fragenkatalog je Rolle?
 
@@ -109,30 +112,39 @@ Die Vision nennt die Weisungen ohne Dokument und Version, die Source-Spalte blei
 **Element:** Glossary: MAG
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** MAG besteht aus Scrum Team und Linienteam; die Rolle ist ein eigener Wert daneben.
+**Status:** Resolved
 
 Das Glossar und die Vision §4 sagen, die MAG setze sich aus Scrum Team, Linienteam und Rolle zusammen. Gleichzeitig werden Radar-Charts "je MAG und Rolle" gebildet. Das Entity-Modell trennt MAG und ROLLE.
+
+**Answer:** Rolle getrennt: MAG besteht aus Scrum Team und Linienteam; die Rolle ist ein eigener Wert daneben.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Glossary: MAG, Entity: MAG, Entity: ROLLE
 
 ## OQ-012: Wird die E-Mail-Adresse der Befragten gespeichert?
 
 **Element:** Entity: EINLADUNG
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** Die Adresse wird nur zum Versand verwendet und nicht gespeichert.
+**Status:** Resolved
 
 Die Teamleitung versendet die Einladung per E-Mail. Eine gespeicherte Adresse würde neben der Einladung einen Personenbezug schaffen.
+
+**Answer:** Nicht speichern: Die E-Mail-Adresse wird nur zum Versand verwendet.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Entity: EINLADUNG, FR-002
 
 ## OQ-013: Wann wird das Assessment selbst gelöscht?
 
 **Element:** Entity: ASSESSMENT
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** Das Assessment wird zusammen mit seinen Antworten und Bewertungen gelöscht; die Einladung bleibt mit Status Eingelöst.
+**Status:** Resolved
 
 Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Zeitstempel könnte mit dem Score korreliert werden.
+
+**Answer:** Mit den Antworten löschen: Assessment, Antworten und Bewertungen werden gemeinsam gelöscht; die Einladung bleibt mit Status Eingelöst.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Entity: ASSESSMENT, FR-009
 
 ## OQ-014: Maximale Länge einer Freitext-Antwort?
 
@@ -143,3 +155,43 @@ Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Ze
 **Assumed:** 500 Zeichen.
 
 Die Vision nennt keine Grenze.
+
+## OQ-015: Welche Rollen darf die Teamleitung für eine Einladung wählen?
+
+**Element:** UC-001 GR-003
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nur Rollen mit freigegebenem Fragenkatalog stehen zur Wahl (A2, wenn keine existiert).
+
+Eine Einladung für eine Rolle ohne freigegebenen Fragenkatalog wäre nicht nutzbar. Die Anforderungen nennen die Prüfung nicht.
+
+## OQ-016: Wie werden doppelte Adressen in einer Eingabe behandelt?
+
+**Element:** UC-001 GR-005
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Dieselbe Adresse mehrfach in einer Eingabe erzeugt eine Einladung.
+
+Da Adressen nicht gespeichert werden, lassen sich Doppelungen nur innerhalb einer Eingabe erkennen.
+
+## OQ-017: Gibt es eine Höchstzahl an Adressen je Durchgang?
+
+**Element:** UC-001 step 4
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Keine Obergrenze.
+
+Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
+
+## OQ-018: Wie wird eine Teamleitung einer MAG zugeordnet?
+
+**Element:** FR-015
+**Raised by:** /spec-review UC-001 (angenommen von /use-case-spec), 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Administrator ordnet in UC-008 jeder MAG eine Teamleitung zu.
+
+UC-001 setzt voraus, dass der Teamleitung mindestens eine MAG zugeordnet ist (Entity MAG.teamleitung_id). FR-015 nennt die Zuordnung nicht.
