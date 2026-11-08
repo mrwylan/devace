@@ -155,3 +155,33 @@ Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Ze
 **Assumed:** 500 Zeichen.
 
 Die Vision nennt keine Grenze.
+
+## OQ-015: Welche Rollen darf die Teamleitung für eine Einladung wählen?
+
+**Element:** UC-001 GR-003
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nur Rollen mit freigegebenem Fragenkatalog stehen zur Wahl (A2, wenn keine existiert).
+
+Eine Einladung für eine Rolle ohne freigegebenen Fragenkatalog wäre nicht nutzbar. Die Anforderungen nennen die Prüfung nicht.
+
+## OQ-016: Wie werden doppelte Adressen in einer Eingabe behandelt?
+
+**Element:** UC-001 GR-005
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Dieselbe Adresse mehrfach in einer Eingabe erzeugt eine Einladung.
+
+Da Adressen nicht gespeichert werden, lassen sich Doppelungen nur innerhalb einer Eingabe erkennen.
+
+## OQ-017: Gibt es eine Höchstzahl an Adressen je Durchgang?
+
+**Element:** UC-001 step 4
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Keine Obergrenze.
+
+Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
