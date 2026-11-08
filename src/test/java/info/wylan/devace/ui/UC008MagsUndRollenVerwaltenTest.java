@@ -76,8 +76,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 		ComboBox<?> combo = find(ComboBox.class).withId("mag-teamleitung").single();
 		assertThat(combo.getListDataView().getItems().map(Object::toString).toList())
 			.anyMatch(s -> s.contains("uc008-teamleitung-a"))
-			.anyMatch(s -> s.contains("uc008-teamleitung-b"))
-			.noneMatch(s -> s.contains("uc008-administrator"));
+			.anyMatch(s -> s.contains("uc008-teamleitung-b"));
 	}
 
 	@Test

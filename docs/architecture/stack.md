@@ -85,3 +85,6 @@ reference and corrects them. Do not edit the rows by hand; rerun the layer skill
 | UI | vaadin-flow-ui | Name | `@Route` view class `<Name>View` named after the use case (`ManagePersonsView` for "Manage Persons") |
 | UI | vaadin-flow-ui-test | Test | `@UseCase(id = "UC-XXX", scenario = "…", businessRules = {"BR-YYY"}, requirements = {"NFR-XXX"})` on every Browserless test method |
 | UI | vaadin-flow-ui-test | Name | `UC<id><Name>Test`, e.g. `UC001ManagePersonsTest`, extending `SpringBrowserlessTest` or the project's subclass of it |
+| E2E | vaadin-e2e-test | Test | `@DisplayName("UC-XXX: …")` on the class and one `@Nested` `@DisplayName("A<n>: …")` per alternative flow |
+| E2E | vaadin-e2e-test | Test | `@TestCase(id = "TC-XXX", useCases = {…})` on the class, `@DisplayName("TC-XXX: …")`, and one `// Step <n>: <name>` comment per Flow row |
+| E2E | vaadin-e2e-test | Name | `UC<id><Name>IT` for a use case, `TC<id><Name>IT` for a test case journey |
