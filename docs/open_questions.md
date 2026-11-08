@@ -241,7 +241,7 @@ Die Gültigkeitsdauer wird in ganzen Tagen angegeben; Beginn und Ende innerhalb 
 
 ## OQ-023: Wie meldet sich die Teamleitung an?
 
-**Element:** UC-001 Vorbedingung 1
+**Element:** UC-001
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
 **Status:** Answered
