@@ -32,12 +32,12 @@
 
 ## Alternativabläufe
 
-### A1: Einladung unbekannt oder bereits verwendet
+### A1: Einladung unbekannt oder bereits eingelöst
 
-**Auslöser:** Die Einladung ist unbekannt oder gehört zu einem abgeschlossenen Assessment (Schritt 1)  
+**Auslöser:** Die Einladung ist unbekannt oder bereits eingelöst, ohne dass ein laufendes Assessment besteht (Schritt 1)  
 **Ablauf:**
 
-1. Das System weist die Befragte darauf hin, dass die Einladung nicht verwendet werden kann.
+1. Das System weist die Befragte darauf hin, dass die Einladung bereits eingelöst wurde.
 2. Der Use Case endet.
 
 ### A2: Laufendes Assessment wiederaufnehmen
@@ -46,7 +46,7 @@
 **Ablauf:**
 
 1. Das System zeigt den Starthinweis nicht erneut.
-2. Das System stellt die erste Frage ohne bewertete Antwort. Eine bereits gespeicherte Antwort ohne Stufe ist vorbelegt.
+2. Das System stellt die erste Frage ohne Antwort.
 3. Der Use Case wird bei Schritt 5 fortgesetzt.
 
 ### A3: Befragte bestätigt den Starthinweis nicht
@@ -70,16 +70,15 @@
 **Auslöser:** Das KI-Modell ist nicht erreichbar oder ordnet der Antwort keine Stufe von 0 bis 5 zu (Schritt 6)  
 **Ablauf:**
 
-1. Das System speichert die Antwort ohne Stufe und meldet, dass die Bewertung nicht möglich ist.
-2. Die Befragte wiederholt die Bewertung oder verlässt das Assessment.
-3. Der Use Case wird bei Schritt 6 fortgesetzt oder endet.
+1. Das System ordnet der Antwort die Stufe 0 zu.
+2. Der Use Case wird bei Schritt 7 fortgesetzt.
 
 ### A6: Befragte unterbricht das Assessment
 
 **Auslöser:** Die Befragte verlässt das Assessment vor der letzten Frage (Schritt 5)  
 **Ablauf:**
 
-1. Das System behält die bereits bewerteten Antworten.
+1. Das System behält die bereits gegebenen Antworten.
 2. Der Use Case endet.
 
 ## Nachbedingungen
@@ -93,14 +92,14 @@
 ### Fehlerfall
 
 - Ein Assessment ohne bestätigten Starthinweis wird nicht gestartet.
-- Eine bereits bewertete Antwort bleibt unverändert.
+- Eine bereits gegebene Antwort bleibt mit ihrer Stufe unverändert.
 - Das KI-Modell erhält keine Angabe, die auf die Befragte schließen lässt.
 
 ## Geschäftsregeln
 
 ### GR-001: Einladung gilt für ein Assessment
 
-Eine Einladung berechtigt zu genau einem Assessment und läuft nicht ab.
+Eine Einladung berechtigt zu genau einem Assessment. Sie gilt ab dem Start des Assessments als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach GR-009 gelöscht wurde. Eine Einladung, mit der noch kein Assessment gestartet wurde, läuft nicht ab.
 
 ### GR-002: Starthinweis vor dem Start
 
@@ -120,7 +119,7 @@ Jede Frage wird genau einmal beantwortet. Die Befragte ändert eine abgegebene A
 
 ### GR-006: Stufenzuordnung
 
-Das KI-Modell ordnet jede Antwort nach der Stufenvorgabe der Frage genau einer Stufe von 0 bis 5 zu.
+Das KI-Modell ordnet jede Antwort nach der Stufenvorgabe der Frage einer Stufe von 0 bis 5 zu. Ordnet es keine Stufe zu, gilt die Stufe 0. Eine Antwort erreicht eine höhere Stufe nur durch die Zuordnung des KI-Modells.
 
 ### GR-007: Anonyme Vorlage an das KI-Modell
 
@@ -132,4 +131,4 @@ Das System zeigt der Befragten die zugeordnete Stufe während des Assessments ni
 
 ### GR-009: Aufbewahrung laufender Antworten
 
-Die Antworten eines laufenden Assessments bleiben erhalten, bis es abgeschlossen wird oder 7 Tage seit der letzten Eingabe vergangen sind.
+Die Antworten eines laufenden Assessments bleiben erhalten, bis es abgeschlossen wird oder 7 Tage seit der letzten Eingabe vergangen sind. Danach wird das Assessment gelöscht und die Einladung ist eingelöst.

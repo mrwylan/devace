@@ -215,3 +215,13 @@ UC-002 setzt voraus, dass ein Starthinweis hinterlegt ist. Kein Use Case im Diag
 **Assumed:** Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
 
 Die Vision verlangt den Hinweis vor jedem Assessment. Bei der Wiederaufnahme läuft dasselbe Assessment weiter.
+
+## OQ-021: Verfällt eine Einladung, mit der noch kein Assessment gestartet wurde?
+
+**Element:** UC-002 GR-001
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nein. Nur eine Einladung, mit der ein Assessment gestartet wurde, ist eingelöst und nicht wiederverwendbar; eine nie gestartete Einladung läuft nicht ab.
+
+Die Antwort zum Review sagt, eine nicht eingelöste Einladung verfalle. Gemeint ist angenommen die Einladung eines gelöschten, nicht abgeschlossenen Assessments. Auf Einladungen, die nie geöffnet wurden, trifft das nicht zu.
