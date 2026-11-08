@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** E-Mail-System  
 **Ziel:** Die Teamleitung lädt Befragte ihrer MAG zu einem Assessment ein, ohne dass die Einladung eine Person erkennen lässt.  
 **Auslösendes Ereignis:** Die Teamleitung fordert Einladungen für Befragte ihrer MAG an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-001, FR-002, NFR-001, NFR-002, NFR-005, NFR-010](../requirements.md)  
 **Schichten:** UI

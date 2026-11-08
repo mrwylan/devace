@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Die Befragte beantwortet alle Fragen ihres Fragenkatalogs im Dialog, sodass jede Antwort einer Stufe zugeordnet ist.  
 **Auslösendes Ereignis:** Die Befragte ruft das Assessment über ihre Einladung auf.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-003, FR-004, FR-005, FR-006, NFR-001, NFR-004, NFR-006, NFR-010, C-001, C-005](../requirements.md)  
 **Schichten:** UI
