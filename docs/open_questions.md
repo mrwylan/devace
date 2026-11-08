@@ -238,3 +238,27 @@ Die Antwort zum Review sagt, eine nicht eingelöste Einladung verfalle. Gemeint 
 **Assumed:** Die Gültigkeit beginnt mit der Erstellung und endet nach Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr).
 
 Die Gültigkeitsdauer wird in ganzen Tagen angegeben; Beginn und Ende innerhalb eines Tages sind nicht festgelegt.
+
+## OQ-023: Wie meldet sich die Teamleitung an?
+
+**Element:** UC-001 Vorbedingung 1
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Answered
+
+UC-001 setzt voraus, dass die Teamleitung angemeldet ist (NFR-005). Keine Spezifikation legt das Verfahren fest, und der Benutzerbestand (BENUTZER) ist im Entity-Modell nur eine externe Systemgrenze.
+
+**Answer:** Formular-Anmeldung mit Benutzername und Passwort gegen einen Benutzerbestand des Systems. Zugangsdaten stehen nie im Repository.
+**Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-024: Wie sieht die Einladungs-E-Mail aus?
+
+**Element:** UC-001 GR-007
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Answered
+
+GR-007 sagt, die E-Mail enthalte nur die Einladung. Betreff, Text, Absender und die Form des Links sind nicht festgelegt.
+
+**Answer:** Kurztext mit Link: Betreff "Einladung zum devace-Assessment", ein Satz und ein Link zur Einladung. Absender und Basis-Adresse des Links kommen aus der Konfiguration.
+**Answered by:** Jakob Albrecht, 2026-11-08
