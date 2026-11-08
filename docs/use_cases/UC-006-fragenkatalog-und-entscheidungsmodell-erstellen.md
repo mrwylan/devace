@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Der Administrator erstellt für eine Rolle einen Entwurf des Fragenkatalogs mit dem Entscheidungsmodell jeder Frage, damit die Handlungsfelder gezielt und fair geprüft werden können.  
 **Auslösendes Ereignis:** Der Administrator fordert die Erstellung eines Fragenkatalogs für eine Rolle an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-012, FR-013, NFR-005, NFR-010, C-006](../requirements.md)  
 **Schichten:** UI
