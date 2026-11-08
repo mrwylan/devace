@@ -1,0 +1,145 @@
+# Open Questions
+
+Questions about the specification that the specification does not answer yet. A question is `Resolved` only when
+the answer is in the specification itself; **Resolved in** names where. Resolved and withdrawn questions stay as
+history.
+
+## OQ-001: Frist für die Löschung der Antworten nach dem Textreport?
+
+**Element:** NFR-003
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** 1 Stunde nach Erstellung des Textreports.
+
+Die Vision verlangt Löschung nach Erstellung des Textreports, nennt aber keine Frist.
+
+## OQ-002: Was geschieht mit Antworten eines abgebrochenen Assessments?
+
+**Element:** NFR-004
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Löschung 7 Tage nach der letzten Eingabe.
+
+Die Vision regelt nur den Abschluss. Ohne Regel bliebe Freitext unbegrenzt gespeichert.
+
+## OQ-003: Welche Rollen und welche Anmeldung berechtigen zum Zugriff auf die Auswertung?
+
+**Element:** NFR-005
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Alle drei Rollen melden sich an; Befragte nutzen nur die Einladung.
+
+Die Antwort der Teamleitung nennt Anmeldung nur für die Teamleitung. Für Schulungsverantwortliche und Administrator wurde dasselbe angenommen.
+
+## OQ-004: Sehen Schulungsverantwortliche die Radar-Charts aller MAGs?
+
+**Element:** FR-011
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Alle MAGs, nur Radar-Charts, keine Einladungen.
+
+Die Vision nennt ihren Nutzen (Bedarf priorisieren), aber nicht den Umfang ihrer Sicht.
+
+## OQ-005: Wie lange gilt eine Einladung, und wie oft kann sie genutzt werden?
+
+**Element:** FR-003
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Eine Einladung erlaubt genau ein Assessment; Gültigkeitsdauer nicht begrenzt; Wiederaufnahme vor Abschluss möglich.
+
+Die Antwort legt fest, dass die Einladung zu einer Befragten gehört. Gültigkeitsdauer und Wiederaufnahme eines abgebrochenen Assessments sind offen.
+
+## OQ-006: Gibt es einen Fragenkatalog je Rolle?
+
+**Element:** FR-012
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Je Rolle ein eigener Fragenkatalog.
+
+Die Vision verlangt getrennte Bewertung je Rolle; ob dafür getrennte Fragensätze nötig sind, ist offen.
+
+## OQ-007: Antwortzeiten und Last (10 s Dialog, 3 s Radar-Chart, 50 gleichzeitige Assessments)?
+
+**Element:** NFR-006
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** 10 s (95 %), 3 s (95 %), 50 gleichzeitige Assessments.
+
+Die Vision nennt keine Zahlen. Die Werte sind Vorschläge für den Pilot mit Lernenden.
+
+## OQ-008: Schwelle für die faire Bewertung?
+
+**Element:** NFR-009
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Mindestens 90 % der Testfälle ergeben die erwartete Stufe.
+
+Die Vision verlangt Testfälle, nennt aber keine Erfolgsquote.
+
+## OQ-009: Gilt WCAG 2.1 AA und ausschließlich Deutsch?
+
+**Element:** NFR-010
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Deutsch; WCAG 2.1 AA.
+
+Die Vision nennt weder Sprache noch Zugänglichkeitsstufe.
+
+## OQ-010: Welche Fassung der Firmenweisungen zum Umgang mit KI gilt?
+
+**Element:** C-001
+**Raised by:** /requirements, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Weisungen in der jeweils gültigen Fassung.
+
+Die Vision nennt die Weisungen ohne Dokument und Version, die Source-Spalte bleibt daher unvollständig.
+
+## OQ-011: Gehört die Rolle zur MAG?
+
+**Element:** Glossary: MAG
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** MAG besteht aus Scrum Team und Linienteam; die Rolle ist ein eigener Wert daneben.
+
+Das Glossar und die Vision §4 sagen, die MAG setze sich aus Scrum Team, Linienteam und Rolle zusammen. Gleichzeitig werden Radar-Charts "je MAG und Rolle" gebildet. Das Entity-Modell trennt MAG und ROLLE.
+
+## OQ-012: Wird die E-Mail-Adresse der Befragten gespeichert?
+
+**Element:** Entity: EINLADUNG
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Die Adresse wird nur zum Versand verwendet und nicht gespeichert.
+
+Die Teamleitung versendet die Einladung per E-Mail. Eine gespeicherte Adresse würde neben der Einladung einen Personenbezug schaffen.
+
+## OQ-013: Wann wird das Assessment selbst gelöscht?
+
+**Element:** Entity: ASSESSMENT
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** Das Assessment wird zusammen mit seinen Antworten und Bewertungen gelöscht; die Einladung bleibt mit Status Eingelöst.
+
+Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Zeitstempel könnte mit dem Score korreliert werden.
+
+## OQ-014: Maximale Länge einer Freitext-Antwort?
+
+**Element:** Entity: ANTWORT.text
+**Raised by:** /entity-model, 2026-11-07
+**Blocking:** No
+**Status:** Open
+**Assumed:** 500 Zeichen.
+
+Die Vision nennt keine Grenze.
