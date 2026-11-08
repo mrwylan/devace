@@ -7,7 +7,7 @@
 **Primärer Akteur:** Administrator  
 **Ziel:** Der Administrator hält MAGs und Rollen aktuell, damit Einladungen, Fragenkataloge und Radar-Charts der Organisation entsprechen.  
 **Auslösendes Ereignis:** Der Administrator fordert die Verwaltung von MAGs und Rollen an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-015, NFR-005, NFR-010](../requirements.md)  
 **Schichten:** UI
