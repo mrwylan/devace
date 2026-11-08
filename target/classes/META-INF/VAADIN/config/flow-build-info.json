@@ -1,0 +1,18 @@
+{
+  "productionMode" : false,
+  "eagerServerLoad" : false,
+  "npmFolder" : "/home/jakob/ws/devace",
+  "node.version" : "v24.22.1",
+  "node.download.root" : "https://nodejs.org/dist/",
+  "frontendFolder" : "/home/jakob/ws/devace/src/main/frontend",
+  "connect.javaSourceFolder" : "/home/jakob/ws/devace/src/main/java",
+  "javaResourceFolder" : "/home/jakob/ws/devace/src/main/resources",
+  "connect.applicationProperties" : "/home/jakob/ws/devace/src/main/resources/application.properties",
+  "connect.openApiFile" : "/home/jakob/ws/devace/target/generated-resources/openapi.json",
+  "project.frontend.generated" : "/home/jakob/ws/devace/src/main/frontend/generated",
+  "pnpm.enable" : false,
+  "bun.enable" : false,
+  "require.home.node" : false,
+  "build.folder" : "target",
+  "react.enable" : true
+}

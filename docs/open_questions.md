@@ -262,3 +262,23 @@ GR-007 sagt, die E-Mail enthalte nur die Einladung. Betreff, Text, Absender und 
 
 **Answer:** Kurztext mit Link: Betreff "Einladung zum devace-Assessment", ein Satz und ein Link zur Einladung. Absender und Basis-Adresse des Links kommen aus der Konfiguration.
 **Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-025: Wer legt Benutzerkonten an und weist ihnen die Rolle Teamleitung, Schulungsverantwortliche oder Administrator zu?
+
+**Element:** UC-008 GR-004
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Die Verwaltung der Benutzerkonten liegt außerhalb von UC-008; UC-008 wählt die Teamleitung aus vorhandenen Teamleitungen. Hand-off an /requirements für eine Anforderung und an /use-case-diagram für einen Use Case.
+
+Die Anmeldung (OQ-023) setzt Benutzerkonten voraus. Keine Anforderung und kein Use Case legt sie an oder ändert sie.
+
+## OQ-026: Wird bei der Eindeutigkeit von MAG und Rolle die Schreibweise unterschieden?
+
+**Element:** UC-008 GR-002
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nein, Groß- und Kleinschreibung sowie umgebende Leerzeichen bleiben beim Vergleich unberücksichtigt.
+
+Ohne diese Regel entstünden "Entwicklung" und "entwicklung" als zwei Rollen mit getrennten Radar-Charts.
