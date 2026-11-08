@@ -195,3 +195,23 @@ Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
 **Assumed:** Der Administrator ordnet in UC-008 jeder MAG eine Teamleitung zu.
 
 UC-001 setzt voraus, dass der Teamleitung mindestens eine MAG zugeordnet ist (Entity MAG.teamleitung_id). FR-015 nennt die Zuordnung nicht.
+
+## OQ-019: Wer pflegt den Starthinweis, und in welchem Use Case?
+
+**Element:** FR-004
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Administrator pflegt den Starthinweis; ein Use Case dafür fehlt noch (Hand-off an /requirements und /use-case-diagram).
+
+UC-002 setzt voraus, dass ein Starthinweis hinterlegt ist. Kein Use Case im Diagramm pflegt ihn (Text, KI-Modelle, Version).
+
+## OQ-020: Wird der Starthinweis bei der Wiederaufnahme erneut gezeigt?
+
+**Element:** UC-002 A2
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
+
+Die Vision verlangt den Hinweis vor jedem Assessment. Bei der Wiederaufnahme läuft dasselbe Assessment weiter.
