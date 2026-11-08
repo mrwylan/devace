@@ -10,7 +10,7 @@ Quelle: `docs/vision.md` (Entwurf 0.7). Pro Konzept gilt genau ein Begriff. Spal
 | Teamleitung | Person, die Einladungen für die Befragten ihrer MAG erstellt und die Radar-Charts auswertet. | Führungskraft |
 | Schulungsverantwortliche | Person, die anhand der Radar-Charts den Schulungsbedarf priorisiert. | Trainer |
 | Administrator | Person, die Fragenkatalog, Entscheidungsmodell sowie MAGs und Rollen pflegt. | Admin |
-| MAG | Mitarbeitergruppe. Setzt sich aus Scrum Team, Linienteam und Rolle zusammen. | |
+| MAG | Mitarbeitergruppe. Setzt sich aus Scrum Team und Linienteam zusammen; die Rolle ist ein eigener Wert daneben. | |
 | Rolle | Aufgabe einer Befragten im Team, zum Beispiel Entwicklung, Test, Scrum Master oder DevEx. Die Bewertung erfolgt getrennt je Rolle. | |
 | Handlungsfeld | Eine der sechs Kompetenzdimensionen, die ein Assessment bewertet: Domänenwissen & Business Alignment, Architektur & Engineering, Qualität & Testing, Security & DevSecOps, Methodik & Agile Delivery, Future Skills & AI. | Kompetenzdimension, Dimension |
 | Kompetenzmatrix | Die bestehende, detaillierte Matrix der Teams mit über 150 Spalten. Sie bleibt die fachliche Quelle und wird von devace nicht gepflegt. | |

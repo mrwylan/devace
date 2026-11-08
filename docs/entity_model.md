@@ -2,7 +2,7 @@
 
 BENUTZER (id) ist die Anmeldeidentität von Teamleitung, Schulungsverantwortlichen und Administratoren und ist eine externe Systemgrenze.
 
-Quelle: `docs/requirements.md`, Begriffe: `docs/glossary.md`. Der Entwurf trennt MAG (Scrum Team, Linienteam) und ROLLE; Scores und Einladungen verweisen auf beide.
+Quelle: `docs/requirements.md`, Begriffe: `docs/glossary.md`. MAG (Scrum Team, Linienteam) und ROLLE sind getrennt; Scores und Einladungen verweisen auf beide.
 
 ## Entity Relationship Diagram
 

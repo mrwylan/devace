@@ -49,10 +49,13 @@ Die Vision nennt ihren Nutzen (Bedarf priorisieren), aber nicht den Umfang ihrer
 **Element:** FR-003
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** Eine Einladung erlaubt genau ein Assessment; Gültigkeitsdauer nicht begrenzt; Wiederaufnahme vor Abschluss möglich.
+**Status:** Resolved
 
 Die Antwort legt fest, dass die Einladung zu einer Befragten gehört. Gültigkeitsdauer und Wiederaufnahme eines abgebrochenen Assessments sind offen.
+
+**Answer:** Unbegrenzt, mit Wiederaufnahme: Eine Einladung erlaubt genau ein Assessment ohne Ablauf; vor dem Abschluss kann die Befragte weitermachen, solange ihre Antworten nicht nach NFR-004 gelöscht wurden.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** FR-003
 
 ## OQ-006: Gibt es einen Fragenkatalog je Rolle?
 
@@ -109,30 +112,39 @@ Die Vision nennt die Weisungen ohne Dokument und Version, die Source-Spalte blei
 **Element:** Glossary: MAG
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** MAG besteht aus Scrum Team und Linienteam; die Rolle ist ein eigener Wert daneben.
+**Status:** Resolved
 
 Das Glossar und die Vision §4 sagen, die MAG setze sich aus Scrum Team, Linienteam und Rolle zusammen. Gleichzeitig werden Radar-Charts "je MAG und Rolle" gebildet. Das Entity-Modell trennt MAG und ROLLE.
+
+**Answer:** Rolle getrennt: MAG besteht aus Scrum Team und Linienteam; die Rolle ist ein eigener Wert daneben.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Glossary: MAG, Entity: MAG, Entity: ROLLE
 
 ## OQ-012: Wird die E-Mail-Adresse der Befragten gespeichert?
 
 **Element:** Entity: EINLADUNG
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** Die Adresse wird nur zum Versand verwendet und nicht gespeichert.
+**Status:** Resolved
 
 Die Teamleitung versendet die Einladung per E-Mail. Eine gespeicherte Adresse würde neben der Einladung einen Personenbezug schaffen.
+
+**Answer:** Nicht speichern: Die E-Mail-Adresse wird nur zum Versand verwendet.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Entity: EINLADUNG, FR-002
 
 ## OQ-013: Wann wird das Assessment selbst gelöscht?
 
 **Element:** Entity: ASSESSMENT
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Open
-**Assumed:** Das Assessment wird zusammen mit seinen Antworten und Bewertungen gelöscht; die Einladung bleibt mit Status Eingelöst.
+**Status:** Resolved
 
 Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Zeitstempel könnte mit dem Score korreliert werden.
+
+**Answer:** Mit den Antworten löschen: Assessment, Antworten und Bewertungen werden gemeinsam gelöscht; die Einladung bleibt mit Status Eingelöst.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Entity: ASSESSMENT, FR-009
 
 ## OQ-014: Maximale Länge einer Freitext-Antwort?
 
