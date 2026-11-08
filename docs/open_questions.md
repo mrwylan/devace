@@ -185,3 +185,13 @@ Da Adressen nicht gespeichert werden, lassen sich Doppelungen nur innerhalb eine
 **Assumed:** Keine Obergrenze.
 
 Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
+
+## OQ-018: Wie wird eine Teamleitung einer MAG zugeordnet?
+
+**Element:** FR-015
+**Raised by:** /spec-review UC-001 (angenommen von /use-case-spec), 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Administrator ordnet in UC-008 jeder MAG eine Teamleitung zu.
+
+UC-001 setzt voraus, dass der Teamleitung mindestens eine MAG zugeordnet ist (Entity MAG.teamleitung_id). FR-015 nennt die Zuordnung nicht.

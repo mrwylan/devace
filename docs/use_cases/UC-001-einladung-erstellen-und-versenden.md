@@ -7,7 +7,7 @@
 **Primärer Akteur:** Teamleitung  
 **Sekundäre Akteure:** E-Mail-System  
 **Ziel:** Die Teamleitung lädt Befragte ihrer MAG zu einem Assessment ein, ohne dass die Einladung eine Person erkennen lässt.  
-**Auslösendes Ereignis:** Die Teamleitung möchte Befragte ihrer MAG zu einem Assessment einladen.  
+**Auslösendes Ereignis:** Die Teamleitung fordert Einladungen für Befragte ihrer MAG an.  
 **Status:** Entwurf  
 
 **Anforderungen:** [FR-001, FR-002, NFR-001, NFR-002, NFR-005, NFR-010](../requirements.md)  
@@ -84,7 +84,7 @@
 
 ### GR-001: Anonyme Referenz
 
-Die Referenz einer Einladung ist eindeutig und enthält weder Namen noch E-Mail-Adresse einer Person. Sie lässt sich nicht aus ihnen ableiten.
+Die Referenz einer Einladung ist eindeutig und wird zufällig vergeben. Sie enthält keine Zeichenfolge aus dem Namen oder der E-Mail-Adresse einer Person.
 
 ### GR-002: Nur eigene MAGs
 
@@ -102,6 +102,10 @@ Das System verwendet die E-Mail-Adresse nur für den Versand der Einladung. Es s
 
 Führt die Teamleitung dieselbe Adresse mehrfach auf, erhält sie eine einzige Einladung.
 
-### GR-006: Einladung ohne Ablauf
+### GR-006: Gültige E-Mail-Adresse
 
-Eine Einladung berechtigt zu genau einem Assessment und läuft nicht ab.
+Eine Adresse ist gültig, wenn sie aus einem lokalen Teil, dem Zeichen @ und einem Domänenteil besteht und keine Leerzeichen enthält. Eine leere Angabe enthält keine Adresse.
+
+### GR-007: Inhalt der E-Mail
+
+Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt.
