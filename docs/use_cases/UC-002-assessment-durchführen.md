@@ -32,12 +32,12 @@
 
 ## Alternativabläufe
 
-### A1: Einladung unbekannt oder bereits eingelöst
+### A1: Einladung unbekannt, eingelöst oder abgelaufen
 
-**Auslöser:** Die Einladung ist unbekannt oder bereits eingelöst, ohne dass ein laufendes Assessment besteht (Schritt 1)  
+**Auslöser:** Die Einladung ist unbekannt, bereits eingelöst oder abgelaufen, ohne dass ein laufendes Assessment besteht (Schritt 1)  
 **Ablauf:**
 
-1. Das System weist die Befragte darauf hin, dass die Einladung bereits eingelöst wurde.
+1. Das System weist die Befragte darauf hin, dass die Einladung bereits eingelöst wurde oder abgelaufen ist.
 2. Der Use Case endet.
 
 ### A2: Laufendes Assessment wiederaufnehmen
@@ -99,7 +99,7 @@
 
 ### GR-001: Einladung gilt für ein Assessment
 
-Eine Einladung berechtigt zu genau einem Assessment. Sie gilt ab dem Start des Assessments als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach GR-009 gelöscht wurde. Eine Einladung, mit der noch kein Assessment gestartet wurde, läuft nicht ab.
+Eine Einladung berechtigt zu genau einem Assessment. Das Assessment muss innerhalb der Gültigkeitsdauer der Einladung gestartet werden, danach ist die Einladung abgelaufen. Mit dem Start gilt sie als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach GR-009 gelöscht wurde. Ein gestartetes Assessment läuft nach Ablauf der Gültigkeitsdauer weiter.
 
 ### GR-002: Starthinweis vor dem Start
 
