@@ -26,6 +26,9 @@ public class MainLayout extends AppLayout {
 		SideNav navigation = new SideNav();
 		navigation.addItem(new SideNavItem("MAGs und Rollen", MagsUndRollenView.class, VaadinIcon.GROUP.create()));
 
+		navigation.addItem(new SideNavItem("Fragenkatalog erstellen", FragenkatalogUndEntscheidungsmodellErstellenView.class,
+				VaadinIcon.LIST_OL.create()));
+
 		addToNavbar(new DrawerToggle(), title, abmelden);
 		addToDrawer(navigation);
 	}

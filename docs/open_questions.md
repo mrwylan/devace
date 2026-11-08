@@ -338,3 +338,25 @@ Das Entity-Modell nennt BENUTZER nur als externe Systemgrenze mit der Spalte id.
 
 **Answer:** Tabelle benutzer mit id, benutzername (eindeutig), passwort_hash und berechtigung (Teamleitung, Schulungsverantwortliche, Administrator). Der erste Administrator entsteht beim Start aus den Umgebungsvariablen DEVACE_ADMIN_USERNAME und DEVACE_ADMIN_PASSWORD, wenn es noch keinen Administrator gibt; das Passwort wird gehasht gespeichert und nie ins Repository geschrieben.
 **Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-033: Welchen Wortlaut haben die Hinweise und Bestätigungen beim Erstellen des Fragenkatalogs?
+
+**Element:** UC-006 A2, A3, A4, A6, Schritt 12
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Answered
+
+A2, A3, A4 und A6 sprechen von Hinweisen, Schritt 12 von einer Bestätigung, nennen aber keinen Wortlaut.
+
+**Answer:** A2: "Das KI-Modell hat keinen Entwurf geliefert."; A3: "Die Zahl muss zwischen 1 und 10 liegen." und "Höchstens 2000 Zeichen."; A4: "Wortlaut fehlt.", "Vorgabe fehlt." und "Höchstens 500 Zeichen."; A6: "Jedes Handlungsfeld hat bereits mindestens N Fragen." mit den Auswahlmöglichkeiten "Abbrechen" und "Weitere Fragen ergänzen"; Bestätigung: "Entwurf gespeichert."
+**Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-034: Wie werden die KI-Modelle je Aufgabe gewählt?
+
+**Element:** UC-006 Schritt 6 (Sekundärer Akteur KI-Modell)
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Das Modell je Aufgabe (Fragenkatalog erstellen, Antworten bewerten, Textreport) wird in der Konfiguration festgelegt und ist ohne Neubau über Umgebungsvariablen änderbar. Für UC-006 gilt nur die Aufgabe Fragenkatalog erstellen.
+
+Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein besseres Modell zum Erstellen der Fragen samt Bewertungs-Prompt, ein günstigeres für die Durchführung und Bewertung eines Assessments, ein kleineres für den Textreport. Ob die Wahl später in der Oberfläche (zur Laufzeit) erfolgen soll, ist offen und gehört in eine eigene Anforderung.
