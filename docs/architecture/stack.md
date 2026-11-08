@@ -14,12 +14,12 @@ Die Technologien folgen `CLAUDE.md` §1 (verbindlicher Stack). Die Spalten Skill
 | Layer       | Technology                                   | Skill | Test skill | Location                                  |
 |-------------|----------------------------------------------|-------|------------|-------------------------------------------|
 | Migration   | Flyway, PostgreSQL                           | –     | –          | `src/main/resources/db/migration`         |
-| Persistence | jOOQ (generated from the migrated schema)    | –     | –          | `net.devace.persistence`                  |
-| Client      | Spring AI via OpenRouter; e-mail dispatch    | –     | –          | `net.devace.client`                       |
-| Service     | Spring Boot services                         | –     | –          | `net.devace.service`                      |
+| Persistence | jOOQ (generated from the migrated schema)    | –     | –          | `info.wylan.devace.persistence`                  |
+| Client      | Spring AI via OpenRouter; e-mail dispatch    | –     | –          | `info.wylan.devace.client`                       |
+| Service     | Spring Boot services                         | –     | –          | `info.wylan.devace.service`                      |
 | API         | –                                            | –     | –          | –                                         |
-| UI          | Vaadin 25 Flow                               | –     | –          | `net.devace.ui`                           |
-| E2E         | Playwright                                   | –     | –          | `src/test/java/net/devace/e2e`            |
+| UI          | Vaadin 25 Flow                               | –     | –          | `info.wylan.devace.ui`                           |
+| E2E         | Playwright                                   | –     | –          | `src/test/java/info/wylan/devace/e2e`            |
 
 **Integration layer:**
 
@@ -45,8 +45,8 @@ alone, and a use case is tested in its integration layer. A project without an E
 
 | System        | Contract | Location            |
 |---------------|----------|---------------------|
-| KI-Modell     | –        | `net.devace.client` |
-| E-Mail-System | –        | `net.devace.client` |
+| KI-Modell     | –        | `info.wylan.devace.client` |
+| E-Mail-System | –        | `info.wylan.devace.client` |
 
 The systems our system calls, by the name the use cases write on their `**Secondary Actors:**` line: the Client
 layer builds an adapter for each one from its contract (OpenAPI or AsyncAPI; `–` while there is none). A secondary
@@ -54,7 +54,7 @@ actor without a row is a person or a role. Without a Client layer the section is
 
 ## Module layout
 
-Flat single-module Maven project (`./mvnw`), root package `net.devace`, one sub-package per layer: `ui`, `service`, `persistence`, `client`. Tests live under `src/test/java/net/devace`, E2E tests under `net.devace.e2e`.
+Flat single-module Maven project (`./mvnw`), Maven coordinates `info.wylan:devace` (groupId:artifactId), root package `info.wylan.devace`, one sub-package per layer: `ui`, `service`, `persistence`, `client`. Tests live under `src/test/java/info/wylan/devace`, E2E tests under `info.wylan.devace.e2e`.
 
 ## Commands
 
