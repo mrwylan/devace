@@ -195,3 +195,46 @@ Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
 **Assumed:** Der Administrator ordnet in UC-008 jeder MAG eine Teamleitung zu.
 
 UC-001 setzt voraus, dass der Teamleitung mindestens eine MAG zugeordnet ist (Entity MAG.teamleitung_id). FR-015 nennt die Zuordnung nicht.
+
+## OQ-019: Wer pflegt den Starthinweis, und in welchem Use Case?
+
+**Element:** FR-004
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Administrator pflegt den Starthinweis; ein Use Case dafür fehlt noch (Hand-off an /requirements und /use-case-diagram).
+
+UC-002 setzt voraus, dass ein Starthinweis hinterlegt ist. Kein Use Case im Diagramm pflegt ihn (Text, KI-Modelle, Version).
+
+## OQ-020: Wird der Starthinweis bei der Wiederaufnahme erneut gezeigt?
+
+**Element:** UC-002 A2
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
+
+Die Vision verlangt den Hinweis vor jedem Assessment. Bei der Wiederaufnahme läuft dasselbe Assessment weiter.
+
+## OQ-021: Verfällt eine Einladung, mit der noch kein Assessment gestartet wurde?
+
+**Element:** UC-002 GR-001
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Resolved
+
+Die Antwort zum Review sagt, eine nicht eingelöste Einladung verfalle. Gemeint ist angenommen die Einladung eines gelöschten, nicht abgeschlossenen Assessments. Auf Einladungen, die nie geöffnet wurden, trifft das nicht zu.
+
+**Answer:** Die Teamleitung legt beim Erstellen eine Gültigkeitsdauer von 1 bis 30 Tagen fest (Vorschlag 30). Danach ist die Einladung abgelaufen; ein gestartetes Assessment läuft weiter. Eine Einladung eines gelöschten Assessments ist eingelöst und nicht wiederverwendbar.
+**Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** UC-001 GR-008, UC-002 GR-001
+
+## OQ-022: Wann endet die Gültigkeit einer Einladung genau?
+
+**Element:** UC-001 GR-008
+**Raised by:** /use-case-spec, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Die Gültigkeit beginnt mit der Erstellung und endet nach Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr).
+
+Die Gültigkeitsdauer wird in ganzen Tagen angegeben; Beginn und Ende innerhalb eines Tages sind nicht festgelegt.

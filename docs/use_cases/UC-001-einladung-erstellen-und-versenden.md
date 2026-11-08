@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** E-Mail-System  
 **Ziel:** Die Teamleitung lädt Befragte ihrer MAG zu einem Assessment ein, ohne dass die Einladung eine Person erkennen lässt.  
 **Auslösendes Ereignis:** Die Teamleitung fordert Einladungen für Befragte ihrer MAG an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-001, FR-002, NFR-001, NFR-002, NFR-005, NFR-010](../requirements.md)  
 **Schichten:** UI
@@ -24,21 +24,21 @@
 1. Die Teamleitung öffnet die Erstellung von Einladungen.
 2. Das System zeigt die MAGs der Teamleitung und die Rollen mit freigegebenem Fragenkatalog zur Auswahl an.
 3. Die Teamleitung wählt eine MAG und eine Rolle.
-4. Die Teamleitung gibt die E-Mail-Adressen der Befragten an.
+4. Die Teamleitung gibt die E-Mail-Adressen der Befragten und die Gültigkeitsdauer der Einladungen an.
 5. Die Teamleitung bestätigt die Erstellung.
-6. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz, die der gewählten MAG und Rolle zugeordnet ist.
+6. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz und der angegebenen Gültigkeitsdauer, die der gewählten MAG und Rolle zugeordnet ist.
 7. Das System versendet jede Einladung per E-Mail-System an die zugehörige Adresse.
 8. Das System zeigt der Teamleitung die Anzahl der versendeten Einladungen und die Adressen, bei denen der Versand scheiterte.
 
 ## Alternativabläufe
 
-### A1: Adressen fehlen oder sind ungültig
+### A1: Angaben fehlen oder sind ungültig
 
-**Auslöser:** Die Angabe enthält keine Adresse oder mindestens eine ungültige Adresse (Schritt 5)  
+**Auslöser:** Die Angabe enthält keine Adresse, mindestens eine ungültige Adresse oder eine ungültige Gültigkeitsdauer (Schritt 5)  
 **Ablauf:**
 
-1. Das System weist auf die fehlenden oder ungültigen Adressen hin.
-2. Die Teamleitung korrigiert die Adressen.
+1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
+2. Die Teamleitung korrigiert die Angaben.
 3. Der Use Case wird bei Schritt 4 fortgesetzt.
 
 ### A2: Keine Rolle mit freigegebenem Fragenkatalog
@@ -70,7 +70,7 @@
 
 ### Erfolgsfall
 
-- Für jede Adresse, deren Versand gelang, existiert eine Einladung mit eindeutiger Referenz, der gewählten MAG und Rolle sowie dem Status Versendet.
+- Für jede Adresse, deren Versand gelang, existiert eine Einladung mit eindeutiger Referenz, der angegebenen Gültigkeitsdauer, der gewählten MAG und Rolle sowie dem Status Versendet.
 - Jede Befragte hat eine E-Mail mit ihrer Einladung erhalten.
 - Keine E-Mail-Adresse ist gespeichert.
 
@@ -109,3 +109,7 @@ Eine Adresse ist gültig, wenn sie aus einem lokalen Teil, dem Zeichen @ und ein
 ### GR-007: Inhalt der E-Mail
 
 Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt.
+
+### GR-008: Gültigkeitsdauer
+
+Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung.

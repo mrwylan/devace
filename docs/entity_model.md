@@ -187,7 +187,7 @@ Score eines Handlungsfelds aus einem abgeschlossenen Assessment, fünf Jahre auf
 
 ### EINLADUNG
 
-Eindeutige Referenz einer Teamleitung für eine Befragte, die einer MAG und Rolle zugeordnet ist und zu genau einem Assessment berechtigt; die E-Mail-Adresse wird nicht gespeichert.
+Eindeutige Referenz einer Teamleitung für eine Befragte, die einer MAG und Rolle zugeordnet ist, 1 bis 30 Tage gilt und zu genau einem Assessment berechtigt; die E-Mail-Adresse wird nicht gespeichert.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
@@ -198,6 +198,7 @@ Eindeutige Referenz einer Teamleitung für eine Befragte, die einer MAG und Roll
 | erstellt_von_id | Teamleitung, die die Einladung erstellt hat | Long | 19 | Not Null, Foreign Key (BENUTZER.id) |
 | status | Stand der Einladung | String | 20 | Not Null, Values: Erstellt, Versendet, Eingelöst |
 | erstellt_am | Zeitpunkt der Erstellung | DateTime | - | Not Null |
+| gueltigkeit_tage | Gültigkeitsdauer in Tagen ab Erstellung | Integer | 10 | Not Null, Min: 1, Max: 30 |
 
 ### STARTHINWEIS
 

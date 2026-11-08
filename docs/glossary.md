@@ -22,6 +22,6 @@ Quelle: `docs/vision.md` (Entwurf 0.7). Pro Konzept gilt genau ein Begriff. Spal
 | Score | Ergebnis eines Handlungsfelds: Summe der Stufen aller Fragen dieses Handlungsfelds geteilt durch deren Anzahl, also ein Wert zwischen 0 und 5. | Punktzahl, Punkte |
 | Radar-Chart | Darstellung der Scores aller Handlungsfelder je MAG und Rolle als Netzdiagramm. | Spinnendiagramm |
 | Textreport | Textdokument zum Abschluss eines Assessments. Die Befragte erhält es einmalig zum Download und verwaltet es selbst. | Bericht |
-| Einladung | Eindeutige Referenz, die eine Teamleitung für eine Befragte erstellt, einer MAG und Rolle zuordnet und per E-Mail verschickt. Sie berechtigt zu genau einem Assessment. | Token |
+| Einladung | Eindeutige Referenz, die eine Teamleitung für eine Befragte erstellt, einer MAG und Rolle zuordnet und per E-Mail verschickt. Sie gilt 1 bis 30 Tage und berechtigt in dieser Zeit zu genau einem Assessment. | Token |
 | Starthinweis | Information, die jede Befragte vor dem Assessment erhält: eingesetzte KI-Modelle, nicht zu erfassende Angaben und Geltung der Firmenweisungen zum Umgang mit KI. | |
 | Testfall | Vorgegebene Antwort mit erwarteter Stufe, mit dem die KI-Bewertung abgesichert wird. | |
