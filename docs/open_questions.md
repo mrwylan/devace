@@ -399,9 +399,46 @@ Die Mockups zeigen andere Hinweistexte als OQ-030 (UC-008) und OQ-033 (UC-006) f
 **Element:** UC-006 GR-009; UC-008 GR-007; UC-001 GR-009
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Withdrawn
 
 Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". Die Regeln GR-009 und GR-007 lassen nur Administratoren zu.
+
+**Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
+**Answered by:** Jakob Albrecht, 2026-11-10
+**Withdrawn:** Das Element nannte drei Regeln statt einer. Ersetzt durch OQ-038 (UC-006 GR-009), OQ-039 (UC-008 GR-007) und OQ-040 (UC-001 GR-009) mit derselben Antwort.
+
+## OQ-038: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
+
+**Element:** UC-006 GR-009
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
+
+**Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-039: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
+
+**Element:** UC-008 GR-007
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-007 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
+
+**Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-040: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
+
+**Element:** UC-001 GR-009
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
