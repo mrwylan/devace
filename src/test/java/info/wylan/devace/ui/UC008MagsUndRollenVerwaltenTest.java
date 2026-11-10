@@ -80,7 +80,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG anlegen", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG anlegen", businessRules = { "BR-004" })
 	void mag_mit_teamleitung_anlegen() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -99,7 +99,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG ohne Teamleitung anlegen", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG ohne Teamleitung anlegen", businessRules = { "BR-004" })
 	void mag_ohne_teamleitung_ist_zulaessig() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -132,7 +132,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG ändern", businessRules = { "GR-006" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG ändern", businessRules = { "BR-006" })
 	void mag_aendern_behaelt_die_identitaet() {
 		navigate(MagsUndRollenView.class);
 		legeMagAn(PRAEFIX + " Eps", PRAEFIX + " Mitte");
@@ -154,7 +154,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "Steps 3-8: Rolle ändern", businessRules = { "GR-006" })
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: Rolle ändern", businessRules = { "BR-006" })
 	void rolle_aendern_laesst_fragenkatalog_zugeordnet() {
 		navigate(MagsUndRollenView.class);
 
@@ -180,7 +180,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	// ---------------------------------------------------------------- A1
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "GR-001" })
+	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "BR-001" })
 	void mag_ohne_scrum_team_wird_abgewiesen() {
 		navigate(MagsUndRollenView.class);
 		long vorher = anzahl("mag");
@@ -196,7 +196,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "GR-001" })
+	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "BR-001" })
 	void angabe_nur_aus_leerzeichen_gilt_als_fehlend() {
 		navigate(MagsUndRollenView.class);
 		long vorher = anzahl("rolle");
@@ -210,7 +210,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "GR-001" })
+	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "BR-001" })
 	void mag_angaben_ueber_100_zeichen_werden_abgewiesen_100_sind_zulaessig() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -235,7 +235,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "GR-001" })
+	@UseCase(id = "UC-008", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "BR-001" })
 	void rollenname_ueber_50_zeichen_wird_abgewiesen_50_sind_zulaessig() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("rolle-anlegen").single()).click();
@@ -258,7 +258,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	// ---------------------------------------------------------------- A2
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "GR-002" })
+	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "BR-002" })
 	void doppelte_mag_ohne_beachtung_von_gross_kleinschreibung_und_leerzeichen_wird_abgewiesen() {
 		navigate(MagsUndRollenView.class);
 		long vorher = anzahl("mag");
@@ -275,7 +275,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "GR-002" })
+	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "BR-002" })
 	void gleiches_scrum_team_mit_anderem_linienteam_ist_eine_andere_mag_und_nach_korrektur_wird_gespeichert() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("mag-anlegen").single()).click();
@@ -295,7 +295,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "GR-002" })
+	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "BR-002" })
 	void mag_aendern_auf_vorhandene_kombination_wird_abgewiesen() {
 		navigate(MagsUndRollenView.class);
 		legeMagAn(PRAEFIX + " Zeta", PRAEFIX + " Mitte");
@@ -313,7 +313,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "GR-003" })
+	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "BR-003" })
 	void doppelte_rolle_ohne_beachtung_von_gross_kleinschreibung_und_leerzeichen_wird_abgewiesen() {
 		navigate(MagsUndRollenView.class);
 		long vorher = anzahl("rolle");
@@ -328,7 +328,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "GR-003" })
+	@UseCase(id = "UC-008", scenario = "A2: MAG oder Rolle besteht bereits", businessRules = { "BR-003" })
 	void rolle_aendern_auf_vorhandenen_namen_wird_abgewiesen() {
 		navigate(MagsUndRollenView.class);
 		test(rolleAendernButton("UC008 Umbenennbar")).click();
@@ -366,7 +366,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	// ---------------------------------------------------------------- Regeln und Nachbedingungen
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-005" })
+	@UseCase(id = "UC-008", businessRules = { "BR-005" })
 	void die_ansicht_bietet_kein_loeschen_an() {
 		navigate(MagsUndRollenView.class);
 
@@ -375,7 +375,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-002", "GR-003" })
+	@UseCase(id = "UC-008", businessRules = { "BR-002", "BR-003" })
 	void bestehende_eintraege_bleiben_nach_abgewiesenem_speichern_unveraendert() {
 		navigate(MagsUndRollenView.class);
 		test(find(Button.class).withId("rolle-anlegen").single()).click();
@@ -389,11 +389,11 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 			.single()).isEqualTo("UC008 Alpha/UC008 Nord");
 	}
 
-	// ---------------------------------------------------------------- GR-007 / NFR-005
+	// ---------------------------------------------------------------- BR-007 / NFR-005
 
 	@Test
 	@WithAnonymousUser
-	@UseCase(id = "UC-008", businessRules = { "GR-007" }, requirements = { "NFR-005" })
+	@UseCase(id = "UC-008", businessRules = { "BR-007" }, requirements = { "NFR-005" })
 	void aufruf_ohne_anmeldung_wird_abgewiesen() {
 		UI.getCurrent().navigate("mags-und-rollen");
 
@@ -402,7 +402,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 
 	@Test
 	@WithMockUser(roles = "TEAMLEITUNG")
-	@UseCase(id = "UC-008", businessRules = { "GR-007" }, requirements = { "NFR-005" })
+	@UseCase(id = "UC-008", businessRules = { "BR-007" }, requirements = { "NFR-005" })
 	void aufruf_ohne_passende_berechtigung_wird_abgewiesen() {
 		UI.getCurrent().navigate("mags-und-rollen");
 
@@ -410,7 +410,7 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-007" }, requirements = { "NFR-005" })
+	@UseCase(id = "UC-008", businessRules = { "BR-007" }, requirements = { "NFR-005" })
 	void administrator_erreicht_dieselbe_route() {
 		UI.getCurrent().navigate("mags-und-rollen");
 

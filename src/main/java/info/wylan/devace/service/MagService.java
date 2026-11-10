@@ -17,12 +17,12 @@ import org.springframework.validation.annotation.Validated;
 /**
  * Verwaltung der MAGs (UC-008).
  */
-// UC-008 GR-007: Nur der angemeldete Administrator verwaltet MAGs.
+// UC-008 BR-007: Nur der angemeldete Administrator verwaltet MAGs.
 @PreAuthorize("hasRole('ADMINISTRATOR')")
 @Service
 @Validated
 @Transactional(readOnly = true)
-// UC-008 GR-005: MAGs werden nur angelegt und geändert, nie gelöscht; der Service bietet kein Löschen.
+// UC-008 BR-005: MAGs werden nur angelegt und geändert, nie gelöscht; der Service bietet kein Löschen.
 public class MagService {
 
 	private final MagRepository magRepository;
@@ -69,7 +69,7 @@ public class MagService {
 	 * zugeordnet.
 	 */
 	@Transactional
-	// UC-008 GR-006: Die Änderung betrifft nur die Angaben der MAG; ihre id und damit ihre Zuordnungen bleiben.
+	// UC-008 BR-006: Die Änderung betrifft nur die Angaben der MAG; ihre id und damit ihre Zuordnungen bleiben.
 	public void aendern(long id, @Valid MagEingabe eingabe) {
 		if (!this.magRepository.existsById(id)) {
 			throw new MagNichtGefundenException();
@@ -84,11 +84,11 @@ public class MagService {
 	}
 
 	private void pruefe(MagEingabe eingabe, Long ausserId) {
-		// UC-008 GR-002: Scrum Team und Linienteam gehören zu höchstens einer MAG.
+		// UC-008 BR-002: Scrum Team und Linienteam gehören zu höchstens einer MAG.
 		if (this.magRepository.existsByScrumTeamAndLinienteam(eingabe.scrumTeam(), eingabe.linienteam(), ausserId)) {
 			throw new MagBereitsVorhandenException();
 		}
-		// UC-008 GR-004: Die Teamleitung ist eine vorhandene Teamleitung oder fehlt.
+		// UC-008 BR-004: Die Teamleitung ist eine vorhandene Teamleitung oder fehlt.
 		if (eingabe.teamleitungId() != null && !this.benutzerRepository.istTeamleitung(eingabe.teamleitungId())) {
 			throw new TeamleitungNichtVorhandenException();
 		}

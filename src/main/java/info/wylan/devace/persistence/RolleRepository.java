@@ -46,7 +46,7 @@ public class RolleRepository {
 	 * {@code ausserId} ausgenommen.
 	 */
 	public boolean existsByName(String name, Long ausserId) {
-		// UC-008 GR-003: Der Name gehört zu höchstens einer Rolle (ohne Schreibweise).
+		// UC-008 BR-003: Der Name gehört zu höchstens einer Rolle (ohne Schreibweise).
 		Condition condition = DSL.lower(ROLLE.NAME).eq(DSL.lower(DSL.val(name)));
 		if (ausserId != null) {
 			condition = condition.and(ROLLE.ID.ne(ausserId));

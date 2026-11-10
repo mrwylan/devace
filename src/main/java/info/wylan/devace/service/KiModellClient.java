@@ -17,7 +17,7 @@ public interface KiModellClient {
 	List<VorgeschlageneFrage> fragenEntwerfen(EntwurfAnfrage anfrage);
 
 	/**
-	 * UC-006 GR-007: nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen, nichts zu einer Person.
+	 * UC-006 BR-007: nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen, nichts zu einer Person.
 	 */
 	record EntwurfAnfrage(String rolle, List<HandlungsfeldAnfrage> handlungsfelder, @Nullable String schwerpunkte) {
 	}

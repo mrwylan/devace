@@ -27,7 +27,7 @@ import jakarta.annotation.security.RolesAllowed;
 @Route(value = "mags-und-rollen", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 @PageTitle("MAGs und Rollen verwalten")
-// UC-008 GR-007: Nur der angemeldete Administrator verwaltet MAGs und Rollen.
+// UC-008 BR-007: Nur der angemeldete Administrator verwaltet MAGs und Rollen.
 @RolesAllowed("ADMINISTRATOR")
 public class MagsUndRollenView extends VerticalLayout {
 
@@ -72,7 +72,7 @@ public class MagsUndRollenView extends VerticalLayout {
 		Button anlegen = new Button("MAG anlegen", (event) -> magDialog(null));
 		anlegen.addThemeVariants(ButtonVariant.PRIMARY);
 		anlegen.setId("mag-anlegen");
-		// UC-008 GR-004: Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.
+		// UC-008 BR-004: Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.
 		return karte("MAGs", "Mitarbeitergruppen aus Scrum Team und Linienteam", this.magGrid,
 				"Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.", anlegen, 3);
 	}
@@ -93,7 +93,7 @@ public class MagsUndRollenView extends VerticalLayout {
 		Button anlegen = new Button("Rolle anlegen", (event) -> rolleDialog(null));
 		anlegen.addThemeVariants(ButtonVariant.PRIMARY);
 		anlegen.setId("rolle-anlegen");
-		// UC-008 GR-005: Der Use Case legt MAGs und Rollen an und ändert sie, er löscht sie nicht.
+		// UC-008 BR-005: Der Use Case legt MAGs und Rollen an und ändert sie, er löscht sie nicht.
 		return karte("Rollen", "Die Bewertung erfolgt getrennt je Rolle", this.rolleGrid,
 				"MAGs und Rollen werden angelegt und geändert, aber nicht gelöscht.", anlegen, 2);
 	}

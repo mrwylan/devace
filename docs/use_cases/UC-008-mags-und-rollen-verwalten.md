@@ -71,30 +71,30 @@
 
 ## Geschäftsregeln
 
-### GR-001: Pflichtangaben und Länge
+### BR-001: Pflichtangaben und Länge
 
 Scrum Team und Linienteam einer MAG sind Pflichtangaben mit höchstens 100 Zeichen. Der Name einer Rolle ist eine Pflichtangabe mit höchstens 50 Zeichen. Eine Angabe, die nur aus Leerzeichen besteht, gilt als fehlend.
 
-### GR-002: Eindeutige MAG
+### BR-002: Eindeutige MAG
 
 Die Kombination aus Scrum Team und Linienteam gehört zu höchstens einer MAG. Beim Vergleich bleiben Groß- und Kleinschreibung sowie umgebende Leerzeichen unberücksichtigt.
 
-### GR-003: Eindeutige Rolle
+### BR-003: Eindeutige Rolle
 
 Der Name einer Rolle gehört zu höchstens einer Rolle. Beim Vergleich bleiben Groß- und Kleinschreibung sowie umgebende Leerzeichen unberücksichtigt.
 
-### GR-004: Teamleitung einer MAG
+### BR-004: Teamleitung einer MAG
 
 Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen Teamleitungen. Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.
 
-### GR-005: Anlegen und Ändern ohne Löschen
+### BR-005: Anlegen und Ändern ohne Löschen
 
 Der Use Case legt MAGs und Rollen an und ändert sie. Er löscht sie nicht.
 
-### GR-006: Änderung wirkt rückwirkend
+### BR-006: Änderung wirkt rückwirkend
 
 Ändert der Administrator Scrum Team, Linienteam oder Teamleitung einer MAG oder den Namen einer Rolle, bleiben bestehende Einladungen, Fragenkataloge und Scores der MAG bzw. Rolle zugeordnet und erscheinen mit den neuen Angaben.
 
-### GR-007: Nur für Administratoren
+### BR-007: Nur für Administratoren
 
 Nur der angemeldete Administrator verwaltet MAGs und Rollen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen.

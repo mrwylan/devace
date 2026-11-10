@@ -24,7 +24,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * Erstellung von Fragenkatalog und Entscheidungsmodell (UC-006).
  */
-// UC-006 GR-009: Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle.
+// UC-006 BR-009: Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle.
 @PreAuthorize("hasRole('ADMINISTRATOR')")
 @Service
 @Validated
@@ -70,12 +70,12 @@ public class FragenkatalogService {
 	 */
 	public Set<Ausgangspunkt> verfuegbareAusgangspunkte(long rolleId) {
 		pruefeRolle(rolleId);
-		// UC-006 GR-004: Besteht ein Entwurf, wird er fortgesetzt statt ein weiterer begonnen.
+		// UC-006 BR-004: Besteht ein Entwurf, wird er fortgesetzt statt ein weiterer begonnen.
 		if (this.katalogRepository.findEntwurf(rolleId).isPresent()) {
 			return EnumSet.of(Ausgangspunkt.VORHANDENER_ENTWURF);
 		}
 		Set<Ausgangspunkt> punkte = EnumSet.of(Ausgangspunkt.LEER);
-		// UC-006 GR-004: Die freigegebene Version steht nur zur Verfügung, wenn die Rolle eine hat.
+		// UC-006 BR-004: Die freigegebene Version steht nur zur Verfügung, wenn die Rolle eine hat.
 		if (this.katalogRepository.findFreigegeben(rolleId).isPresent()) {
 			punkte.add(Ausgangspunkt.FREIGEGEBENE_VERSION);
 		}
@@ -105,13 +105,13 @@ public class FragenkatalogService {
 		Map<Long, Integer> vorhanden = zaehleJeHandlungsfeld(aktuell);
 		List<KiModellClient.HandlungsfeldAnfrage> anfrage = new ArrayList<>();
 		for (Handlungsfeld feld : felder) {
-			// UC-006 GR-010: Je Handlungsfeld werden so viele Fragen ergänzt, bis die Zahl erreicht ist.
+			// UC-006 BR-010: Je Handlungsfeld werden so viele Fragen ergänzt, bis die Zahl erreicht ist.
 			int fehlend = angaben.anzahl() - vorhanden.getOrDefault(feld.id(), 0);
 			if (fehlend > 0) {
 				anfrage.add(new KiModellClient.HandlungsfeldAnfrage(feld.nummer(), feld.name(), feld.fokus(), fehlend));
 			}
 		}
-		// UC-006 GR-010: Hat jedes Handlungsfeld genug Fragen, wird das KI-Modell nicht gefragt.
+		// UC-006 BR-010: Hat jedes Handlungsfeld genug Fragen, wird das KI-Modell nicht gefragt.
 		if (anfrage.isEmpty()) {
 			return new KiErgebnis.GenuegendFragen(angaben.anzahl());
 		}
@@ -132,7 +132,7 @@ public class FragenkatalogService {
 	private KiErgebnis anfordern(long rolleId, List<KatalogFrage> aktuell, List<Handlungsfeld> felder,
 			List<KiModellClient.HandlungsfeldAnfrage> anfrage, KiAngaben angaben) {
 		String rolle = rolleName(rolleId);
-		// UC-006 GR-007: Die Anfrage enthält nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen.
+		// UC-006 BR-007: Die Anfrage enthält nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen.
 		KiModellClient.EntwurfAnfrage anfragen = new KiModellClient.EntwurfAnfrage(rolle, anfrage,
 				angaben.schwerpunkte());
 		List<KiModellClient.VorgeschlageneFrage> antwort;
@@ -147,7 +147,7 @@ public class FragenkatalogService {
 		Map<Integer, Integer> angefordert = new HashMap<>();
 		anfrage.forEach(a -> angefordert.put(a.nummer(), a.anzahl()));
 		Map<Integer, Integer> uebernommen = new HashMap<>();
-		// UC-006 GR-010: Der KI-Entwurf ändert und entfernt keine vorhandene Frage, er ergänzt nur.
+		// UC-006 BR-010: Der KI-Entwurf ändert und entfernt keine vorhandene Frage, er ergänzt nur.
 		List<KatalogFrage> ergebnis = new ArrayList<>(aktuell);
 		int neu = 0;
 		for (KiModellClient.VorgeschlageneFrage frage : antwort) {
@@ -156,7 +156,7 @@ public class FragenkatalogService {
 			if (feld == null || uebernommen.merge(feld.nummer(), 1, Integer::sum) > grenze) {
 				continue;
 			}
-			// UC-006 GR-011: Eine unvollständige Frage erscheint im Entwurf und wird vor dem Speichern ergänzt.
+			// UC-006 BR-011: Eine unvollständige Frage erscheint im Entwurf und wird vor dem Speichern ergänzt.
 			ergebnis.add(new KatalogFrage(feld.id(), frage.text(), frage.vorgaben()));
 			neu++;
 		}
@@ -172,13 +172,13 @@ public class FragenkatalogService {
 	 * bei unvollständigem oder ungültigem Entwurf.
 	 */
 	@Transactional
-	// UC-006 GR-005: Nur der Entwurf ändert sich; freigegebene und archivierte Kataloge bleiben unverändert.
+	// UC-006 BR-005: Nur der Entwurf ändert sich; freigegebene und archivierte Kataloge bleiben unverändert.
 	public void speichern(long rolleId, List<KatalogFrage> entwurf) {
 		pruefeRolle(rolleId);
 		pruefeEntwurf(entwurf);
 		Map<Long, Integer> reihenfolge = new HashMap<>();
 		this.handlungsfelder().forEach(f -> reihenfolge.put(f.id(), f.nummer()));
-		// UC-006 GR-002: Die Position ist eindeutig; die Fragen stehen nach Handlungsfeld geordnet.
+		// UC-006 BR-002: Die Position ist eindeutig; die Fragen stehen nach Handlungsfeld geordnet.
 		List<KatalogFrage> geordnet = entwurf.stream()
 			.sorted(Comparator.comparingInt(f -> reihenfolge.getOrDefault(f.handlungsfeldId(), Integer.MAX_VALUE)))
 			.map(f -> new KatalogFrage(f.handlungsfeldId(), f.text().strip(),
@@ -186,7 +186,7 @@ public class FragenkatalogService {
 			.toList();
 		long katalogId = this.katalogRepository.findEntwurf(rolleId)
 			.map(k -> k.id())
-			// UC-006 GR-004: Ein neuer Katalog erhält die um 1 höhere Nummer als die höchste Version der Rolle.
+			// UC-006 BR-004: Ein neuer Katalog erhält die um 1 höhere Nummer als die höchste Version der Rolle.
 			.orElseGet(() -> this.katalogRepository.insertEntwurf(rolleId,
 					this.katalogRepository.hoechsteVersion(rolleId) + 1, LocalDateTime.now()));
 		this.katalogRepository.ersetzeFragen(katalogId, geordnet);
@@ -196,7 +196,7 @@ public class FragenkatalogService {
 		List<EntwurfUngueltigException.Fehler> fehler = new ArrayList<>();
 		for (int i = 0; i < entwurf.size(); i++) {
 			KatalogFrage frage = entwurf.get(i);
-			// UC-006 GR-002: Der Wortlaut ist eine Pflichtangabe mit höchstens 500 Zeichen.
+			// UC-006 BR-002: Der Wortlaut ist eine Pflichtangabe mit höchstens 500 Zeichen.
 			if (frage.text() == null || frage.text().isBlank()) {
 				fehler.add(new EntwurfUngueltigException.Fehler(i, EntwurfUngueltigException.Fehler.WORTLAUT,
 						"Wortlaut fehlt."));
@@ -206,7 +206,7 @@ public class FragenkatalogService {
 						"Höchstens 500 Zeichen."));
 			}
 			for (int stufe = 0; stufe < STUFEN; stufe++) {
-				// UC-006 GR-001: Genau eine Vorgabe je Stufe 0 bis 5, Pflichtangabe mit höchstens 500 Zeichen.
+				// UC-006 BR-001: Genau eine Vorgabe je Stufe 0 bis 5, Pflichtangabe mit höchstens 500 Zeichen.
 				String vorgabe = (stufe < frage.vorgaben().size()) ? frage.vorgaben().get(stufe) : null;
 				if (vorgabe == null || vorgabe.isBlank()) {
 					fehler.add(new EntwurfUngueltigException.Fehler(i, stufe, "Vorgabe fehlt."));

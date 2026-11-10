@@ -35,7 +35,7 @@ public class MainLayout extends AppLayout {
 		SideNavItem mags = new SideNavItem("MAGs und Rollen", MagsUndRollenView.class, VaadinIcon.USER.create());
 		SideNavItem katalog = new SideNavItem("Fragenkatalog",
 				FragenkatalogUndEntscheidungsmodellErstellenView.class, VaadinIcon.LIST_OL.create());
-		// UC-006 GR-009, UC-008 GR-007: Einträge ohne passende Berechtigung erscheinen deaktiviert.
+		// UC-006 BR-009, UC-008 BR-007: Einträge ohne passende Berechtigung erscheinen deaktiviert.
 		mags.setEnabled(administrator);
 		katalog.setEnabled(administrator);
 		administration.addItem(katalog, mags);

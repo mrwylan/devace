@@ -51,7 +51,7 @@ public class KiModellClientFake implements KiModellClient {
 		this.naechsterFehler = new KiModellNichtErreichbarException(new IllegalStateException("stubbed"));
 	}
 
-	/** Legt die nächste Antwort fest, zum Beispiel leer (kein Entwurf) oder mit unvollständigen Vorgaben (GR-011). */
+	/** Legt die nächste Antwort fest, zum Beispiel leer (kein Entwurf) oder mit unvollständigen Vorgaben (BR-011). */
 	public void antwortet(List<VorgeschlageneFrage> antwort) {
 		this.naechsteAntwort = antwort;
 	}

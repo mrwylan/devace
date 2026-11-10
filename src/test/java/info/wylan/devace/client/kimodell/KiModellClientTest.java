@@ -103,7 +103,7 @@ class KiModellClientTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Main Success Scenario", businessRules = { "GR-011" })
+	@UseCase(id = "UC-006", scenario = "Main Success Scenario", businessRules = { "BR-011" })
 	void ergaenzt_fehlende_vorgaben_leer_und_behaelt_die_frage() {
 		this.antwortKoerper = chatAntwort("""
 				{"fragen":[{"handlungsfeld":3,"frage":"Wie testen Sie?","stufen":["t0","t1","t2","t3"]}]}""");
@@ -115,7 +115,7 @@ class KiModellClientTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Main Success Scenario", businessRules = { "GR-007" })
+	@UseCase(id = "UC-006", scenario = "Main Success Scenario", businessRules = { "BR-007" })
 	void sendet_nur_rolle_handlungsfelder_schwerpunkte_und_zahl_der_fragen() {
 		this.antwortKoerper = chatAntwort("{\"fragen\":[]}");
 
@@ -131,12 +131,12 @@ class KiModellClientTest {
 			.contains("Praxisfragen zur Zusammenarbeit im Scrum Team")
 			.contains("3 Fragen")
 			.contains("2 Fragen");
-		// GR-007: keine Angabe zu einer Person; die Anfrage kennt nur Rolle, Handlungsfelder, Schwerpunkte, Zahl.
+		// BR-007: keine Angabe zu einer Person; die Anfrage kennt nur Rolle, Handlungsfelder, Schwerpunkte, Zahl.
 		assertThat(gesendet).doesNotContainIgnoringCase("e-mail").doesNotContain("@").doesNotContainIgnoringCase("benutzer");
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Main Success Scenario", businessRules = { "GR-008" })
+	@UseCase(id = "UC-006", scenario = "Main Success Scenario", businessRules = { "BR-008" })
 	void verlangt_alltagsrelevanz_statt_eintrag_in_der_kompetenzmatrix() {
 		this.antwortKoerper = chatAntwort("{\"fragen\":[]}");
 

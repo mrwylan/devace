@@ -182,7 +182,7 @@ Die Vision nennt keine Grenze.
 
 ## OQ-015: Welche Rollen darf die Teamleitung für eine Einladung wählen?
 
-**Element:** UC-001 GR-003
+**Element:** UC-001 BR-003
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -195,7 +195,7 @@ Eine Einladung für eine Rolle ohne freigegebenen Fragenkatalog wäre nicht nutz
 
 ## OQ-016: Wie werden doppelte Adressen in einer Eingabe behandelt?
 
-**Element:** UC-001 GR-005
+**Element:** UC-001 BR-005
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -260,7 +260,7 @@ Die Vision verlangt den Hinweis vor jedem Assessment. Bei der Wiederaufnahme lä
 
 ## OQ-021: Verfällt eine Einladung, mit der noch kein Assessment gestartet wurde?
 
-**Element:** UC-002 GR-001
+**Element:** UC-002 BR-001
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Resolved
@@ -269,11 +269,11 @@ Die Antwort zum Review sagt, eine nicht eingelöste Einladung verfalle. Gemeint 
 
 **Answer:** Die Teamleitung legt beim Erstellen eine Gültigkeitsdauer von 1 bis 30 Tagen fest (Vorschlag 30). Danach ist die Einladung abgelaufen; ein gestartetes Assessment läuft weiter. Eine Einladung eines gelöschten Assessments ist eingelöst und nicht wiederverwendbar.
 **Answered by:** Jakob Albrecht, 2026-11-08
-**Resolved in:** UC-001 GR-008, UC-002 GR-001
+**Resolved in:** UC-001 BR-008, UC-002 BR-001
 
 ## OQ-022: Wann endet die Gültigkeit einer Einladung genau?
 
-**Element:** UC-001 GR-008
+**Element:** UC-001 BR-008
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -295,24 +295,24 @@ UC-001 setzt voraus, dass die Teamleitung angemeldet ist (NFR-005). Keine Spezif
 
 **Answer:** Formular-Anmeldung mit Benutzername und Passwort gegen einen Benutzerbestand des Systems. Zugangsdaten stehen nie im Repository.
 **Answered by:** Jakob Albrecht, 2026-11-08
-**Resolved in:** UC-001 GR-009
+**Resolved in:** UC-001 BR-009
 
 ## OQ-024: Wie sieht die Einladungs-E-Mail aus?
 
-**Element:** UC-001 GR-007
+**Element:** UC-001 BR-007
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
 **Status:** Resolved
 
-GR-007 sagt, die E-Mail enthalte nur die Einladung. Betreff, Text, Absender und die Form des Links sind nicht festgelegt.
+BR-007 sagt, die E-Mail enthalte nur die Einladung. Betreff, Text, Absender und die Form des Links sind nicht festgelegt.
 
 **Answer:** Kurztext mit Link: Betreff "Einladung zum devace-Assessment", ein Satz und ein Link zur Einladung. Absender und Basis-Adresse des Links kommen aus der Konfiguration.
 **Answered by:** Jakob Albrecht, 2026-11-08
-**Resolved in:** UC-001 GR-007
+**Resolved in:** UC-001 BR-007
 
 ## OQ-025: Wer legt Benutzerkonten an und weist ihnen die Rolle Teamleitung, Schulungsverantwortliche oder Administrator zu?
 
-**Element:** UC-008 GR-004
+**Element:** UC-008 BR-004
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -325,7 +325,7 @@ Die Anmeldung (OQ-023) setzt Benutzerkonten voraus. Keine Anforderung und kein U
 
 ## OQ-026: Wird bei der Eindeutigkeit von MAG und Rolle die Schreibweise unterschieden?
 
-**Element:** UC-008 GR-002
+**Element:** UC-008 BR-002
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -338,7 +338,7 @@ Ohne diese Regel entstünden "Entwicklung" und "entwicklung" als zwei Rollen mit
 
 ## OQ-027: Wie viele Entwürfe hat eine Rolle?
 
-**Element:** UC-006 GR-004
+**Element:** UC-006 BR-004
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -351,7 +351,7 @@ Das Entity-Modell begrenzt nur die freigegebenen Fragenkataloge je Rolle auf ein
 
 ## OQ-028: Wie viele Fragen je Handlungsfeld darf der Administrator für den KI-Entwurf anfordern?
 
-**Element:** UC-006 GR-003
+**Element:** UC-006 BR-003
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -364,7 +364,7 @@ Die Vision nennt keine Zahl. Die Grenze ist ein Vorschlag für den Pilot mit Ler
 
 ## OQ-029: Darf ein Entwurf Handlungsfelder ohne Frage enthalten?
 
-**Element:** UC-006 GR-006
+**Element:** UC-006 BR-006
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
 **Status:** Answered
@@ -402,12 +402,12 @@ Das Entity-Modell nennt BENUTZER nur als externe Systemgrenze mit der Spalte id.
 
 ## OQ-032: Welchen Wortlaut hat der Hinweis, wenn eine MAG eine nicht vorhandene Teamleitung erhält?
 
-**Element:** UC-008 GR-004
+**Element:** UC-008 BR-004
 **Raised by:** /spring-service-test, 2026-11-08
 **Blocking:** No
 **Status:** Answered
 
-GR-004 verlangt, dass die Teamleitung aus den vorhandenen Teamleitungen ausgewählt wird. Kein Ablauf und kein Wortlaut sagt, was geschieht, wenn eine Angabe außerhalb der Oberfläche eine nicht vorhandene Person oder einen Benutzer ohne Funktion Teamleitung nennt. Der Dienst lehnt sie mit dem Hinweis "Die Teamleitung ist nicht vorhanden." ab; der Wortlaut stammt aus der Umsetzung, nicht aus der Spezifikation. Der Test prüft deshalb nur die Ablehnung, nicht den Text.
+BR-004 verlangt, dass die Teamleitung aus den vorhandenen Teamleitungen ausgewählt wird. Kein Ablauf und kein Wortlaut sagt, was geschieht, wenn eine Angabe außerhalb der Oberfläche eine nicht vorhandene Person oder einen Benutzer ohne Funktion Teamleitung nennt. Der Dienst lehnt sie mit dem Hinweis "Die Teamleitung ist nicht vorhanden." ab; der Wortlaut stammt aus der Umsetzung, nicht aus der Spezifikation. Der Test prüft deshalb nur die Ablehnung, nicht den Text.
 
 **Answer:** „Diese Teamleitung ist nicht vorhanden.“
 **Answered by:** Jakob Albrecht, 2026-11-10
@@ -464,53 +464,53 @@ Die Mockups zeigen andere Hinweistexte als OQ-030 (UC-008) und OQ-033 (UC-006) f
 
 ## OQ-037: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
-**Element:** UC-006 GR-009; UC-008 GR-007; UC-001 GR-009
+**Element:** UC-006 BR-009; UC-008 BR-007; UC-001 BR-009
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Withdrawn
 
-Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". Die Regeln GR-009 und GR-007 lassen nur Administratoren zu.
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". Die Regeln BR-009 und BR-007 lassen nur Administratoren zu.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
-**Withdrawn:** Das Element nannte drei Regeln statt einer. Ersetzt durch OQ-038 (UC-006 GR-009), OQ-039 (UC-008 GR-007) und OQ-040 (UC-001 GR-009) mit derselben Antwort.
+**Withdrawn:** Das Element nannte drei Regeln statt einer. Ersetzt durch OQ-038 (UC-006 BR-009), OQ-039 (UC-008 BR-007) und OQ-040 (UC-001 BR-009) mit derselben Antwort.
 
 ## OQ-038: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
-**Element:** UC-006 GR-009
+**Element:** UC-006 BR-009
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Answered
 
-Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". BR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
 
 ## OQ-039: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
-**Element:** UC-008 GR-007
+**Element:** UC-008 BR-007
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Answered
 
-Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-007 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". BR-007 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
 
 ## OQ-040: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
-**Element:** UC-001 GR-009
+**Element:** UC-001 BR-009
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Resolved
 
-Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". BR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
-**Resolved in:** UC-001 GR-009
+**Resolved in:** UC-001 BR-009
 
 ## OQ-041: Welchen Wortlaut haben die Hinweise und Bestätigungen beim Erstellen des Fragenkatalogs?
 
@@ -563,7 +563,7 @@ Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein bes
 
 ## OQ-045: Welche Angaben enthält der Textreport je Handlungsfeld, und enthält er Antworttexte?
 
-**Element:** UC-003 GR-003
+**Element:** UC-003 BR-003
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Answered
@@ -602,7 +602,7 @@ Weder die Anforderungen noch die Vision sagen, wie das System mit einem Ausfall 
 
 ## OQ-048: Wie wird der Score gerundet?
 
-**Element:** UC-003 GR-001
+**Element:** UC-003 BR-001
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Answered
@@ -625,4 +625,4 @@ Der Product Owner wünscht eine Auswertung für den Teilnehmer direkt beim Absch
 
 **Answer:** Ja. Der Teilnehmer sieht beim Abschluss seines Assessments sein Radar-Chart, seine Scores je Handlungsfeld und den Textreport. Der Textreport würdigt seine Leistung, begründet seine Einstufung und gibt Hinweise, wo er als Nächstes investieren sollte; das KI-Modell erstellt ihn. Die Anforderung steht als FR-018 im Katalog.
 **Answered by:** Jakob Albrecht, 2026-11-10
-**Resolved in:** UC-003 step 5, UC-003 GR-005
+**Resolved in:** UC-003 step 5, UC-003 BR-005

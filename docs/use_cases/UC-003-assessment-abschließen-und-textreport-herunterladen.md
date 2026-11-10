@@ -74,30 +74,30 @@
 
 ## Geschäftsregeln
 
-### GR-001: Score je Handlungsfeld
+### BR-001: Score je Handlungsfeld
 
 Der Score eines Handlungsfelds ist die Summe der Stufen aller Antworten dieses Handlungsfelds geteilt durch die Anzahl seiner Fragen. Er liegt zwischen 0 und 5 und hat höchstens zwei Nachkommastellen. Ein Handlungsfeld ohne Frage hat keinen Score.
 
-### GR-002: Scores ohne Personenbezug
+### BR-002: Scores ohne Personenbezug
 
 Das System speichert je Score nur MAG, Rolle, Handlungsfeld, Fragenkatalog, Wert und Datum. Es speichert keinen Verweis auf eine Einladung, ein Assessment, eine Antwort, eine E-Mail-Adresse oder eine Person. Die Scores werden fünf Jahre aufbewahrt.
 
-### GR-003: Inhalt des Textreports
+### BR-003: Inhalt des Textreports
 
 Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
 
-### GR-004: Anonyme Vorlage an das KI-Modell
+### BR-004: Anonyme Vorlage an das KI-Modell
 
 Das System legt dem KI-Modell nur die Rolle, die Handlungsfelder, die Fragen mit den Antworten und ihren zugeordneten Stufen sowie die Scores vor, aber weder die Einladung noch die E-Mail-Adresse oder eine andere Angabe, die auf den Teilnehmer schließen lässt.
 
-### GR-005: Auswertung nur für den Teilnehmer
+### BR-005: Auswertung nur für den Teilnehmer
 
 Radar-Chart, Scores und Textreport zeigt das System nur dem Teilnehmer, der das Assessment abgeschlossen hat, und nur beim Abschluss. Es speichert sie nicht für eine spätere Anzeige.
 
-### GR-006: Einmaliger Download
+### BR-006: Einmaliger Download
 
 Der Textreport steht dem Teilnehmer einmal zum Download bereit. Nach dem Download, nach seinem Verfall und bei erneuter Anforderung steht er nicht mehr zur Verfügung.
 
-### GR-007: Löschung der Antworten
+### BR-007: Löschung der Antworten
 
 Die Antworten eines Assessments werden nach dem Download des Textreports gelöscht, spätestens 1 Stunde nach seiner Erstellung. Die Scores bleiben erhalten.

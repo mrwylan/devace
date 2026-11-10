@@ -85,38 +85,38 @@
 
 ## Geschäftsregeln
 
-### GR-001: Anonyme Referenz
+### BR-001: Anonyme Referenz
 
 Die Referenz einer Einladung ist eindeutig und wird zufällig vergeben. Sie enthält keine Zeichenfolge aus dem Namen oder der E-Mail-Adresse einer Person.
 
-### GR-002: Nur eigene MAGs
+### BR-002: Nur eigene MAGs
 
 Die Teamleitung erstellt Einladungen nur für MAGs, die ihr zugeordnet sind.
 
-### GR-003: Rolle mit freigegebenem Fragenkatalog
+### BR-003: Rolle mit freigegebenem Fragenkatalog
 
 Die Teamleitung kann nur Rollen wählen, für die ein freigegebener Fragenkatalog besteht.
 
-### GR-004: E-Mail-Adresse nur zum Versand
+### BR-004: E-Mail-Adresse nur zum Versand
 
 Das System verwendet die E-Mail-Adresse nur für den Versand der Einladung. Es speichert sie nicht und gibt sie an keine andere Stelle weiter, auch nicht an ein KI-Modell.
 
-### GR-005: Doppelte Adressen
+### BR-005: Doppelte Adressen
 
 Führt die Teamleitung dieselbe Adresse mehrfach auf, erhält sie eine einzige Einladung.
 
-### GR-006: Gültige E-Mail-Adresse
+### BR-006: Gültige E-Mail-Adresse
 
 Eine Adresse ist gültig, wenn sie aus einem lokalen Teil, dem Zeichen @ und einem Domänenteil besteht und keine Leerzeichen enthält. Eine leere Angabe enthält keine Adresse.
 
-### GR-007: Inhalt der E-Mail
+### BR-007: Inhalt der E-Mail
 
 Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt: den Betreff "Einladung zum devace-Assessment", einen kurzen Text und den Link zur Einladung.
 
-### GR-008: Gültigkeitsdauer
+### BR-008: Gültigkeitsdauer
 
 Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung.
 
-### GR-009: Nur für angemeldete Teamleitungen
+### BR-009: Nur für angemeldete Teamleitungen
 
 Nur die angemeldete Teamleitung erstellt Einladungen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen. Die Navigation zeigt Einträge, für die die Teamleitung keine passende Berechtigung hat, deaktiviert.

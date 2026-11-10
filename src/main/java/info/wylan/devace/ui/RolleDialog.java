@@ -39,7 +39,7 @@ class RolleDialog extends Dialog {
 		this.name.setHelperText("Pflichtangabe, höchstens 50 Zeichen");
 		this.name.setValueChangeMode(ValueChangeMode.EAGER);
 
-		// UC-008 GR-001: Der Name einer Rolle ist Pflichtangabe mit höchstens 50 Zeichen.
+		// UC-008 BR-001: Der Name einer Rolle ist Pflichtangabe mit höchstens 50 Zeichen.
 		this.binder.forField(this.name)
 			.withValidator(wert -> wert != null && !wert.isBlank(), "Pflichtangabe fehlt.")
 			.withValidator(wert -> wert.strip().length() <= 50, "Höchstens 50 Zeichen.")
@@ -54,7 +54,7 @@ class RolleDialog extends Dialog {
 		form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));
 		add(form);
 		if (vorhandene != null) {
-			// UC-008 GR-006: Die Änderung des Namens wirkt rückwirkend auf Einladungen, Fragenkataloge und Scores.
+			// UC-008 BR-006: Die Änderung des Namens wirkt rückwirkend auf Einladungen, Fragenkataloge und Scores.
 			Div hinweis = new Div(hinweisTitel("Änderung wirkt rückwirkend"),
 					new Span("Bestehende Einladungen, Fragenkataloge und Scores dieser Rolle erscheinen mit dem neuen Namen."));
 			hinweis.addClassName("devace-hinweis");

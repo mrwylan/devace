@@ -37,7 +37,7 @@ class OpenRouterKiModellClient implements KiModellClient {
 	}
 
 	/**
-	 * UC-006 step 6 — Anfrage nur mit Rolle, Handlungsfeldern, Schwerpunkten und Zahl der Fragen (GR-007).
+	 * UC-006 step 6 — Anfrage nur mit Rolle, Handlungsfeldern, Schwerpunkten und Zahl der Fragen (BR-007).
 	 */
 	@Override
 	public List<VorgeschlageneFrage> fragenEntwerfen(EntwurfAnfrage anfrage) {

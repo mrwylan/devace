@@ -54,7 +54,7 @@ import org.jspecify.annotations.Nullable;
  */
 @Route(value = "fragenkatalog-erstellen", layout = MainLayout.class)
 @PageTitle("Fragenkatalog und Entscheidungsmodell erstellen")
-// UC-006 GR-009: Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle.
+// UC-006 BR-009: Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle.
 @RolesAllowed("ADMINISTRATOR")
 public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLayout {
 
@@ -128,7 +128,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 
 		VerticalLayout karte = karte("Fragenkataloge je Rolle",
 				"Version und Status je Rolle. Eine Rolle hat höchstens einen Entwurf.");
-		// UC-006 GR-005, GR-006: Nur der Entwurf ändert sich; er gilt erst nach der Freigabe in Assessments.
+		// UC-006 BR-005, BR-006: Nur der Entwurf ändert sich; er gilt erst nach der Freigabe in Assessments.
 		karte.add(this.rolleGrid, fussnote(
 				"Freigegebene und archivierte Fragenkataloge bleiben unverändert. Ein Entwurf gilt erst nach der Freigabe in Assessments."));
 		setzeInhalt(seitentitel("Fragenkatalog"), karte);
@@ -172,7 +172,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 			zeigeUebersicht();
 			return;
 		}
-		// UC-006 GR-004: Besteht ein Entwurf, setzt der Administrator ihn fort statt einen weiteren zu beginnen.
+		// UC-006 BR-004: Besteht ein Entwurf, setzt der Administrator ihn fort statt einen weiteren zu beginnen.
 		if (verfuegbar.size() == 1) {
 			beginnen(rolle, verfuegbar.iterator().next());
 			return;
@@ -383,7 +383,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		this.kiAnzahl.setMin(1);
 		this.kiAnzahl.setMax(10);
 		this.kiAnzahl.setWidthFull();
-		// UC-006 GR-003: Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10, vorgeschlagen werden 3.
+		// UC-006 BR-003: Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10, vorgeschlagen werden 3.
 		this.kiAnzahl.setHelperText("1 bis 10, vorgeschlagen sind " + VORSCHLAG_ANZAHL);
 		this.kiSchwerpunkte.setWidthFull();
 		this.kiSchwerpunkte.setHelperText("Höchstens 2000 Zeichen");
@@ -392,7 +392,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		anfordern.setId("ki-anfordern");
 
 		VerticalLayout karte = karte("KI-Entwurf anfordern", "Das KI-Modell ergänzt Fragen mit Entscheidungsmodell");
-		// UC-006 GR-006, GR-007, GR-010: Vorschlag; nur Rolle, Handlungsfelder, Schwerpunkte, Zahl; Vorhandenes bleibt.
+		// UC-006 BR-006, BR-007, BR-010: Vorschlag; nur Rolle, Handlungsfelder, Schwerpunkte, Zahl; Vorhandenes bleibt.
 		Div hinweis = new Div(hinweisTitel("Nur ein Vorschlag"), new Span(
 				"Die Anfrage enthält nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen, keine Angaben zu Personen. Vorhandene Fragen bleiben unverändert."));
 		hinweis.addClassName("devace-hinweis");
@@ -447,7 +447,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		Button abbrechen = new Button("Abbrechen", (event) -> dialog.close());
 		abbrechen.setId("genug-abbrechen");
 		Button ergaenzen = new Button("Weitere Fragen ergänzen", (event) -> {
-			// UC-006 GR-003: Dieselbe Grenze 1 bis 10 gilt für die Zahl weiterer Fragen je Handlungsfeld.
+			// UC-006 BR-003: Dieselbe Grenze 1 bis 10 gilt für die Zahl weiterer Fragen je Handlungsfeld.
 			Integer wert = weitere.getValue();
 			if (wert == null || wert < 1 || wert > 10) {
 				weitere.setInvalid(true);
@@ -481,13 +481,13 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		this.kiAnzahl.setInvalid(false);
 		this.kiSchwerpunkte.setInvalid(false);
 		Integer anzahl = this.kiAnzahl.getValue();
-		// UC-006 GR-003: Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10.
+		// UC-006 BR-003: Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10.
 		if (anzahl == null || anzahl < 1 || anzahl > 10) {
 			this.kiAnzahl.setInvalid(true);
 			this.kiAnzahl.setErrorMessage("Die Zahl muss zwischen 1 und 10 liegen.");
 			gueltig = false;
 		}
-		// UC-006 GR-003: Die Schwerpunkte haben höchstens 2000 Zeichen.
+		// UC-006 BR-003: Die Schwerpunkte haben höchstens 2000 Zeichen.
 		if (this.kiSchwerpunkte.getValue().strip().length() > 2000) {
 			this.kiSchwerpunkte.setInvalid(true);
 			this.kiSchwerpunkte.setErrorMessage("Höchstens 2000 Zeichen.");

@@ -48,7 +48,7 @@ class MagDialog extends Dialog {
 		this.linienteam.setRequiredIndicatorVisible(true);
 		this.scrumTeam.setHelperText("Pflichtangabe, höchstens 100 Zeichen");
 		this.linienteam.setHelperText("Pflichtangabe, höchstens 100 Zeichen");
-		// UC-008 GR-004: Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen.
+		// UC-008 BR-004: Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen.
 		this.teamleitung.setHelperText("Höchstens eine Teamleitung, ausgewählt aus den vorhandenen");
 		this.scrumTeam.setValueChangeMode(ValueChangeMode.EAGER);
 		this.linienteam.setValueChangeMode(ValueChangeMode.EAGER);
@@ -56,12 +56,12 @@ class MagDialog extends Dialog {
 		this.teamleitung.setItemLabelGenerator(TeamleitungOption::benutzername);
 		this.teamleitung.setClearButtonVisible(true);
 
-		// UC-008 GR-001: Scrum Team ist Pflichtangabe mit höchstens 100 Zeichen.
+		// UC-008 BR-001: Scrum Team ist Pflichtangabe mit höchstens 100 Zeichen.
 		this.binder.forField(this.scrumTeam)
 			.withValidator(wert -> wert != null && !wert.isBlank(), "Pflichtangabe fehlt.")
 			.withValidator(wert -> wert.strip().length() <= 100, "Höchstens 100 Zeichen.")
 			.bind(Formular::getScrumTeam, Formular::setScrumTeam);
-		// UC-008 GR-001: Linienteam ist Pflichtangabe mit höchstens 100 Zeichen.
+		// UC-008 BR-001: Linienteam ist Pflichtangabe mit höchstens 100 Zeichen.
 		this.binder.forField(this.linienteam)
 			.withValidator(wert -> wert != null && !wert.isBlank(), "Pflichtangabe fehlt.")
 			.withValidator(wert -> wert.strip().length() <= 100, "Höchstens 100 Zeichen.")
