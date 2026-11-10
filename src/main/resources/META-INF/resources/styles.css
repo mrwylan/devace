@@ -49,6 +49,10 @@
   background: color-mix(in srgb, var(--vaadin-error-color, #f66) 14%, transparent);
 }
 
+.devace-hinweis[theme~='erfolg'] {
+  background: color-mix(in srgb, #1f9d46 16%, transparent);
+}
+
 .devace-hinweis[theme~='warnung'] {
   background: color-mix(in srgb, #f5c400 12%, transparent);
 }

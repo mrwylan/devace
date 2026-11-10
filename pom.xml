@@ -69,6 +69,11 @@
             <artifactId>spring-boot-starter-jooq</artifactId>
         </dependency>
         <dependency>
+            <!-- e-mail dispatch of the invitations (UC-001); part of Spring Boot, version managed by the parent -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
             <!-- model access only through Spring AI; OpenRouter is the gateway (the API is OpenAI-compatible) -->
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-openai</artifactId>

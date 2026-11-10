@@ -38,6 +38,28 @@ public class MagRepository {
 	}
 
 	/**
+	 * UC-001 step 2: die MAGs, die der Teamleitung zugeordnet sind.
+	 */
+	public List<MagListItem> findByTeamleitung(long teamleitungId) {
+		return this.ctx.select(MAG.ID, MAG.SCRUM_TEAM, MAG.LINIENTEAM, MAG.TEAMLEITUNG_ID, BENUTZER.BENUTZERNAME)
+			.from(MAG)
+			.leftJoin(BENUTZER)
+			.on(BENUTZER.ID.eq(MAG.TEAMLEITUNG_ID))
+			// UC-001 BR-002: Nur MAGs, die der Teamleitung zugeordnet sind.
+			.where(MAG.TEAMLEITUNG_ID.eq(teamleitungId))
+			.orderBy(DSL.lower(MAG.SCRUM_TEAM), DSL.lower(MAG.LINIENTEAM))
+			.fetch(Records.mapping(MagListItem::new));
+	}
+
+	/**
+	 * UC-001 BR-002: gehört die MAG zur Teamleitung?
+	 */
+	public boolean gehoertZurTeamleitung(long magId, long teamleitungId) {
+		// UC-001 BR-002: Nur MAGs, die der Teamleitung zugeordnet sind.
+		return this.ctx.fetchExists(MAG, MAG.ID.eq(magId).and(MAG.TEAMLEITUNG_ID.eq(teamleitungId)));
+	}
+
+	/**
 	 * Prüft, ob die Kombination aus Scrum Team und Linienteam einer anderen MAG gehört. Beim
 	 * Ändern wird die eigene MAG über {@code ausserId} ausgenommen.
 	 */

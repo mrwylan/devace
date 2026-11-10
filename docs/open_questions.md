@@ -640,3 +640,48 @@ Der Product Owner wünscht eine Auswertung für den Teilnehmer direkt beim Absch
 **Assumed:** Doppelte Adressen einer Eingabe zählen nur einmal gegen die Grenze von 50 Adressen.
 
 Die Antwort auf OQ-017 begrenzt den Durchgang auf höchstens 50 Adressen. BR-005 lässt dieselbe Adresse mehrfach in einer Eingabe zu und erzeugt daraus eine Einladung. Offen ist, ob die Grenze die Zeilen der Eingabe oder die verschiedenen Adressen zählt.
+
+## OQ-051: Welchen Wortlaut haben die Hinweise, die Zusammenfassung und das Ergebnis beim Erstellen der Einladungen?
+
+**Element:** UC-001
+**Raised by:** /use-case-implement, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+A1, A2, Schritt 6 und Schritt 10 sprechen von Hinweisen, einer Zusammenfassung und einem Ergebnis, nennen aber keinen Wortlaut. Das Figma-Mockup zeigt Texte für die meisten Fälle.
+
+**Answer:** Der Wortlaut des Figma-Mockups gilt, ergänzt um die Vorschläge für die Fälle ohne Mockup-Text: A1 ungültige Adresse „Mindestens eine Adresse ist ungültig: <Adresse>. Bitte korrigieren.“, keine Adresse „Bitte mindestens eine Adresse eingeben.“, mehr als 50 Adressen „Höchstens 50 Adressen je Durchgang.“, Gültigkeit „Die Zahl muss zwischen 1 und 30 liegen.“; A2 „Noch keine Einladung möglich“ mit „Es gibt noch keine Rolle mit freigegebenem Fragenkatalog. Bitte wenden Sie sich an einen Administrator.“; Zusammenfassung „Einladungen versenden?“ mit „Es werden <n> Einladungen für <MAG>, Rolle <Rolle> erstellt und per E-Mail versendet. Gültigkeit: <t> Tage.“; Ergebnis „<n> Einladungen versendet“ und „<m> Einladung nicht versendet“.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-052: Welchen Text hat die E-Mail der Einladung?
+
+**Element:** UC-001 BR-007
+**Raised by:** /use-case-implement, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+BR-007 nennt den Betreff und verlangt „einen kurzen Text“ und den Link, ohne den Text zu nennen.
+
+**Answer:** „Sie sind zu einem devace-Assessment eingeladen. Über den folgenden Link starten Sie es:“, danach der Link, sonst nichts.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-053: Gilt die Adresse „ben.muster@example“ als gültig?
+
+**Element:** UC-001 BR-006
+**Raised by:** /vaadin-flow-ui, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** BR-006 gilt wörtlich: Die Adresse hat einen lokalen Teil, das Zeichen @ und einen Domänenteil ohne Leerzeichen; „ben.muster@example“ ist gültig.
+
+Das Mockup „Eingabe prüfen (A1)“ zeigt „ben.muster@example“ als ungültige Adresse. Nach BR-006 genügt ein Domänenteil; ein Punkt ist nicht verlangt. Die Oberfläche folgt der Spezifikation.
+
+## OQ-054: Wird bei doppelten Adressen die Schreibweise unterschieden?
+
+**Element:** UC-001 BR-005
+**Raised by:** /use-case-implement, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Zwei Adressen gelten als dieselbe, wenn sie sich nur in Groß- und Kleinschreibung oder in umgebenden Leerzeichen unterscheiden; die erste Schreibweise wird verwendet.
+
+BR-005 nennt „dieselbe Adresse“, ohne die Schreibweise zu regeln. Ohne Regel erhielte „Anna@example.com“ und „anna@example.com“ zwei Einladungen.
+
