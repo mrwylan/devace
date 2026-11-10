@@ -25,6 +25,8 @@
         <spring-ai.version>2.0.2</spring-ai.version>
         <!-- PostgreSQL major version of production, shared by tests and code generation. -->
         <postgres.image>postgres:17-alpine</postgres.image>
+        <!-- Coverage measurement only (CLAUDE.md §3: coverage is uploaded by the pipeline), no minimum threshold. -->
+        <jacoco-plugin.version>0.8.16</jacoco-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -161,6 +163,28 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- Measures the coverage of the unit, integration and browser tests; the report lands in target/site/jacoco. -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Generates the jOOQ classes from the Flyway migration scripts (no database needed at build time). -->

@@ -1,0 +1,98 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+# Minimal rights by default; the jobs raise them only where needed.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The full-context test reads its database from DEVACE_DB_*; this throwaway service is only for CI.
+    # The other tests start their own PostgreSQL through Testcontainers.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: devace
+          POSTGRES_PASSWORD: ci-only
+          POSTGRES_DB: devace
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U devace -d devace"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DEVACE_DB_URL: jdbc:postgresql://localhost:5432/devace
+      DEVACE_DB_USER: devace
+      DEVACE_DB_PASSWORD: ci-only
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Verify
+        run: ./mvnw -B verify
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-reports
+          path: |
+            target/surefire-reports
+            target/failsafe-reports
+          if-no-files-found: warn
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: jacoco-coverage
+          path: target/site/jacoco
+          if-no-files-found: warn
+
+  image:
+    needs: verify
+    # Only on pushes to the default branch, after verify passed.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push the image
+        # Tagged with the commit SHA and the version of the POM, never with latest alone.
+        run: |
+          VERSION="$(./mvnw -q -B help:evaluate -Dexpression=project.version -DforceStdout)"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          ./mvnw -B spring-boot:build-image \
+            -Dspring-boot.build-image.imageName="${IMAGE}:${GITHUB_SHA}" \
+            -Dspring-boot.build-image.tags="${IMAGE}:${VERSION}" \
+            -Dspring-boot.build-image.publish=true
