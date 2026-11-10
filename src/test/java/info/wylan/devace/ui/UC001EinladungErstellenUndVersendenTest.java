@@ -1,5 +1,6 @@
 package info.wylan.devace.ui;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import info.wylan.devace.TestcontainersConfiguration;
@@ -138,7 +140,15 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 		assertThat(this.jdbc.sql("select column_name from information_schema.columns where table_name = 'einladung'")
 			.query(String.class)
 			.list()).containsExactlyInAnyOrder("id", "referenz", "mag_id", "rolle_id", "erstellt_von_id", "status",
-					"erstellt_am", "gueltigkeit_tage");
+					"erstellt_am", "gueltigkeit_tage", "laeuft_ab_am");
+		// BR-004: die Adresse steht in keiner Tabelle, in keiner Spalte
+		for (String tabelle : this.jdbc.sql("select table_name from information_schema.tables where table_schema = 'public'")
+			.query(String.class)
+			.list()) {
+			assertThat(this.jdbc.sql("select count(*) from \"" + tabelle + "\" t where t::text like '%beispiel@example.com%'")
+				.query(Long.class)
+				.single()).as("Tabelle " + tabelle).isZero();
+		}
 	}
 
 	@Test
@@ -188,13 +198,19 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 
 	@Test
 	@UseCase(id = "UC-001", scenario = "A1: Angaben fehlen oder sind ungültig", businessRules = { "BR-006" })
-	void adresse_mit_lokalem_teil_at_und_domaenenteil_ist_gueltig() {
+	void domaenenteil_braucht_mindestens_einen_punkt() {
 		navigate(EinladungErstellenUndVersendenView.class);
-		// BR-006 verlangt nur lokalen Teil, @ und Domänenteil ohne Leerzeichen (OQ-053: das Mockup zeigt sie als ungültig)
+
+		// ohne Punkt im Domänenteil ungültig (OQ-053), das Mockup zeigt dasselbe Beispiel
 		adressen("ben.muster@example");
-
 		anfordern();
+		assertThat(adressenFeld().isInvalid()).isTrue();
+		assertThat(adressenFeld().getErrorMessage())
+			.isEqualTo("Mindestens eine Adresse ist ungültig: ben.muster@example. Bitte korrigieren.");
 
+		// mit Punkt gültig
+		adressen("ben.muster@example.com");
+		anfordern();
 		assertThat(adressenFeld().isInvalid()).isFalse();
 		assertThat(find(Dialog.class).single().isOpened()).isTrue();
 	}
@@ -363,7 +379,75 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 		assertThat(find(EinladungErstellenUndVersendenView.class).exists()).isTrue();
 	}
 
+	@Test
+	@UseCase(id = "UC-001", scenario = "Main Success Scenario", businessRules = { "BR-005" })
+	void unterschiedliche_schreibweise_und_leerzeichen_gelten_als_dieselbe_adresse() {
+		navigate(EinladungErstellenUndVersendenView.class);
+		adressen("Anna.Beispiel@Example.com", "anna.beispiel@example.com ");
+
+		anfordern();
+		test(find(Button.class).withId("einladung-versenden").single()).click();
+
+		// OQ-054: die erste Schreibweise gilt
+		assertThat(MAIL.gesendet()).extracting(Einladungsmail::adresse).containsExactly("Anna.Beispiel@Example.com");
+	}
+
+	@Test
+	@UseCase(id = "UC-001", scenario = "Main Success Scenario", businessRules = { "BR-008" })
+	void ablaufdatum_ist_der_letzte_tag_der_gueltigkeit_der_erstellungstag_ist_der_erste() {
+		navigate(EinladungErstellenUndVersendenView.class);
+		for (int tage : new int[] { 1, 14, 30 }) {
+			adressen("tag" + tage + ".beispiel@example.com");
+			gueltigkeit(tage);
+			anfordern();
+			test(find(Button.class).withId("einladung-versenden").single()).click();
+
+			LocalDate ablauf = this.jdbc.sql("select laeuft_ab_am from einladung where erstellt_von_id = 9201 and gueltigkeit_tage = ?")
+				.param(tage)
+				.query(LocalDate.class)
+				.single();
+			assertThat(ablauf).as("Gültigkeit " + tage).isEqualTo(LocalDate.now().plusDays(tage - 1L));
+			this.jdbc.sql("delete from einladung where erstellt_von_id = 9201").update();
+			test(find(Button.class).withId("weitere-einladungen").single()).click();
+		}
+	}
+
+	@Test
+	@WithMockUser(username = "uc001-ohne-mag", roles = "TEAMLEITUNG")
+	@UseCase(id = "UC-001", scenario = "Precondition: mindestens eine MAG zugeordnet")
+	void ohne_zugeordnete_mag_bleibt_die_aktion_deaktiviert() {
+		navigate(EinladungErstellenUndVersendenView.class);
+
+		assertThat(find(Button.class).withId("einladung-erstellen").single().isEnabled()).isFalse();
+		keineEinladungErstelltOderVersendet();
+	}
+
+	@Test
+	@UseCase(id = "UC-001", businessRules = { "BR-009" }, requirements = { "NFR-005" })
+	void navigation_zeigt_den_eintrag_der_teamleitung_aktiviert() {
+		navigate(EinladungErstellenUndVersendenView.class);
+
+		assertThat(navigationseintrag("Einladungen").isEnabled()).isTrue();
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMINISTRATOR")
+	@UseCase(id = "UC-001", businessRules = { "BR-009" }, requirements = { "NFR-005" })
+	void navigation_zeigt_den_eintrag_ohne_berechtigung_deaktiviert() {
+		navigate(MagsUndRollenView.class);
+
+		assertThat(navigationseintrag("Einladungen").isEnabled()).isFalse();
+	}
+
 	// ---------------------------------------------------------------- Hilfen
+
+	private SideNavItem navigationseintrag(String beschriftung) {
+		return find(SideNavItem.class).all()
+			.stream()
+			.filter(eintrag -> beschriftung.equals(eintrag.getLabel()))
+			.findFirst()
+			.orElseThrow();
+	}
 
 	private TextArea adressenFeld() {
 		return find(TextArea.class).withId("einladung-adressen").single();

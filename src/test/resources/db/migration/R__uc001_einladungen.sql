@@ -5,7 +5,8 @@
 
 INSERT INTO benutzer (id, benutzername, passwort_hash, berechtigung)
 VALUES (9201, 'uc001-teamleitung', '{noop}uc001-test', 'Teamleitung'),
-       (9202, 'uc001-andere-teamleitung', 'unused', 'Teamleitung')
+       (9202, 'uc001-andere-teamleitung', 'unused', 'Teamleitung'),
+       (9203, 'uc001-ohne-mag', 'unused', 'Teamleitung')
 ON CONFLICT DO NOTHING;
 
 -- eine MAG der Teamleitung, eine MAG einer anderen Teamleitung
