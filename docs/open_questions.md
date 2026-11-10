@@ -494,3 +494,53 @@ Das Mockup zeigt für A1 und A2 andere Hinweistexte als OQ-030 festlegt, z. B. "
 **Assumed:** Das Modell je Aufgabe (Fragenkatalog erstellen, Antworten bewerten, Textreport) wird in der Konfiguration festgelegt und ist ohne Neubau über Umgebungsvariablen änderbar. Für UC-006 gilt nur die Aufgabe Fragenkatalog erstellen.
 
 Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein besseres Modell zum Erstellen der Fragen samt Bewertungs-Prompt, ein günstigeres für die Durchführung und Bewertung eines Assessments, ein kleineres für den Textreport. Ob die Wahl später in der Oberfläche (zur Laufzeit) erfolgen soll, ist offen und gehört in eine eigene Anforderung. Der Sekundärakteur ist das KI-Modell. Ersetzt OQ-034, dessen Element keine gültige Form hatte.
+
+## OQ-045: Welche Angaben enthält der Textreport je Handlungsfeld, und enthält er Antworttexte?
+
+**Element:** UC-003 GR-003
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Textreport enthält je Handlungsfeld die Würdigung der Leistung, die Begründung der Einstufung und Hinweise auf die nächsten Investitionen, aber keine wörtlichen Antworttexte der Befragten.
+
+Die Vorgabe lautet, dass der Textreport die Leistung würdigt, die Einstufung begründet und Hinweise zu den nächsten Investitionen gibt. Ob er zusätzlich Fragen, Antworten und Stufen im Wortlaut aufführt, ist offen. Die Antworten werden nach dem Download gelöscht; der Textreport ist danach die einzige Aufzeichnung der Befragten.
+
+## OQ-046: Wie läuft der einmalige Download, und wann verfällt der Textreport?
+
+**Element:** UC-003 step 7
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Textreport steht nach dem Abschluss einmal zum Download bereit. Die Antworten werden nach dem Download gelöscht, spätestens 1 Stunde nach Erstellung des Textreports (NFR-003). Wird er nicht heruntergeladen, verfällt er und die Scores bleiben.
+
+FR-008 verlangt den einmaligen Download, FR-009 die Löschung der Antworten nach der Erstellung des Textreports, NFR-003 die Löschung innerhalb einer Stunde. Offen ist, was geschieht, wenn der Download scheitert oder nicht stattfindet, und ob ein abgebrochener Download wiederholt werden darf.
+
+## OQ-047: Was geschieht, wenn das KI-Modell den Textreport nicht erstellt?
+
+**Element:** UC-003 A1
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Das System weist darauf hin, speichert keine Scores und lässt das Assessment laufend. Die Befragte kann den Abschluss erneut anfordern; die Antworten bleiben bis dahin erhalten (NFR-004).
+
+Weder die Anforderungen noch die Vision sagen, wie das System mit einem Ausfall des KI-Modells beim Abschluss umgeht. Alternativen: Scores sofort speichern und den Textreport später nachliefern, oder den Abschluss ohne Textreport zulassen.
+
+## OQ-048: Wie wird der Score gerundet?
+
+**Element:** UC-003 GR-001
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Score hat höchstens zwei Nachkommastellen (kaufmännisch gerundet); ein Handlungsfeld ohne Frage hat keinen Score.
+
+Das Entity-Modell führt den Score als Dezimalzahl mit zwei Nachkommastellen (SCORE.wert). Die Anforderung nennt keine Rundung, und ein Handlungsfeld ohne Frage ergäbe eine Division durch null.
+
+## OQ-049: Zeigt das System der Befragten ihre eigene Auswertung mit Radar-Chart und Scores?
+
+**Element:** UC-003 step 5
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Ja. Die Befragte sieht beim Abschluss ihr Radar-Chart, ihre Scores je Handlungsfeld und den Textreport. Sie werden nicht gespeichert und nicht erneut angezeigt.
+
+Der Product Owner wünscht eine Auswertung für die Befragte direkt beim Abschluss. Die Anforderungen kennen das Radar-Chart nur je MAG und Rolle für Teamleitung und Schulungsverantwortliche (FR-010, FR-011). Die Anforderung für die persönliche Auswertung fehlt und gehört in `/requirements`; das Glossar beschreibt das Radar-Chart nur je MAG und Rolle.
