@@ -29,7 +29,7 @@ class MagDialog extends Dialog {
 
 	private final TextField linienteam = new TextField("Linienteam");
 
-	private final ComboBox<TeamleitungOption> teamleitung = new ComboBox<>("Teamleitung");
+	private final ComboBox<TeamleitungOption> teamleitung = new ComboBox<>("Teamleitung (optional)");
 
 	private final Binder<Formular> binder = new Binder<>();
 
@@ -39,12 +39,17 @@ class MagDialog extends Dialog {
 			Runnable nachSpeichern) {
 		setHeaderTitle((vorhandene == null) ? "MAG anlegen" : "MAG ändern");
 		setId("mag-dialog");
+		setWidth("34rem");
 
 		this.scrumTeam.setId("mag-scrum-team");
 		this.linienteam.setId("mag-linienteam");
 		this.teamleitung.setId("mag-teamleitung");
 		this.scrumTeam.setRequiredIndicatorVisible(true);
 		this.linienteam.setRequiredIndicatorVisible(true);
+		this.scrumTeam.setHelperText("Pflichtangabe, höchstens 100 Zeichen");
+		this.linienteam.setHelperText("Pflichtangabe, höchstens 100 Zeichen");
+		// UC-008 GR-004: Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen.
+		this.teamleitung.setHelperText("Höchstens eine Teamleitung, ausgewählt aus den vorhandenen");
 		this.scrumTeam.setValueChangeMode(ValueChangeMode.EAGER);
 		this.linienteam.setValueChangeMode(ValueChangeMode.EAGER);
 		this.teamleitung.setItems(teamleitungen);
