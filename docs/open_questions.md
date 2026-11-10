@@ -685,3 +685,21 @@ Das Mockup „Eingabe prüfen (A1)“ zeigt „ben.muster@example“ als ungült
 
 BR-005 nennt „dieselbe Adresse“, ohne die Schreibweise zu regeln. Ohne Regel erhielte „Anna@example.com“ und „anna@example.com“ zwei Einladungen.
 
+
+## OQ-055: Was geschieht, wenn der Teamleitung keine MAG zugeordnet ist?
+
+**Element:** UC-001
+**Raised by:** /use-case-coverage, 2026-11-10
+**Blocking:** No
+**Status:** Open
+
+Die Vorbedingung verlangt mindestens eine zugeordnete MAG. Die Spezifikation nennt keinen Ablauf für den Fall, dass sie nicht erfüllt ist. Die Oberfläche zeigt dann ein leeres Auswahlfeld für die MAG; „Einladungen erstellen und versenden“ löst einen Fehler aus. Lesarten: (a) die Vorbedingung gilt als Vertrag, ein Ablauf ist nicht nötig; (b) neuer Ablauf wie A2 mit Hinweis und Ende des Use Cases.
+
+## OQ-056: Wo wird das Ende der Gültigkeit einer Einladung geprüft?
+
+**Element:** UC-001 BR-008
+**Raised by:** /use-case-coverage, 2026-11-10
+**Blocking:** No
+**Status:** Open
+
+BR-008 lässt die Einladung bis 24:00 Uhr des letzten Gültigkeitstags gelten. UC-001 speichert nur Erstellzeitpunkt und Zahl der Tage; eine Prüfung des Ablaufs gibt es nicht und kein Test belegt das Ende. Lesarten: (a) die Prüfung gehört zu dem Use Case, der die Einladung einlöst (UC-002), UC-001 speichert nur die Angaben; (b) UC-001 legt das Ablaufdatum selbst fest und speichert es.
