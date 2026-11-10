@@ -37,7 +37,7 @@
 
 ### A1: Angaben fehlen oder sind ungültig
 
-**Auslöser:** Die Angabe enthält keine Adresse, mindestens eine ungültige Adresse oder eine ungültige Gültigkeitsdauer (Schritt 6)  
+**Auslöser:** Die Angabe enthält keine Adresse, mehr als 50 Adressen, mindestens eine ungültige Adresse oder eine ungültige Gültigkeitsdauer (Schritt 6)  
 **Ablauf:**
 
 1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
@@ -115,8 +115,12 @@ Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt: den Betreff "E
 
 ### BR-008: Gültigkeitsdauer
 
-Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung.
+Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung. Die Einladung ist bis zum Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr) gültig.
 
 ### BR-009: Nur für angemeldete Teamleitungen
 
 Nur die angemeldete Teamleitung erstellt Einladungen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen. Die Navigation zeigt Einträge, für die die Teamleitung keine passende Berechtigung hat, deaktiviert.
+
+### BR-010: Höchstzahl der Adressen
+
+Ein Durchgang enthält höchstens 50 Adressen. Doppelte Adressen zählen nach BR-005 einmal.

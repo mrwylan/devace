@@ -185,39 +185,42 @@ Die Vision nennt keine Grenze.
 **Element:** UC-001 BR-003
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Nur Rollen mit freigegebenem Fragenkatalog stehen zur Wahl (A2, wenn keine existiert).
 
 Eine Einladung für eine Rolle ohne freigegebenen Fragenkatalog wäre nicht nutzbar. Die Anforderungen nennen die Prüfung nicht.
 
 **Answer:** Bestätigt: Nur Rollen mit freigegebenem Fragenkatalog stehen zur Wahl (A2, wenn keine existiert).
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-001 BR-003, UC-001 A2
 
 ## OQ-016: Wie werden doppelte Adressen in einer Eingabe behandelt?
 
 **Element:** UC-001 BR-005
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Dieselbe Adresse mehrfach in einer Eingabe erzeugt eine Einladung.
 
 Da Adressen nicht gespeichert werden, lassen sich Doppelungen nur innerhalb einer Eingabe erkennen.
 
 **Answer:** Bestätigt: Dieselbe Adresse mehrfach in einer Eingabe erzeugt eine Einladung.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-001 BR-005
 
 ## OQ-017: Gibt es eine Höchstzahl an Adressen je Durchgang?
 
 **Element:** UC-001 step 4
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Keine Obergrenze.
 
 Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
 
 **Answer:** Max. 50 Adressen
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-001 A1, UC-001 BR-010
 
 ## OQ-018: Wie wird eine Teamleitung einer MAG zugeordnet?
 
@@ -276,13 +279,14 @@ Die Antwort zum Review sagt, eine nicht eingelöste Einladung verfalle. Gemeint 
 **Element:** UC-001 BR-008
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Die Gültigkeit beginnt mit der Erstellung und endet nach Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr).
 
 Die Gültigkeitsdauer wird in ganzen Tagen angegeben; Beginn und Ende innerhalb eines Tages sind nicht festgelegt.
 
 **Answer:** Bestätigt: Die Gültigkeit beginnt mit der Erstellung und endet nach Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr).
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-001 BR-008
 
 ## OQ-023: Wie meldet sich die Teamleitung an?
 
@@ -626,3 +630,13 @@ Der Product Owner wünscht eine Auswertung für den Teilnehmer direkt beim Absch
 **Answer:** Ja. Der Teilnehmer sieht beim Abschluss seines Assessments sein Radar-Chart, seine Scores je Handlungsfeld und den Textreport. Der Textreport würdigt seine Leistung, begründet seine Einstufung und gibt Hinweise, wo er als Nächstes investieren sollte; das KI-Modell erstellt ihn. Die Anforderung steht als FR-018 im Katalog.
 **Answered by:** Jakob Albrecht, 2026-11-10
 **Resolved in:** UC-003 step 5, UC-003 BR-005
+
+## OQ-050: Zählen doppelte Adressen gegen die Höchstzahl von 50?
+
+**Element:** UC-001 BR-010
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Doppelte Adressen einer Eingabe zählen nur einmal gegen die Grenze von 50 Adressen.
+
+Die Antwort auf OQ-017 begrenzt den Durchgang auf höchstens 50 Adressen. BR-005 lässt dieselbe Adresse mehrfach in einer Eingabe zu und erzeugt daraus eine Einladung. Offen ist, ob die Grenze die Zeilen der Eingabe oder die verschiedenen Adressen zählt.
