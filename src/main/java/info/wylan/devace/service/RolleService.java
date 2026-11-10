@@ -15,12 +15,12 @@ import org.springframework.validation.annotation.Validated;
 /**
  * Verwaltung der Rollen (UC-008).
  */
-// UC-008 GR-007: Nur der angemeldete Administrator verwaltet Rollen.
+// UC-008 BR-007: Nur der angemeldete Administrator verwaltet Rollen.
 @PreAuthorize("hasRole('ADMINISTRATOR')")
 @Service
 @Validated
 @Transactional(readOnly = true)
-// UC-008 GR-005: Rollen werden nur angelegt und geändert, nie gelöscht; der Service bietet kein Löschen.
+// UC-008 BR-005: Rollen werden nur angelegt und geändert, nie gelöscht; der Service bietet kein Löschen.
 public class RolleService {
 
 	private final RolleRepository rolleRepository;
@@ -56,7 +56,7 @@ public class RolleService {
 	 * ihr zugeordnet.
 	 */
 	@Transactional
-	// UC-008 GR-006: Die Änderung betrifft nur den Namen der Rolle; ihre id und damit ihre Zuordnungen bleiben.
+	// UC-008 BR-006: Die Änderung betrifft nur den Namen der Rolle; ihre id und damit ihre Zuordnungen bleiben.
 	public void aendern(long id, @Valid RolleEingabe eingabe) {
 		if (!this.rolleRepository.existsById(id)) {
 			throw new RolleNichtGefundenException();
@@ -71,7 +71,7 @@ public class RolleService {
 	}
 
 	private void pruefe(RolleEingabe eingabe, Long ausserId) {
-		// UC-008 GR-003: Der Name gehört zu höchstens einer Rolle.
+		// UC-008 BR-003: Der Name gehört zu höchstens einer Rolle.
 		if (this.rolleRepository.existsByName(eingabe.name(), ausserId)) {
 			throw new RolleBereitsVorhandenException();
 		}

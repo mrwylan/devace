@@ -105,7 +105,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 3-4: Ausgangspunkt", businessRules = { "GR-004" })
+	@UseCase(id = "UC-006", scenario = "Steps 3-4: Ausgangspunkt", businessRules = { "BR-004" })
 	@SuppressWarnings("unchecked")
 	void freigegebene_version_wird_als_ausgangspunkt_angeboten_und_ergibt_die_naechste_version() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
@@ -130,7 +130,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 3-4: Ausgangspunkt", businessRules = { "GR-004" })
+	@UseCase(id = "UC-006", scenario = "Steps 3-4: Ausgangspunkt", businessRules = { "BR-004" })
 	void ohne_freigegebene_version_steht_nur_der_leere_entwurf_zur_verfuegung() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 
@@ -144,7 +144,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 3-4: Ausgangspunkt", businessRules = { "GR-004" })
+	@UseCase(id = "UC-006", scenario = "Steps 3-4: Ausgangspunkt", businessRules = { "BR-004" })
 	void vorhandener_entwurf_wird_fortgesetzt_statt_einen_weiteren_zu_beginnen() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 
@@ -159,13 +159,13 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	// ---------------------------------------------------------------- A1 und Schritte 8 bis 12
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A1: Ohne KI-Entwurf", businessRules = { "GR-001", "GR-002", "GR-004" })
+	@UseCase(id = "UC-006", scenario = "A1: Ohne KI-Entwurf", businessRules = { "BR-001", "BR-002", "BR-004" })
 	void frage_und_entscheidungsmodell_selbst_erfassen_und_als_entwurf_speichern() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
 
 		test(find(Button.class).withId("frage-hinzufuegen").single()).click();
-		// GR-001 und GR-002: genau 500 Zeichen sind zulässig
+		// BR-001 und BR-002: genau 500 Zeichen sind zulässig
 		fuelleFrage("F".repeat(500), "v0", "v1", "v2", "v3", "v4", "V".repeat(500));
 		test(find(Button.class).withId("frage-uebernehmen").single()).click();
 		test(find(Button.class).withId("entwurf-speichern").single()).click();
@@ -181,7 +181,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 				select h.nummer from frage f join fragenkatalog k on k.id = f.fragenkatalog_id
 				join handlungsfeld h on h.id = f.handlungsfeld_id where k.rolle_id = 9101
 				""").query(Integer.class).list()).containsExactly(1);
-		// GR-001: genau eine Vorgabe je Stufe von 0 bis 5
+		// BR-001: genau eine Vorgabe je Stufe von 0 bis 5
 		assertThat(this.jdbc.sql("""
 				select s.stufe from stufenvorgabe s join frage f on f.id = s.frage_id
 				join fragenkatalog k on k.id = f.fragenkatalog_id where k.rolle_id = 9101 order by s.stufe
@@ -189,7 +189,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 8-12: Nur der Entwurf ändert sich", businessRules = { "GR-004", "GR-005" })
+	@UseCase(id = "UC-006", scenario = "Steps 8-12: Nur der Entwurf ändert sich", businessRules = { "BR-004", "BR-005" })
 	void speichern_legt_die_naechste_version_an_und_laesst_die_freigegebene_unveraendert() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(FREIGEGEBEN)).click();
@@ -202,12 +202,12 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 		assertThat(zelle(FREIGEGEBEN, 1)).isEqualTo("Version 2");
 		assertThat(zelle(FREIGEGEBEN, 2)).isEqualTo("Version 3");
-		// GR-004: Version = höchste Version + 1, Status Entwurf, drei Fragen
+		// BR-004: Version = höchste Version + 1, Status Entwurf, drei Fragen
 		assertThat(this.jdbc.sql("""
 				select count(*) from frage f join fragenkatalog k on k.id = f.fragenkatalog_id
 				where k.rolle_id = 9102 and k.version = 3 and k.status = 'Entwurf'
 				""").query(Long.class).single()).isEqualTo(3L);
-		// GR-005: die freigegebene Version 2 bleibt unverändert
+		// BR-005: die freigegebene Version 2 bleibt unverändert
 		assertThat(this.jdbc.sql("select status from fragenkatalog where id = 9101").query(String.class).single())
 			.isEqualTo("Freigegeben");
 		assertThat(this.jdbc.sql("select count(*) from frage where fragenkatalog_id = 9101").query(Long.class).single())
@@ -234,7 +234,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	// ---------------------------------------------------------------- A4, A5
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-001" })
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "BR-001" })
 	void fehlende_vorgabe_einer_stufe_wird_gemeldet_und_nichts_gespeichert() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -264,7 +264,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-002" })
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "BR-002" })
 	void frage_ohne_wortlaut_wird_gemeldet() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -284,7 +284,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-001", "GR-002" })
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "BR-001", "BR-002" })
 	void angaben_ueber_500_zeichen_werden_gemeldet() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -322,23 +322,23 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	// ---------------------------------------------------------------- Schritte 5 bis 7, A1 bis A3, A6, A7
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "GR-003", "GR-006", "GR-007", "GR-010" })
+	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "BR-003", "BR-006", "BR-007", "BR-010" })
 	void ki_entwurf_ergaenzt_je_handlungsfeld_drei_fragen_und_sendet_nur_rolle_schwerpunkte_und_zahl() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
 
-		// GR-003: vorgeschlagen werden 3 Fragen je Handlungsfeld
+		// BR-003: vorgeschlagen werden 3 Fragen je Handlungsfeld
 		assertThat(find(IntegerField.class).withId("ki-anzahl").single().getValue()).isEqualTo(3);
 		find(TextArea.class).withId("ki-schwerpunkte").single().setValue("Praxisfragen zur Zusammenarbeit");
 		test(find(Button.class).withId("ki-anfordern").single()).click();
 
 		assertThat(KI.anfragen()).hasSize(1);
 		KiModellClient.EntwurfAnfrage anfrage = KI.anfragen().get(0);
-		// GR-007: die Anfrage kennt nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen
+		// BR-007: die Anfrage kennt nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen
 		assertThat(anfrage.rolle()).isEqualTo(LEER);
 		assertThat(anfrage.schwerpunkte()).isEqualTo("Praxisfragen zur Zusammenarbeit");
 		assertThat(anfrage.handlungsfelder()).hasSize(6).allMatch(h -> h.anzahl() == 3);
-		// Schritt 7: der Entwurf je Handlungsfeld, drei Fragen je Handlungsfeld, nichts gespeichert (GR-006)
+		// Schritt 7: der Entwurf je Handlungsfeld, drei Fragen je Handlungsfeld, nichts gespeichert (BR-006)
 		for (int feld = 1; feld <= 6; feld++) {
 			assertThat(fragen(feld)).hasSize(3);
 		}
@@ -347,7 +347,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "GR-010" })
+	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "BR-010" })
 	void ki_entwurf_aendert_vorhandene_fragen_nicht_und_ergaenzt_nur_die_fehlenden() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(FREIGEGEBEN)).click();
@@ -366,7 +366,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A3: Angaben für den KI-Entwurf ungültig", businessRules = { "GR-003" })
+	@UseCase(id = "UC-006", scenario = "A3: Angaben für den KI-Entwurf ungültig", businessRules = { "BR-003" })
 	void zahl_der_fragen_ausserhalb_von_1_bis_10_wird_gemeldet() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -388,7 +388,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A3: Angaben für den KI-Entwurf ungültig", businessRules = { "GR-003" })
+	@UseCase(id = "UC-006", scenario = "A3: Angaben für den KI-Entwurf ungültig", businessRules = { "BR-003" })
 	void schwerpunkte_ueber_2000_zeichen_werden_gemeldet() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -444,7 +444,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-011" })
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "BR-011" })
 	void unvollstaendige_frage_des_ki_entwurfs_erscheint_und_muss_vor_dem_speichern_ergaenzt_werden() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -463,7 +463,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A6: Genügend Fragen vorhanden", businessRules = { "GR-010" })
+	@UseCase(id = "UC-006", scenario = "A6: Genügend Fragen vorhanden", businessRules = { "BR-010" })
 	void genuegend_fragen_ruft_das_ki_modell_nicht_auf_und_bietet_weitere_fragen_an() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -472,7 +472,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 		test(find(Button.class).withId("ki-anfordern").single()).click();
 
-		// GR-010: jedes Handlungsfeld hat schon 3 Fragen: kein weiterer Aufruf, stattdessen der Hinweis
+		// BR-010: jedes Handlungsfeld hat schon 3 Fragen: kein weiterer Aufruf, stattdessen der Hinweis
 		assertThat(KI.anfragen()).hasSize(1);
 		assertThat(find(Dialog.class).single().getHeaderTitle()).isEqualTo("Genügend Fragen vorhanden");
 		assertThat(find(Paragraph.class).all().stream().map(p -> p.getText()))
@@ -488,7 +488,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A6: Genügend Fragen vorhanden", businessRules = { "GR-003" })
+	@UseCase(id = "UC-006", scenario = "A6: Genügend Fragen vorhanden", businessRules = { "BR-003" })
 	void zahl_weiterer_fragen_ausserhalb_von_1_bis_10_wird_gemeldet() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -526,7 +526,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	// ---------------------------------------------------------------- Fehlerfall, Position
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-005" })
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "BR-005" })
 	void fehlgeschlagenes_speichern_laesst_freigegebene_und_archivierte_kataloge_unveraendert() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(FREIGEGEBEN)).click();
@@ -550,7 +550,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-004" })
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "BR-004" })
 	void fehlgeschlagenes_speichern_laesst_einen_vorhandenen_entwurf_unveraendert() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(ENTWURF)).click();
@@ -573,7 +573,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", scenario = "Steps 9-12: Entwurf speichern", businessRules = { "GR-002" })
+	@UseCase(id = "UC-006", scenario = "Steps 9-12: Entwurf speichern", businessRules = { "BR-002" })
 	void positionen_der_fragen_sind_eindeutig_und_nach_handlungsfeld_geordnet() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
@@ -584,18 +584,18 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 				select f.position, h.nummer from frage f join fragenkatalog k on k.id = f.fragenkatalog_id
 				join handlungsfeld h on h.id = f.handlungsfeld_id where k.rolle_id = 9101 order by f.position
 				""").query((rs, n) -> new int[] { rs.getInt(1), rs.getInt(2) }).list();
-		// GR-002: 18 Fragen, Positionen 1 bis 18 ohne Wiederholung, die Handlungsfelder 1 bis 6 in dieser Reihenfolge
+		// BR-002: 18 Fragen, Positionen 1 bis 18 ohne Wiederholung, die Handlungsfelder 1 bis 6 in dieser Reihenfolge
 		assertThat(zeilen.stream().map(z -> z[0]).toList())
 			.containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
 		assertThat(zeilen.stream().map(z -> z[1]).toList())
 			.containsExactly(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6);
 	}
 
-	// ---------------------------------------------------------------- GR-009
+	// ---------------------------------------------------------------- BR-009
 
 	@Test
 	@WithAnonymousUser
-	@UseCase(id = "UC-006", businessRules = { "GR-009" }, requirements = { "NFR-005" })
+	@UseCase(id = "UC-006", businessRules = { "BR-009" }, requirements = { "NFR-005" })
 	void aufruf_ohne_anmeldung_wird_abgewiesen() {
 		UI.getCurrent().navigate("fragenkatalog-erstellen");
 
@@ -604,7 +604,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 	@Test
 	@WithMockUser(roles = "TEAMLEITUNG")
-	@UseCase(id = "UC-006", businessRules = { "GR-009" }, requirements = { "NFR-005" })
+	@UseCase(id = "UC-006", businessRules = { "BR-009" }, requirements = { "NFR-005" })
 	void aufruf_ohne_passende_berechtigung_wird_abgewiesen() {
 		UI.getCurrent().navigate("fragenkatalog-erstellen");
 
@@ -612,7 +612,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
-	@UseCase(id = "UC-006", businessRules = { "GR-009" }, requirements = { "NFR-005" })
+	@UseCase(id = "UC-006", businessRules = { "BR-009" }, requirements = { "NFR-005" })
 	void administrator_erreicht_dieselbe_route() {
 		UI.getCurrent().navigate("fragenkatalog-erstellen");
 

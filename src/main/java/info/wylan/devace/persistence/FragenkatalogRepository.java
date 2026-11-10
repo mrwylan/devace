@@ -46,7 +46,7 @@ public class FragenkatalogRepository {
 		return this.ctx.select(FRAGENKATALOG.ID, FRAGENKATALOG.ROLLE_ID, FRAGENKATALOG.VERSION, FRAGENKATALOG.STATUS)
 			.from(FRAGENKATALOG)
 			.where(FRAGENKATALOG.ROLLE_ID.eq(rolleId))
-			// UC-006 GR-005: Entwurf und freigegebene Version werden über den Status unterschieden.
+			// UC-006 BR-005: Entwurf und freigegebene Version werden über den Status unterschieden.
 			.and(FRAGENKATALOG.STATUS.eq(status))
 			.fetchOptional(Records.mapping((id, rolle, version, st) -> new Fragenkatalog(id, rolle, version, st,
 					fragen(id))));
@@ -65,7 +65,7 @@ public class FragenkatalogRepository {
 	}
 
 	/**
-	 * UC-006 GR-004: höchste Versionsnummer der Rolle, 0 ohne Fragenkatalog.
+	 * UC-006 BR-004: höchste Versionsnummer der Rolle, 0 ohne Fragenkatalog.
 	 */
 	public int hoechsteVersion(long rolleId) {
 		Integer max = this.ctx.select(org.jooq.impl.DSL.max(FRAGENKATALOG.VERSION))

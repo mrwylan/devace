@@ -42,7 +42,7 @@ public class MagRepository {
 	 * Ändern wird die eigene MAG über {@code ausserId} ausgenommen.
 	 */
 	public boolean existsByScrumTeamAndLinienteam(String scrumTeam, String linienteam, Long ausserId) {
-		// UC-008 GR-002: Scrum Team und Linienteam gehören zu höchstens einer MAG (ohne Schreibweise).
+		// UC-008 BR-002: Scrum Team und Linienteam gehören zu höchstens einer MAG (ohne Schreibweise).
 		Condition condition = DSL.lower(MAG.SCRUM_TEAM)
 			.eq(DSL.lower(DSL.val(scrumTeam)))
 			.and(DSL.lower(MAG.LINIENTEAM).eq(DSL.lower(DSL.val(linienteam))));

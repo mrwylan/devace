@@ -11,6 +11,6 @@ CREATE TABLE mag
 );
 
 /* [jooq ignore start] */
--- UC-008 GR-002: Scrum Team und Linienteam gehören zu höchstens einer MAG, ohne Groß-/Kleinschreibung.
+-- UC-008 BR-002: Scrum Team und Linienteam gehören zu höchstens einer MAG, ohne Groß-/Kleinschreibung.
 CREATE UNIQUE INDEX mag_scrum_team_linienteam_uk ON mag (lower(scrum_team), lower(linienteam));
 /* [jooq ignore stop] */

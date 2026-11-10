@@ -114,46 +114,46 @@
 
 ## Geschäftsregeln
 
-### GR-001: Entscheidungsmodell je Frage
+### BR-001: Entscheidungsmodell je Frage
 
 Jede Frage hat genau eine Vorgabe je Stufe von 0 bis 5. Jede Vorgabe beschreibt, welche Antwort der Stufe entspricht, ist eine Pflichtangabe und hat höchstens 500 Zeichen.
 
-### GR-002: Frage
+### BR-002: Frage
 
 Eine Frage gehört zu genau einem Handlungsfeld. Der Wortlaut ist eine Pflichtangabe mit höchstens 500 Zeichen. Die Position einer Frage im Fragenkatalog ist eindeutig.
 
-### GR-003: Angaben für den KI-Entwurf
+### BR-003: Angaben für den KI-Entwurf
 
 Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10. Vorgeschlagen werden 3. Dieselbe Grenze gilt für die Zahl weiterer Fragen je Handlungsfeld. Die Schwerpunkte sind optional und haben höchstens 2000 Zeichen.
 
-### GR-004: Versionen und Entwurf
+### BR-004: Versionen und Entwurf
 
 Ein neuer Fragenkatalog einer Rolle erhält die um 1 höhere Nummer als die höchste Version dieser Rolle. Eine Rolle hat höchstens einen Entwurf; besteht ein Entwurf, setzt der Administrator ihn fort, statt einen weiteren zu beginnen. Die freigegebene Version als Ausgangspunkt steht nur zur Verfügung, wenn die Rolle eine freigegebene Version hat.
 
-### GR-005: Nur der Entwurf ändert sich
+### BR-005: Nur der Entwurf ändert sich
 
 Der Use Case ändert nur den Entwurf. Freigegebene und archivierte Fragenkataloge bleiben unverändert.
 
-### GR-006: KI-Entwurf ist ein Vorschlag
+### BR-006: KI-Entwurf ist ein Vorschlag
 
 Der Entwurf des KI-Modells ist ein Vorschlag. Er gilt erst nach der Prüfung und Freigabe durch den Administrator als Fragenkatalog in Assessments. Ein Entwurf darf Handlungsfelder ohne Frage enthalten; die Vollständigkeit für die Freigabe prüft UC-007.
 
-### GR-007: Anfrage an das KI-Modell ohne Personenbezug
+### BR-007: Anfrage an das KI-Modell ohne Personenbezug
 
 Die Anfrage an das KI-Modell enthält nur die Rolle, die Handlungsfelder, die angegebenen Schwerpunkte und die Zahl der Fragen. Sie enthält keine Angabe zu einer Person.
 
-### GR-008: Alltagsrelevanz
+### BR-008: Alltagsrelevanz
 
 Der Fragenkatalog nimmt Technologien und Grundlagen nach Relevanz im Alltag der Teams auf, nicht nach Eintrag in der Kompetenzmatrix.
 
-### GR-009: Nur für Administratoren
+### BR-009: Nur für Administratoren
 
 Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen.
 
-### GR-010: KI-Entwurf ergänzt den Entwurf
+### BR-010: KI-Entwurf ergänzt den Entwurf
 
 Der KI-Entwurf ändert und entfernt keine vorhandene Frage. Er ergänzt je Handlungsfeld so viele Fragen, bis die angegebene Zahl erreicht ist. Hat ein Handlungsfeld bereits mindestens so viele Fragen, ergänzt er dort keine. Hat jedes Handlungsfeld bereits mindestens so viele Fragen, fragt das System das KI-Modell nicht an, sondern weist darauf hin.
 
-### GR-011: Unvollständige Frage aus dem KI-Entwurf
+### BR-011: Unvollständige Frage aus dem KI-Entwurf
 
 Eine Frage des KI-Entwurfs, deren Entscheidungsmodell nicht für jede Stufe von 0 bis 5 eine Vorgabe enthält, erscheint im Entwurf und muss vor dem Speichern ergänzt werden. Als nicht verwertbar gilt nur ein KI-Entwurf ohne Frage.

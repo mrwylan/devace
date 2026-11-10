@@ -89,7 +89,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenIT extends AbstractBasePl
 	@BeforeEach
 	void anmelden() {
 		KI.reset();
-		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-006 GR-009, NFR-005).
+		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-006 BR-009, NFR-005).
 		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(ADMIN);
 		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(ADMIN_PASSWORT);
 		ButtonElement.getByText(this.page, "Anmelden").click();

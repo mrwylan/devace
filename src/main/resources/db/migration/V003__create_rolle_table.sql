@@ -9,6 +9,6 @@ CREATE TABLE rolle
 );
 
 /* [jooq ignore start] */
--- UC-008 GR-003: Der Name einer Rolle gehört zu höchstens einer Rolle, ohne Groß-/Kleinschreibung.
+-- UC-008 BR-003: Der Name einer Rolle gehört zu höchstens einer Rolle, ohne Groß-/Kleinschreibung.
 CREATE UNIQUE INDEX rolle_name_uk ON rolle (lower(name));
 /* [jooq ignore stop] */

@@ -98,38 +98,38 @@
 
 ## Geschäftsregeln
 
-### GR-001: Einladung gilt für ein Assessment
+### BR-001: Einladung gilt für ein Assessment
 
-Eine Einladung berechtigt zu genau einem Assessment. Das Assessment muss innerhalb der Gültigkeitsdauer der Einladung gestartet werden, danach ist die Einladung abgelaufen. Mit dem Start gilt sie als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach GR-009 gelöscht wurde. Ein gestartetes Assessment läuft nach Ablauf der Gültigkeitsdauer weiter.
+Eine Einladung berechtigt zu genau einem Assessment. Das Assessment muss innerhalb der Gültigkeitsdauer der Einladung gestartet werden, danach ist die Einladung abgelaufen. Mit dem Start gilt sie als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach BR-009 gelöscht wurde. Ein gestartetes Assessment läuft nach Ablauf der Gültigkeitsdauer weiter.
 
-### GR-002: Starthinweis vor dem Start
+### BR-002: Starthinweis vor dem Start
 
 Das Assessment beginnt erst, nachdem der Teilnehmer den Starthinweis bestätigt hat. Der Starthinweis nennt die eingesetzten KI-Modelle, die Angaben, die der Teilnehmer nicht erfassen soll (zum Beispiel Namen von Personen oder Kundenprojekte), und die Geltung der Firmenweisungen zum Umgang mit KI für Textantworten.
 
-### GR-003: Fragen der Rolle
+### BR-003: Fragen der Rolle
 
 Der Teilnehmer erhält die Fragen des freigegebenen Fragenkatalogs der Rolle seiner Einladung, in der Reihenfolge des Fragenkatalogs.
 
-### GR-004: Länge der Antwort
+### BR-004: Länge der Antwort
 
 Eine Antwort ist nicht leer und hat höchstens 500 Zeichen.
 
-### GR-005: Eine endgültige Antwort je Frage
+### BR-005: Eine endgültige Antwort je Frage
 
 Jede Frage wird genau einmal beantwortet. Der Teilnehmer ändert eine abgegebene Antwort nicht. Das KI-Modell stellt keine Nachfragen.
 
-### GR-006: Stufenzuordnung
+### BR-006: Stufenzuordnung
 
 Das KI-Modell ordnet jede Antwort nach der Stufenvorgabe der Frage einer Stufe von 0 bis 5 zu. Ordnet es keine Stufe zu, gilt die Stufe 0. Eine Antwort erreicht eine höhere Stufe nur durch die Zuordnung des KI-Modells.
 
-### GR-007: Anonyme Vorlage an das KI-Modell
+### BR-007: Anonyme Vorlage an das KI-Modell
 
 Das System legt dem KI-Modell nur die Frage, ihre Stufenvorgaben und den Text der Antwort vor, aber weder die Einladung noch die E-Mail-Adresse oder eine andere Angabe, die auf den Teilnehmer schließen lässt.
 
-### GR-008: Stufe bleibt verborgen
+### BR-008: Stufe bleibt verborgen
 
 Das System zeigt dem Teilnehmer die zugeordnete Stufe während des Assessments nicht an.
 
-### GR-009: Aufbewahrung laufender Antworten
+### BR-009: Aufbewahrung laufender Antworten
 
 Die Antworten eines laufenden Assessments bleiben erhalten, bis es abgeschlossen wird oder 7 Tage seit der letzten Eingabe vergangen sind. Danach wird das Assessment gelöscht und die Einladung ist eingelöst.

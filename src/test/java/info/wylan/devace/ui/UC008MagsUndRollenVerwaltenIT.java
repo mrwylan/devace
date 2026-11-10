@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Browser test für UC-008 "MAGs und Rollen verwalten". Erwartete Werte stammen aus der Spezifikation und den
  * Testdaten. Die Randwerte der Geschäftsregeln prüfen die Browserless-Tests; hier läuft, was die Administratorin
- * im Browser sieht. Das Anmelden prüft GR-007 mit.
+ * im Browser sieht. Das Anmelden prüft BR-007 mit.
  */
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -68,7 +68,7 @@ class UC008MagsUndRollenVerwaltenIT extends AbstractBasePlaywrightIT {
 
 	@BeforeEach
 	void anmelden() {
-		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-008 GR-007, NFR-005).
+		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-008 BR-007, NFR-005).
 		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(ADMIN);
 		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(ADMIN_PASSWORT);
 		ButtonElement.getByText(this.page, "Anmelden").click();
@@ -79,7 +79,7 @@ class UC008MagsUndRollenVerwaltenIT extends AbstractBasePlaywrightIT {
 
 	@AfterEach
 	void aufraeumen() {
-		// Die Oberfläche kann nicht löschen (GR-005): gezielt nur, was dieser Test angelegt hat.
+		// Die Oberfläche kann nicht löschen (BR-005): gezielt nur, was dieser Test angelegt hat.
 		this.jdbc.sql("delete from mag where scrum_team like 'UC008E%'").update();
 		this.jdbc.sql("delete from rolle where name like 'UC008E%'").update();
 	}
@@ -141,7 +141,7 @@ class UC008MagsUndRollenVerwaltenIT extends AbstractBasePlaywrightIT {
 	class A1AngabenFehlenOderSindUngueltig {
 
 		@Test
-		@DisplayName("GR-001: Fehlendes Scrum Team zeigt den Hinweis")
+		@DisplayName("BR-001: Fehlendes Scrum Team zeigt den Hinweis")
 		void pflichtangabe_fehlt() {
 			ButtonElement.getByText(page, "MAG anlegen").click();
 			TextFieldElement.getByLabel(page, "Linienteam").setValue(PRAEFIX + " Nord");
@@ -159,7 +159,7 @@ class UC008MagsUndRollenVerwaltenIT extends AbstractBasePlaywrightIT {
 	class A2MagOderRolleBestehtBereits {
 
 		@Test
-		@DisplayName("GR-002: Vorhandene MAG wird mit Hinweis abgewiesen")
+		@DisplayName("BR-002: Vorhandene MAG wird mit Hinweis abgewiesen")
 		void mag_besteht_bereits() {
 			ButtonElement.getByText(page, "MAG anlegen").click();
 			TextFieldElement.getByLabel(page, "Scrum Team").setValue("uc008 alpha");
@@ -170,7 +170,7 @@ class UC008MagsUndRollenVerwaltenIT extends AbstractBasePlaywrightIT {
 		}
 
 		@Test
-		@DisplayName("GR-003: Vorhandene Rolle wird mit Hinweis abgewiesen")
+		@DisplayName("BR-003: Vorhandene Rolle wird mit Hinweis abgewiesen")
 		void rolle_besteht_bereits() {
 			ButtonElement.getByText(page, "Rolle anlegen").click();
 			TextFieldElement.getByLabel(page, "Name").setValue("uc008 entwickler");

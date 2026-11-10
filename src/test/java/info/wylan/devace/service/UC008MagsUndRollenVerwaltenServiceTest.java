@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * UC-008, Service-Ebene: GR-004 (Teamleitung aus den vorhandenen Teamleitungen). Die übrigen Regeln prüfen die
+ * UC-008, Service-Ebene: BR-004 (Teamleitung aus den vorhandenen Teamleitungen). Die übrigen Regeln prüfen die
  * Tests der Ansicht, die diese Schicht mit durchlaufen.
  */
 @SpringBootTest
@@ -40,7 +40,7 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", businessRules = { "BR-004" })
 	void vorhandene_teamleitung_wird_zugeordnet() {
 		this.service.anlegen(new MagEingabe("UC008S Eins", "UC008S Nord", VORHANDENE_TEAMLEITUNG));
 
@@ -48,7 +48,7 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", businessRules = { "BR-004" })
 	void mag_ohne_teamleitung_ist_zulaessig() {
 		this.service.anlegen(new MagEingabe("UC008S Zwei", "UC008S Nord", null));
 
@@ -56,7 +56,7 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", businessRules = { "BR-004" })
 	void nicht_vorhandene_teamleitung_wird_beim_anlegen_abgewiesen() {
 		assertThatThrownBy(() -> this.service.anlegen(new MagEingabe("UC008S Drei", "UC008S Nord", UNBEKANNT)))
 			.isInstanceOf(TeamleitungNichtVorhandenException.class);
@@ -65,7 +65,7 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", businessRules = { "BR-004" })
 	void benutzer_ohne_funktion_teamleitung_wird_beim_anlegen_abgewiesen() {
 		assertThatThrownBy(
 				() -> this.service.anlegen(new MagEingabe("UC008S Vier", "UC008S Nord", BENUTZER_OHNE_TEAMLEITUNG)))
@@ -75,7 +75,7 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-008", businessRules = { "GR-004" })
+	@UseCase(id = "UC-008", businessRules = { "BR-004" })
 	void nicht_vorhandene_teamleitung_wird_beim_aendern_abgewiesen_und_die_mag_bleibt() {
 		this.service.anlegen(new MagEingabe("UC008S Fuenf", "UC008S Nord", VORHANDENE_TEAMLEITUNG));
 		long id = this.jdbc.sql("select id from mag where scrum_team = 'UC008S Fuenf'").query(Long.class).single();
