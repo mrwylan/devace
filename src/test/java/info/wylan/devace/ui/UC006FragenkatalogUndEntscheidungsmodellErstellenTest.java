@@ -523,6 +523,74 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		assertThat(fragenGesamt()).isEqualTo(18);
 	}
 
+	// ---------------------------------------------------------------- Fehlerfall, Position
+
+	@Test
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-005" })
+	void fehlgeschlagenes_speichern_laesst_freigegebene_und_archivierte_kataloge_unveraendert() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(FREIGEGEBEN)).click();
+		auswaehlen(Ausgangspunkt.FREIGEGEBENE_VERSION);
+		test(find(Button.class).withId("frage-hinzufuegen").single()).click();
+		fuelleFrage("UC006 Frage ohne Stufe 3?", "v0", "v1", "v2", "", "v4", "v5");
+		test(find(Button.class).withId("frage-uebernehmen").single()).click();
+
+		test(find(Button.class).withId("entwurf-speichern").single()).click();
+
+		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Vorgabe fehlt."));
+		// Post-F-2: freigegebene Version 2 und archivierte Version 1 bleiben, es entsteht kein Entwurf
+		assertThat(this.jdbc.sql("select status from fragenkatalog where id = 9101").query(String.class).single())
+			.isEqualTo("Freigegeben");
+		assertThat(this.jdbc.sql("select count(*) from frage where fragenkatalog_id = 9101").query(Long.class).single())
+			.isEqualTo(2L);
+		assertThat(this.jdbc.sql("select status from fragenkatalog where id = 9103").query(String.class).single())
+			.isEqualTo("Archiviert");
+		assertThat(this.jdbc.sql("select count(*) from fragenkatalog where rolle_id = 9102").query(Long.class).single())
+			.isEqualTo(2L);
+	}
+
+	@Test
+	@UseCase(id = "UC-006", scenario = "A4: Entwurf unvollständig oder ungültig", businessRules = { "GR-004" })
+	void fehlgeschlagenes_speichern_laesst_einen_vorhandenen_entwurf_unveraendert() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(ENTWURF)).click();
+		test(find(Button.class).withId("frage-hinzufuegen").single()).click();
+		fuelleFrage("UC006 Frage ohne Stufe 3?", "v0", "v1", "v2", "", "v4", "v5");
+		test(find(Button.class).withId("frage-uebernehmen").single()).click();
+
+		test(find(Button.class).withId("entwurf-speichern").single()).click();
+
+		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Vorgabe fehlt."));
+		// Post-F-3: der gespeicherte Entwurf (Version 1, eine Frage mit sechs Vorgaben) ist unverändert
+		assertThat(this.jdbc.sql("select version from fragenkatalog where id = 9102").query(Integer.class).single())
+			.isEqualTo(1);
+		assertThat(this.jdbc.sql("select text from frage where fragenkatalog_id = 9102").query(String.class).list())
+			.containsExactly("UC006 Wie testen Sie im Alltag?");
+		assertThat(this.jdbc.sql("select beschreibung from stufenvorgabe where frage_id = 9103 order by stufe")
+			.query(String.class)
+			.list()).containsExactly("Vorgabe 0 zu Frage 9103", "Vorgabe 1 zu Frage 9103", "Vorgabe 2 zu Frage 9103",
+					"Vorgabe 3 zu Frage 9103", "Vorgabe 4 zu Frage 9103", "Vorgabe 5 zu Frage 9103");
+	}
+
+	@Test
+	@UseCase(id = "UC-006", scenario = "Steps 9-12: Entwurf speichern", businessRules = { "GR-002" })
+	void positionen_der_fragen_sind_eindeutig_und_nach_handlungsfeld_geordnet() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(LEER)).click();
+		test(find(Button.class).withId("ki-anfordern").single()).click();
+		test(find(Button.class).withId("entwurf-speichern").single()).click();
+
+		List<int[]> zeilen = this.jdbc.sql("""
+				select f.position, h.nummer from frage f join fragenkatalog k on k.id = f.fragenkatalog_id
+				join handlungsfeld h on h.id = f.handlungsfeld_id where k.rolle_id = 9101 order by f.position
+				""").query((rs, n) -> new int[] { rs.getInt(1), rs.getInt(2) }).list();
+		// GR-002: 18 Fragen, Positionen 1 bis 18 ohne Wiederholung, die Handlungsfelder 1 bis 6 in dieser Reihenfolge
+		assertThat(zeilen.stream().map(z -> z[0]).toList())
+			.containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+		assertThat(zeilen.stream().map(z -> z[1]).toList())
+			.containsExactly(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6);
+	}
+
 	// ---------------------------------------------------------------- GR-009
 
 	@Test

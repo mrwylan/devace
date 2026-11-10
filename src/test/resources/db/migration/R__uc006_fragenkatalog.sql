@@ -6,7 +6,7 @@ INSERT INTO benutzer (id, benutzername, passwort_hash, berechtigung)
 VALUES (9101, 'uc006-teamleitung', 'unused', 'Teamleitung')
 ON CONFLICT DO NOTHING;
 
--- Rolle ohne Fragenkatalog, Rolle mit freigegebenem Katalog (Version 2), Rolle mit Entwurf (Version 1)
+-- Rolle ohne Fragenkatalog, Rolle mit freigegebenem Katalog (Version 2) und archiviertem (Version 1), Rolle mit Entwurf (Version 1)
 INSERT INTO rolle (id, name)
 VALUES (9101, 'UC006 Leer'),
        (9102, 'UC006 Freigegeben'),
@@ -15,7 +15,8 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO fragenkatalog (id, rolle_id, version, status, erstellt_am, freigegeben_am, freigegeben_von_id)
 VALUES (9101, 9102, 2, 'Freigegeben', TIMESTAMP '2026-01-01 10:00:00', TIMESTAMP '2026-01-02 10:00:00', 9101),
-       (9102, 9103, 1, 'Entwurf', TIMESTAMP '2026-02-01 10:00:00', NULL, NULL)
+       (9102, 9103, 1, 'Entwurf', TIMESTAMP '2026-02-01 10:00:00', NULL, NULL),
+       (9103, 9102, 1, 'Archiviert', TIMESTAMP '2025-06-01 10:00:00', TIMESTAMP '2025-06-02 10:00:00', 9101)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO frage (id, fragenkatalog_id, handlungsfeld_id, text, position)
