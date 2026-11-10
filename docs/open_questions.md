@@ -375,12 +375,13 @@ Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein bes
 **Element:** UC-001 Schritt 8
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Das Mockup "Einladungen – Ergebnis" zeigt in der Liste der nicht versendeten Adressen eine Spalte "Grund" (z. B. "E-Mail-System hat den Versand abgelehnt"). Schritt 8 und A4 nennen nur die Adressen, bei denen der Versand scheiterte.
 
 **Answer:** Nein. Die Liste zeigt nur die Adressen. Die Spezifikation gilt; die Spalte "Grund" im Mockup wird nicht gebaut. Die Zusammenfassung vor dem Versand ist dagegen übernommen (UC-001 Schritt 5).
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-001 step 10
 
 ## OQ-036: Welcher Wortlaut gilt, wenn das Mockup von früheren Antworten abweicht?
 
@@ -436,9 +437,10 @@ Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs 
 **Element:** UC-001 GR-009
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". GR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-001 GR-009

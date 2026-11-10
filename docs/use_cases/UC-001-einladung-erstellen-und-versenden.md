@@ -26,16 +26,18 @@
 2. Das System zeigt die MAGs der Teamleitung und die Rollen mit freigegebenem Fragenkatalog zur Auswahl an.
 3. Die Teamleitung wählt eine MAG und eine Rolle.
 4. Die Teamleitung gibt die E-Mail-Adressen der Befragten und die Gültigkeitsdauer der Einladungen an.
-5. Die Teamleitung bestätigt die Erstellung und bestätigt die Zusammenfassung mit der Anzahl der Einladungen, der gewählten MAG und Rolle sowie der Gültigkeitsdauer.
-6. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz und der angegebenen Gültigkeitsdauer, die der gewählten MAG und Rolle zugeordnet ist.
-7. Das System versendet jede Einladung per E-Mail-System an die zugehörige Adresse.
-8. Das System zeigt der Teamleitung die Anzahl der versendeten Einladungen und die Adressen, bei denen der Versand scheiterte.
+5. Die Teamleitung fordert die Erstellung an.
+6. Das System prüft die Angaben und zeigt eine Zusammenfassung mit der Anzahl der Einladungen (doppelte Adressen zählen nur einmal), der gewählten MAG und Rolle sowie der Gültigkeitsdauer.
+7. Die Teamleitung bestätigt die Zusammenfassung.
+8. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz und der angegebenen Gültigkeitsdauer, die der gewählten MAG und Rolle zugeordnet ist.
+9. Das System versendet jede Einladung per E-Mail-System an die zugehörige Adresse.
+10. Das System zeigt der Teamleitung die Anzahl der versendeten Einladungen und nur die Adressen, bei denen der Versand scheiterte.
 
 ## Alternativabläufe
 
 ### A1: Angaben fehlen oder sind ungültig
 
-**Auslöser:** Die Angabe enthält keine Adresse, mindestens eine ungültige Adresse oder eine ungültige Gültigkeitsdauer (Schritt 5)  
+**Auslöser:** Die Angabe enthält keine Adresse, mindestens eine ungültige Adresse oder eine ungültige Gültigkeitsdauer (Schritt 6)  
 **Ablauf:**
 
 1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
@@ -52,7 +54,7 @@
 
 ### A3: Teamleitung bricht ab
 
-**Auslöser:** Die Teamleitung bricht die Erstellung ab (Schritt 5)  
+**Auslöser:** Die Teamleitung bricht die Erstellung ab (Schritt 7)  
 **Ablauf:**
 
 1. Das System verwirft die Angaben.
@@ -60,12 +62,12 @@
 
 ### A4: Versand scheitert
 
-**Auslöser:** Das E-Mail-System lehnt den Versand ab oder ist nicht erreichbar (Schritt 7)  
+**Auslöser:** Das E-Mail-System lehnt den Versand ab oder ist nicht erreichbar (Schritt 9)  
 **Ablauf:**
 
 1. Das System verwirft die Einladung dieser Adresse.
 2. Das System versendet die Einladungen der übrigen Adressen weiter.
-3. Der Use Case wird bei Schritt 8 fortgesetzt.
+3. Der Use Case wird bei Schritt 10 fortgesetzt.
 
 ## Nachbedingungen
 
@@ -117,4 +119,4 @@ Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen 
 
 ### GR-009: Nur für angemeldete Teamleitungen
 
-Nur die angemeldete Teamleitung erstellt Einladungen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen.
+Nur die angemeldete Teamleitung erstellt Einladungen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen. Die Navigation zeigt Einträge, für die die Teamleitung keine passende Berechtigung hat, deaktiviert.
