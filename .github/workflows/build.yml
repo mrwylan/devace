@@ -93,7 +93,8 @@ jobs:
         run: |
           VERSION="$(./mvnw -q -B help:evaluate -Dexpression=project.version -DforceStdout)"
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          ./mvnw -B spring-boot:build-image \
+          # -Pproduction bundles the Vaadin frontend; without it the container starts in development mode and fails.
+          ./mvnw -B -Pproduction spring-boot:build-image \
             -DskipTests \
             -Dspring-boot.build-image.imageName="${IMAGE}:${GITHUB_SHA}" \
             -Dspring-boot.build-image.publish=true

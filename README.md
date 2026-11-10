@@ -173,9 +173,10 @@ Einzelne Tests: `./mvnw -B test -Dtest='UC006*Test'`, Browser-Tests mit
 Das Image entsteht mit den Spring-Boot-Buildpacks, nicht mit einem Dockerfile:
 
 ```bash
-./mvnw -B spring-boot:build-image -Dspring-boot.build-image.imageName=devace:local
+./mvnw -B -Pproduction spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=devace:local
 ```
 
+Das Profil `production` bündelt das Vaadin-Frontend. Ohne es startet der Container im Entwicklungsmodus und bricht ab.
 Beim Start des Containers gelten dieselben Umgebungsvariablen wie oben.
 
 ## Arbeiten am Projekt
