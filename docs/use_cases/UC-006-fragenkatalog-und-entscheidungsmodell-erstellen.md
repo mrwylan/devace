@@ -11,7 +11,8 @@
 **Status:** Genehmigt  
 
 **Anforderungen:** [FR-012, FR-013, NFR-005, NFR-010, C-006](../requirements.md)  
-**Schichten:** UI
+**Schichten:** UI  
+**Mockup:** [Übersicht](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=29-1999), [Ausgangspunkt wählen](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=29-2274), [Entwurf](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=30-2300), [Frage und Entscheidungsmodell](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=30-2779), [KI-Anforderung fehlgeschlagen (A2, A3)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=31-3722), [Entwurf unvollständig (A4)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=31-4106), [Genügend Fragen vorhanden (A6)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=31-4481)
 
 ## Vorbedingungen
 
