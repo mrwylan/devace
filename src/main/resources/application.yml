@@ -17,3 +17,10 @@ devace:
     # Optional first administrator, created at startup when none exists (OQ-031).
     username: ${DEVACE_ADMIN_USERNAME:}
     password: ${DEVACE_ADMIN_PASSWORD:}
+  ki:
+    # KI-Modell nur über Spring AI und OpenRouter; der Schlüssel kommt aus der Umgebung.
+    base-url: https://openrouter.ai/api/v1
+    api-key: ${OPENROUTER_API_KEY:}
+    modelle:
+      # Modell-ID je Aufgabe (OQ-034); leer, bis eine eingerichtet ist.
+      fragenkatalog: ${DEVACE_KI_MODELL_FRAGENKATALOG:}

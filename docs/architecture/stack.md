@@ -90,3 +90,6 @@ reference and corrects them. Do not edit the rows by hand; rerun the layer skill
 | E2E | vaadin-e2e-test | Name | `UC<id><Name>IT` for a use case, `TC<id><Name>IT` for a test case journey |
 | Service | spring-service-test | Test | `@UseCase(id = "UC-XXX", scenario = "…", businessRules = {"BR-YYY"}, requirements = {"NFR-XXX"})` on every service test method |
 | Service | spring-service-test | Name | `UC<id><Name>ServiceTest`, e.g. `UC001RegisterGuestServiceTest` |
+| Client | spring-client | Code | `UC-XXX` in the Javadoc of the outbound port method that realizes a step or an alternative flow |
+| Client | spring-client | Code | `// UC-XXX BR-YYY:` directly above an adapter check that enforces a rule of the external system |
+| Client | spring-client | Name | `<System>Client` port interfaces; `<System>RestClient` / `<System>Publisher` adapters implementing them |
