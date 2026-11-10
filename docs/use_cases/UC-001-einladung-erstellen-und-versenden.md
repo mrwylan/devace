@@ -11,7 +11,8 @@
 **Status:** Genehmigt  
 
 **Anforderungen:** [FR-001, FR-002, NFR-001, NFR-002, NFR-005, NFR-010](../requirements.md)  
-**Schichten:** UI
+**Schichten:** UI  
+**Mockup:** [Formular](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=21-532), [Eingabe prüfen (A1)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=21-820), [Ergebnis](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=21-1064), [Keine Rolle (A2)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=21-1295), [Bestätigen](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=21-1437)
 
 ## Vorbedingungen
 
@@ -25,7 +26,7 @@
 2. Das System zeigt die MAGs der Teamleitung und die Rollen mit freigegebenem Fragenkatalog zur Auswahl an.
 3. Die Teamleitung wählt eine MAG und eine Rolle.
 4. Die Teamleitung gibt die E-Mail-Adressen der Befragten und die Gültigkeitsdauer der Einladungen an.
-5. Die Teamleitung bestätigt die Erstellung.
+5. Die Teamleitung bestätigt die Erstellung und bestätigt die Zusammenfassung mit der Anzahl der Einladungen, der gewählten MAG und Rolle sowie der Gültigkeitsdauer.
 6. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz und der angegebenen Gültigkeitsdauer, die der gewählten MAG und Rolle zugeordnet ist.
 7. Das System versendet jede Einladung per E-Mail-System an die zugehörige Adresse.
 8. Das System zeigt der Teamleitung die Anzahl der versendeten Einladungen und die Adressen, bei denen der Versand scheiterte.

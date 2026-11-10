@@ -369,3 +369,39 @@ A2, A3, A4 und A6 sprechen von Hinweisen, Schritt 12 von einer Bestätigung, nen
 **Assumed:** Das Modell je Aufgabe (Fragenkatalog erstellen, Antworten bewerten, Textreport) wird in der Konfiguration festgelegt und ist ohne Neubau über Umgebungsvariablen änderbar. Für UC-006 gilt nur die Aufgabe Fragenkatalog erstellen.
 
 Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein besseres Modell zum Erstellen der Fragen samt Bewertungs-Prompt, ein günstigeres für die Durchführung und Bewertung eines Assessments, ein kleineres für den Textreport. Ob die Wahl später in der Oberfläche (zur Laufzeit) erfolgen soll, ist offen und gehört in eine eigene Anforderung.
+
+## OQ-035: Gilt die Spalte "Grund" der nicht versendeten Adressen aus dem Mockup?
+
+**Element:** UC-001 Schritt 8
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Das Mockup "Einladungen – Ergebnis" zeigt in der Liste der nicht versendeten Adressen eine Spalte "Grund" (z. B. "E-Mail-System hat den Versand abgelehnt"). Schritt 8 und A4 nennen nur die Adressen, bei denen der Versand scheiterte.
+
+**Answer:** Nein. Die Liste zeigt nur die Adressen. Die Spezifikation gilt; die Spalte "Grund" im Mockup wird nicht gebaut. Die Zusammenfassung vor dem Versand ist dagegen übernommen (UC-001 Schritt 5).
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-036: Welcher Wortlaut gilt, wenn das Mockup von früheren Antworten abweicht?
+
+**Element:** UC-006 A2, A3, A4, A6; UC-008 A1, A2
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Die Mockups zeigen andere Hinweistexte als OQ-030 (UC-008) und OQ-033 (UC-006) festlegen, z. B. "Scrum Team ist eine Pflichtangabe.", "Diese MAG besteht bereits: Scrum Team Alpha · Linienteam Entwicklung." und "Kein Entwurf entstanden – Das KI-Modell ist nicht erreichbar. Der Ausgangspunkt und Ihre bisherigen Angaben bleiben erhalten."
+
+**Answer:** Die bisherigen Antworten OQ-030 und OQ-033 gelten. Der Wortlaut im Mockup ist ein Platzhalter; das Layout folgt dem Mockup.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-037: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
+
+**Element:** UC-006 GR-009; UC-008 GR-007; UC-001 GR-009
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". Die Regeln GR-009 und GR-007 lassen nur Administratoren zu.
+
+**Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
+**Answered by:** Jakob Albrecht, 2026-11-10

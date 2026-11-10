@@ -10,7 +10,8 @@
 **Status:** Genehmigt  
 
 **Anforderungen:** [FR-015, NFR-005, NFR-010](../requirements.md)  
-**Schichten:** UI
+**Schichten:** UI  
+**Mockup:** [Übersicht](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=23-918), [MAG anlegen](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=23-1267), [Eingabe prüfen (A1)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=23-1452), [MAG besteht bereits (A2)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=23-1635), [Rolle ändern](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=23-1817)
 
 ## Vorbedingungen
 
