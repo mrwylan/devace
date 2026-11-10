@@ -332,12 +332,13 @@ A1 und A2 sagen nur, das System weise auf fehlende oder ungültige Angaben bzw. 
 **Element:** Entity: BENUTZER
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Das Entity-Modell nennt BENUTZER nur als externe Systemgrenze mit der Spalte id. Die Anmeldung (OQ-023) braucht Benutzername, Passwort und die Funktion der Person (Teamleitung, Schulungsverantwortliche, Administrator). Wer weitere Konten anlegt, ist in OQ-025 offen.
 
 **Answer:** Tabelle benutzer mit id, benutzername (eindeutig), passwort_hash und berechtigung (Teamleitung, Schulungsverantwortliche, Administrator). Der erste Administrator entsteht beim Start aus den Umgebungsvariablen DEVACE_ADMIN_USERNAME und DEVACE_ADMIN_PASSWORD, wenn es noch keinen Administrator gibt; das Passwort wird gehasht gespeichert und nie ins Repository geschrieben.
 **Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** Entity: BENUTZER
 
 ## OQ-032: Welchen Wortlaut hat der Hinweis, wenn eine MAG eine nicht vorhandene Teamleitung erhält?
 

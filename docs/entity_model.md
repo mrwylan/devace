@@ -1,13 +1,15 @@
 # Entity Model
 
-BENUTZER (id) ist die Anmeldeidentität von Teamleitung, Schulungsverantwortlichen und Administratoren und ist eine externe Systemgrenze.
-
 Quelle: `docs/requirements.md`, Begriffe: `docs/glossary.md`. MAG (Scrum Team, Linienteam) und ROLLE sind getrennt; Scores und Einladungen verweisen auf beide.
 
 ## Entity Relationship Diagram
 
 ```mermaid
 erDiagram
+    BENUTZER ||--o{ MAG : "leitet"
+    BENUTZER ||--o{ FRAGENKATALOG : "gibt frei"
+    BENUTZER ||--o{ EINLADUNG : "erstellt"
+    BENUTZER ||--o{ TESTLAUF : "führt aus"
     ROLLE ||--o{ FRAGENKATALOG : "hat"
     FRAGENKATALOG ||--o{ FRAGE : "enthält"
     HANDLUNGSFELD ||--o{ FRAGE : "gliedert"
@@ -184,6 +186,17 @@ Score eines Handlungsfelds aus einem abgeschlossenen Assessment, fünf Jahre auf
 | erfasst_am | Datum der Erfassung | Date | - | Not Null |
 
 ## Supportive
+
+### BENUTZER
+
+Anmeldekonto von Teamleitung, Schulungsverantwortlichen und Administratoren; die Berechtigung bestimmt, welche Ansichten die Person nutzt.
+
+| Attribute | Description | Data Type | Length/Precision | Validation Rules |
+|-----------|-------------|-----------|------------------|------------------|
+| id | Unique identifier | Long | 19 | Primary Key, Sequence |
+| benutzername | Name, mit dem sich die Person anmeldet | String | 100 | Not Null, Unique |
+| passwort_hash | Gehashtes Passwort, nie im Klartext | String | 255 | Not Null |
+| berechtigung | Funktion der Person | String | 30 | Not Null, Values: Teamleitung, Schulungsverantwortliche, Administrator |
 
 ### EINLADUNG
 
