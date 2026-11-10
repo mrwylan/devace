@@ -11,7 +11,8 @@
 **Status:** Entwurf  
 
 **Anforderungen:** [FR-007, FR-008, FR-009, NFR-001, NFR-002, NFR-003, NFR-010, C-002, C-003, C-005](../requirements.md)  
-**Schichten:** UI
+**Schichten:** UI  
+**Mockup:** [Auswertung](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4323), [Textreport nicht erstellt (A1)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4487), [Textreport nicht mehr verfügbar (A3)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4564)
 
 ## Vorbedingungen
 
