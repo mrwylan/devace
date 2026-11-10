@@ -93,3 +93,5 @@ reference and corrects them. Do not edit the rows by hand; rerun the layer skill
 | Client | spring-client | Code | `UC-XXX` in the Javadoc of the outbound port method that realizes a step or an alternative flow |
 | Client | spring-client | Code | `// UC-XXX BR-YYY:` directly above an adapter check that enforces a rule of the external system |
 | Client | spring-client | Name | `<System>Client` port interfaces; `<System>RestClient` / `<System>Publisher` adapters implementing them |
+| Client | spring-client-test | Test | `@UseCase(id = "UC-XXX", scenario = "…")` on every adapter test method |
+| Client | spring-client-test | Name | `<System>ClientTest` adapter tests; `<System>ClientFake` in the test sources |
