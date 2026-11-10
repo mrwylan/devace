@@ -29,7 +29,7 @@
 5. Die Teamleitung fordert die Erstellung an.
 6. Das System prüft die Angaben und zeigt eine Zusammenfassung mit der Anzahl der Einladungen (doppelte Adressen zählen nur einmal), der gewählten MAG und Rolle sowie der Gültigkeitsdauer.
 7. Die Teamleitung bestätigt die Zusammenfassung.
-8. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz und der angegebenen Gültigkeitsdauer, die der gewählten MAG und Rolle zugeordnet ist.
+8. Das System erstellt je Adresse eine Einladung mit eindeutiger Referenz, der angegebenen Gültigkeitsdauer und dem daraus berechneten Ablaufdatum, die der gewählten MAG und Rolle zugeordnet ist.
 9. Das System versendet jede Einladung per E-Mail-System an die zugehörige Adresse.
 10. Das System zeigt der Teamleitung die Anzahl der versendeten Einladungen und nur die Adressen, bei denen der Versand scheiterte.
 
@@ -40,7 +40,7 @@
 **Auslöser:** Die Angabe enthält keine Adresse, mehr als 50 Adressen, mindestens eine ungültige Adresse oder eine ungültige Gültigkeitsdauer (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
+1. Das System weist auf die fehlenden oder ungültigen Angaben hin: „Bitte mindestens eine Adresse eingeben.“, „Höchstens 50 Adressen je Durchgang.“, „Mindestens eine Adresse ist ungültig: <Adresse>. Bitte korrigieren.“ oder „Die Zahl muss zwischen 1 und 30 liegen.“
 2. Die Teamleitung korrigiert die Angaben.
 3. Der Use Case wird bei Schritt 4 fortgesetzt.
 
@@ -49,7 +49,7 @@
 **Auslöser:** Es gibt keine Rolle mit freigegebenem Fragenkatalog (Schritt 2)  
 **Ablauf:**
 
-1. Das System weist die Teamleitung darauf hin, dass noch keine Einladung möglich ist.
+1. Das System weist die Teamleitung darauf hin, dass noch keine Einladung möglich ist: „Noch keine Einladung möglich“ mit „Es gibt noch keine Rolle mit freigegebenem Fragenkatalog. Bitte wenden Sie sich an einen Administrator.“
 2. Der Use Case endet.
 
 ### A3: Teamleitung bricht ab
@@ -73,7 +73,7 @@
 
 ### Erfolgsfall
 
-- Für jede Adresse, deren Versand gelang, existiert eine Einladung mit eindeutiger Referenz, der angegebenen Gültigkeitsdauer, der gewählten MAG und Rolle sowie dem Status Versendet.
+- Für jede Adresse, deren Versand gelang, existiert eine Einladung mit eindeutiger Referenz, der angegebenen Gültigkeitsdauer, dem Ablaufdatum, der gewählten MAG und Rolle sowie dem Status Versendet.
 - Jeder Teilnehmer hat eine E-Mail mit seiner Einladung erhalten.
 - Keine E-Mail-Adresse ist gespeichert.
 
@@ -103,19 +103,19 @@ Das System verwendet die E-Mail-Adresse nur für den Versand der Einladung. Es s
 
 ### BR-005: Doppelte Adressen
 
-Führt die Teamleitung dieselbe Adresse mehrfach auf, erhält sie eine einzige Einladung.
+Führt die Teamleitung dieselbe Adresse mehrfach auf, erhält sie eine einzige Einladung. Adressen, die sich nur in Groß- und Kleinschreibung oder in umgebenden Leerzeichen unterscheiden, gelten als dieselbe Adresse; es gilt die erste Schreibweise.
 
 ### BR-006: Gültige E-Mail-Adresse
 
-Eine Adresse ist gültig, wenn sie aus einem lokalen Teil, dem Zeichen @ und einem Domänenteil besteht und keine Leerzeichen enthält. Eine leere Angabe enthält keine Adresse.
+Eine Adresse ist gültig, wenn sie aus einem lokalen Teil, dem Zeichen @ und einem Domänenteil mit mindestens einem Punkt besteht und keine Leerzeichen enthält. Eine leere Angabe enthält keine Adresse.
 
 ### BR-007: Inhalt der E-Mail
 
-Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt: den Betreff "Einladung zum devace-Assessment", einen kurzen Text und den Link zur Einladung.
+Die E-Mail enthält nur die Einladung und keinen weiteren Inhalt: den Betreff "Einladung zum devace-Assessment", einen kurzen Text und den Link zur Einladung. Der Text lautet: „Sie sind zu einem devace-Assessment eingeladen. Über den folgenden Link starten Sie es:“, danach folgt der Link.
 
 ### BR-008: Gültigkeitsdauer
 
-Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung. Die Einladung ist bis zum Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr) gültig.
+Die Gültigkeitsdauer ist eine ganze Zahl von Tagen von 1 bis 30. Vorgeschlagen werden 30 Tage. Sie gilt für alle Einladungen eines Durchgangs und beginnt mit der Erstellung der Einladung. Die Einladung ist bis zum Ablauf des letzten Tages der Gültigkeitsdauer (24 Uhr) gültig. Das System berechnet das Ablaufdatum bei der Erstellung und speichert es mit der Einladung.
 
 ### BR-009: Nur für angemeldete Teamleitungen
 
