@@ -501,9 +501,9 @@ Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein bes
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Open
-**Assumed:** Der Textreport enthält je Handlungsfeld die Würdigung der Leistung, die Begründung der Einstufung und Hinweise auf die nächsten Investitionen, aber keine wörtlichen Antworttexte der Befragten.
+**Assumed:** Der Textreport enthält je Handlungsfeld die Würdigung der Leistung, die Begründung der Einstufung und Hinweise auf die nächsten Investitionen, aber keine wörtlichen Antworttexte des Teilnehmers.
 
-Die Vorgabe lautet, dass der Textreport die Leistung würdigt, die Einstufung begründet und Hinweise zu den nächsten Investitionen gibt. Ob er zusätzlich Fragen, Antworten und Stufen im Wortlaut aufführt, ist offen. Die Antworten werden nach dem Download gelöscht; der Textreport ist danach die einzige Aufzeichnung der Befragten.
+Die Vorgabe lautet, dass der Textreport die Leistung würdigt, die Einstufung begründet und Hinweise zu den nächsten Investitionen gibt. Ob er zusätzlich Fragen, Antworten und Stufen im Wortlaut aufführt, ist offen. Die Antworten werden nach dem Download gelöscht; der Textreport ist danach die einzige Aufzeichnung des Teilnehmers.
 
 ## OQ-046: Wie läuft der einmalige Download, und wann verfällt der Textreport?
 
@@ -521,7 +521,7 @@ FR-008 verlangt den einmaligen Download, FR-009 die Löschung der Antworten nach
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Open
-**Assumed:** Das System weist darauf hin, speichert keine Scores und lässt das Assessment laufend. Die Befragte kann den Abschluss erneut anfordern; die Antworten bleiben bis dahin erhalten (NFR-004).
+**Assumed:** Das System weist darauf hin, speichert keine Scores und lässt das Assessment laufend. Der Teilnehmer kann den Abschluss erneut anfordern; die Antworten bleiben bis dahin erhalten (NFR-004).
 
 Weder die Anforderungen noch die Vision sagen, wie das System mit einem Ausfall des KI-Modells beim Abschluss umgeht. Alternativen: Scores sofort speichern und den Textreport später nachliefern, oder den Abschluss ohne Textreport zulassen.
 
@@ -535,12 +535,12 @@ Weder die Anforderungen noch die Vision sagen, wie das System mit einem Ausfall 
 
 Das Entity-Modell führt den Score als Dezimalzahl mit zwei Nachkommastellen (SCORE.wert). Die Anforderung nennt keine Rundung, und ein Handlungsfeld ohne Frage ergäbe eine Division durch null.
 
-## OQ-049: Zeigt das System der Befragten ihre eigene Auswertung mit Radar-Chart und Scores?
+## OQ-049: Zeigt das System dem Teilnehmer seine eigene Auswertung mit Radar-Chart und Scores?
 
 **Element:** UC-003 step 5
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
 **Status:** Open
-**Assumed:** Ja. Die Befragte sieht beim Abschluss ihr Radar-Chart, ihre Scores je Handlungsfeld und den Textreport. Sie werden nicht gespeichert und nicht erneut angezeigt.
+**Assumed:** Ja. Der Teilnehmer sieht beim Abschluss sein Radar-Chart, seine Scores je Handlungsfeld und den Textreport. Sie werden nicht gespeichert und nicht erneut angezeigt.
 
-Der Product Owner wünscht eine Auswertung für die Befragte direkt beim Abschluss. Die Anforderungen kennen das Radar-Chart nur je MAG und Rolle für Teamleitung und Schulungsverantwortliche (FR-010, FR-011). Die Anforderung für die persönliche Auswertung fehlt und gehört in `/requirements`; das Glossar beschreibt das Radar-Chart nur je MAG und Rolle.
+Der Product Owner wünscht eine Auswertung für den Teilnehmer direkt beim Abschluss. Die Anforderungen kennen das Radar-Chart nur je MAG und Rolle für Teamleitung und Schulungsverantwortliche (FR-010, FR-011). Die Anforderung für die persönliche Auswertung fehlt und gehört in `/requirements`; das Glossar beschreibt das Radar-Chart nur je MAG und Rolle.

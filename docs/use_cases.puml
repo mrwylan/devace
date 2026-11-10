@@ -2,7 +2,7 @@
 left to right direction
 
 actor "Teamleitung" as teamleitung
-actor "Befragte" as befragte
+actor "Teilnehmer" as teilnehmer
 actor "Schulungsverantwortliche" as schulung
 actor "Administrator" as admin
 actor "KI-Modell" as ki <<system>>
@@ -33,8 +33,8 @@ rectangle "devace" {
 
 teamleitung --> UC001
 teamleitung --> UC004
-befragte --> UC002
-befragte --> UC003
+teilnehmer --> UC002
+teilnehmer --> UC003
 schulung --> UC005
 admin --> UC006
 admin --> UC007

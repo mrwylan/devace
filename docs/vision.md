@@ -20,7 +20,7 @@ Die Kompetenzmatrix zeigt viele Einzelwerte, aber kein Gesamtbild. Die Teamleitu
 
 ## 3. Vision
 
-devace ist ein **KI-gestütztes Assessment**. Es erstellt einen Fragenkatalog, der die Handlungsfelder gezielt prüft, führt die Befragten im Dialog durch die Fragen und bewertet die Antworten nach einem festen Entscheidungsmodell.
+devace ist ein **KI-gestütztes Assessment**. Es erstellt einen Fragenkatalog, der die Handlungsfelder gezielt prüft, führt die Teilnehmer im Dialog durch die Fragen und bewertet die Antworten nach einem festen Entscheidungsmodell.
 
 Das Ergebnis je Mitarbeitergruppe ist ein **Radar-Chart** über die Handlungsfelder. Das Gespräch dreht sich damit um Handlungsfelder und nächste Entwicklungsschritte, nicht um einzelne Werkzeuge.
 
@@ -77,10 +77,10 @@ Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage
 ## 8. Ablauf des Assessments (Fachsicht)
 
 1. **Fragenkatalog:** Das System erstellt mit KI-Unterstützung einen Fragenkatalog, der die Handlungsfelder gezielt prüft. Zu jeder Frage ist vorgegeben, welcher Stufe welche Antwort entspricht.
-2. **Dialog:** Die befragte Person beantwortet die Fragen im Dialog mit dem System. Antworten sind Freitext. Die Interaktion mit der KI ist anonymisiert und lässt keinen Rückschluss auf die Person zu.
+2. **Dialog:** Der Teilnehmer beantwortet die Fragen im Dialog mit dem System. Antworten sind Freitext. Die Interaktion mit der KI ist anonymisiert und lässt keinen Rückschluss auf die Person zu.
 3. **Bewertung:** Die KI ordnet die Antworten den vorgegebenen Stufen zu.
 4. **Score:** Je Handlungsfeld werden die Stufen der Fragen aufsummiert und durch die Anzahl der Fragen geteilt. Das Ergebnis ist der Score des Handlungsfelds, zwischen 0 und 5. Nur die Scores werden auf Handlungsfeld-Ebene gespeichert.
-5. **Textreport:** Nach Abschluss wird ein Textreport erstellt. Er wird der befragten Person einmalig zum Download angeboten; sie verwaltet ihn selbst. Danach werden die einzelnen Antworten gelöscht.
+5. **Textreport:** Nach Abschluss wird ein Textreport erstellt. Er wird dem Teilnehmer einmalig zum Download angeboten; er verwaltet ihn selbst. Danach werden die einzelnen Antworten gelöscht.
 6. **Ergebnis:** Die Scores werden je MAG und Rolle als Radar-Chart dargestellt.
 
 ## 9. Erfolgskriterien (vorläufig)
@@ -95,7 +95,7 @@ Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage
 ## 10. Fachliche Rahmenbedingungen
 
 - **Anonymität:** Die Interaktion mit der KI ist anonymisiert. Sie lässt keinen Rückschluss auf die Person zu. Es wird kein Identifikator zur Person übergeben.
-- **Hinweis beim Start:** Vor jedem Assessment wird die befragte Person informiert:
+- **Hinweis beim Start:** Vor jedem Assessment wird der Teilnehmer informiert:
   - welche KI-Modelle eingesetzt werden,
   - welche Angaben sie nicht erfassen soll (z. B. Namen von Personen oder Kundenprojekte),
   - dass die allgemeinen Firmenweisungen zum Umgang mit KI bei Textantworten gelten.
@@ -103,7 +103,7 @@ Die Stufen gelten je Antwort. Die Beschreibungen sind die verbindliche Grundlage
 - **Aufbewahrung:**
   - Einzelne Antworten werden nach Erstellung des Textreports gelöscht.
   - Gespeichert werden die Scores je Handlungsfeld. Sie werden fünf Jahre aufbewahrt, damit der Erfolg des Programms bis 2030 nachweisbar ist.
-  - Der Textreport wird einmalig zum Download angeboten. Die weitere Verwaltung liegt bei der befragten Person.
+  - Der Textreport wird einmalig zum Download angeboten. Die weitere Verwaltung liegt beim Teilnehmer.
 - **Kleine Gruppen:** Der Radar-Chart wird auch für kleine MAGs erstellt. Diese Gruppen erhalten gezielte Förderung.
 - **Keine Leistungsbeurteilung:** Das Assessment ist kein Bestandteil der Leistungsbeurteilung. Diese erfolgt unabhängig davon, nach Abschluss des Assessments.
 
