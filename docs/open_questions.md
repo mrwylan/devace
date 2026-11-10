@@ -353,22 +353,24 @@ GR-004 verlangt, dass die Teamleitung aus den vorhandenen Teamleitungen ausgewä
 **Element:** UC-006 A2, A3, A4, A6, Schritt 12
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Withdrawn
 
 A2, A3, A4 und A6 sprechen von Hinweisen, Schritt 12 von einer Bestätigung, nennen aber keinen Wortlaut.
 
 **Answer:** A2: "Das KI-Modell hat keinen Entwurf geliefert."; A3: "Die Zahl muss zwischen 1 und 10 liegen." und "Höchstens 2000 Zeichen."; A4: "Wortlaut fehlt.", "Vorgabe fehlt." und "Höchstens 500 Zeichen."; A6: "Jedes Handlungsfeld hat bereits mindestens N Fragen." mit den Auswahlmöglichkeiten "Abbrechen" und "Weitere Fragen ergänzen"; Bestätigung: "Entwurf gespeichert."
 **Answered by:** Jakob Albrecht, 2026-11-08
+**Withdrawn:** Das Feld Element nannte mehrere Stellen. Ersetzt durch OQ-041 (UC-006) mit unverändertem Inhalt und Antwort.
 
 ## OQ-034: Wie werden die KI-Modelle je Aufgabe gewählt?
 
 **Element:** UC-006 Schritt 6 (Sekundärer Akteur KI-Modell)
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
-**Status:** Open
+**Status:** Withdrawn
 **Assumed:** Das Modell je Aufgabe (Fragenkatalog erstellen, Antworten bewerten, Textreport) wird in der Konfiguration festgelegt und ist ohne Neubau über Umgebungsvariablen änderbar. Für UC-006 gilt nur die Aufgabe Fragenkatalog erstellen.
 
 Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein besseres Modell zum Erstellen der Fragen samt Bewertungs-Prompt, ein günstigeres für die Durchführung und Bewertung eines Assessments, ein kleineres für den Textreport. Ob die Wahl später in der Oberfläche (zur Laufzeit) erfolgen soll, ist offen und gehört in eine eigene Anforderung.
+**Withdrawn:** Das Feld Element hatte keine gültige Form. Ersetzt durch OQ-044 (UC-006 step 6) mit unverändertem Inhalt.
 
 ## OQ-035: Gilt die Spalte "Grund" der nicht versendeten Adressen aus dem Mockup?
 
@@ -388,12 +390,13 @@ Das Mockup "Einladungen – Ergebnis" zeigt in der Liste der nicht versendeten A
 **Element:** UC-006 A2, A3, A4, A6; UC-008 A1, A2
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Withdrawn
 
 Die Mockups zeigen andere Hinweistexte als OQ-030 (UC-008) und OQ-033 (UC-006) festlegen, z. B. "Scrum Team ist eine Pflichtangabe.", "Diese MAG besteht bereits: Scrum Team Alpha · Linienteam Entwicklung." und "Kein Entwurf entstanden – Das KI-Modell ist nicht erreichbar. Der Ausgangspunkt und Ihre bisherigen Angaben bleiben erhalten."
 
 **Answer:** Die bisherigen Antworten OQ-030 und OQ-033 gelten. Der Wortlaut im Mockup ist ein Platzhalter; das Layout folgt dem Mockup.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Withdrawn:** Das Feld Element nannte zwei Use Cases mit mehreren Abläufen. Ersetzt durch OQ-042 (UC-006) und OQ-043 (UC-008) mit unveränderter Antwort.
 
 ## OQ-037: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
@@ -444,3 +447,49 @@ Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
 **Resolved in:** UC-001 GR-009
+
+## OQ-041: Welchen Wortlaut haben die Hinweise und Bestätigungen beim Erstellen des Fragenkatalogs?
+
+**Element:** UC-006
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Answered
+
+A2, A3, A4 und A6 sprechen von Hinweisen, Schritt 12 von einer Bestätigung, nennen aber keinen Wortlaut. Ersetzt OQ-033, dessen Element mehrere Stellen nannte.
+
+**Answer:** A2: "Das KI-Modell hat keinen Entwurf geliefert."; A3: "Die Zahl muss zwischen 1 und 10 liegen." und "Höchstens 2000 Zeichen."; A4: "Wortlaut fehlt.", "Vorgabe fehlt." und "Höchstens 500 Zeichen."; A6: "Jedes Handlungsfeld hat bereits mindestens N Fragen." mit den Auswahlmöglichkeiten "Abbrechen" und "Weitere Fragen ergänzen"; Bestätigung: "Entwurf gespeichert."
+**Answered by:** Jakob Albrecht, 2026-11-08
+
+## OQ-042: Welcher Wortlaut gilt in UC-006, wenn das Mockup von früheren Antworten abweicht?
+
+**Element:** UC-006
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Das Mockup zeigt für A2, A3, A4 und A6 andere Hinweistexte als OQ-041 festlegt, z. B. "Kein Entwurf entstanden – Das KI-Modell ist nicht erreichbar. Der Ausgangspunkt und Ihre bisherigen Angaben bleiben erhalten." Ersetzt den UC-006-Teil von OQ-036.
+
+**Answer:** Die bisherige Antwort OQ-041 gilt. Der Wortlaut im Mockup ist ein Platzhalter; das Layout folgt dem Mockup.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-043: Welcher Wortlaut gilt in UC-008, wenn das Mockup von früheren Antworten abweicht?
+
+**Element:** UC-008
+**Raised by:** /use-case-spec, 2026-11-10
+**Blocking:** No
+**Status:** Answered
+
+Das Mockup zeigt für A1 und A2 andere Hinweistexte als OQ-030 festlegt, z. B. "Scrum Team ist eine Pflichtangabe." und "Diese MAG besteht bereits: Scrum Team Alpha · Linienteam Entwicklung." Ersetzt den UC-008-Teil von OQ-036.
+
+**Answer:** Die bisherige Antwort OQ-030 gilt. Der Wortlaut im Mockup ist ein Platzhalter; das Layout folgt dem Mockup.
+**Answered by:** Jakob Albrecht, 2026-11-10
+
+## OQ-044: Wie werden die KI-Modelle je Aufgabe gewählt?
+
+**Element:** UC-006 step 6
+**Raised by:** /use-case-implement, 2026-11-08
+**Blocking:** No
+**Status:** Open
+**Assumed:** Das Modell je Aufgabe (Fragenkatalog erstellen, Antworten bewerten, Textreport) wird in der Konfiguration festgelegt und ist ohne Neubau über Umgebungsvariablen änderbar. Für UC-006 gilt nur die Aufgabe Fragenkatalog erstellen.
+
+Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein besseres Modell zum Erstellen der Fragen samt Bewertungs-Prompt, ein günstigeres für die Durchführung und Bewertung eines Assessments, ein kleineres für den Textreport. Ob die Wahl später in der Oberfläche (zur Laufzeit) erfolgen soll, ist offen und gehört in eine eigene Anforderung. Der Sekundärakteur ist das KI-Modell. Ersetzt OQ-034, dessen Element keine gültige Form hatte.
