@@ -38,6 +38,12 @@ committet, auch keine `.env`-Datei mit echten Werten.
 | `DEVACE_ADMIN_PASSWORD` | nein | Passwort des ersten Administrators |
 | `OPENROUTER_API_KEY` | für KI | Schlüssel für OpenRouter, das einzige Tor zu den KI-Modellen |
 | `DEVACE_KI_MODELL_FRAGENKATALOG` | für KI | Modell-ID für den KI-Entwurf des Fragenkatalogs, z. B. `anthropic/claude-haiku-5.5` |
+| `DEVACE_MAIL_HOST` | für Einladungen | SMTP-Server für den Versand der Einladungen (UC-001); ohne ihn scheitert jeder Versand und die Einladung wird verworfen |
+| `DEVACE_MAIL_PORT` | nein | Port des SMTP-Servers, Standard `587` |
+| `DEVACE_MAIL_USER`, `DEVACE_MAIL_PASSWORD` | nein | Anmeldung am SMTP-Server |
+| `DEVACE_MAIL_AUTH`, `DEVACE_MAIL_STARTTLS` | nein | `true`, wenn der Server Anmeldung oder STARTTLS verlangt, Standard `false` |
+| `DEVACE_MAIL_ABSENDER` | für Einladungen | Absenderadresse der Einladungen |
+| `DEVACE_BASIS_URL` | nein | Öffentliche Adresse der Anwendung für den Link in der E-Mail, Standard `http://localhost:8080` |
 | `SERVER_PORT` | nein | Port der Anwendung, Standard `8080` |
 
 Hinweise:

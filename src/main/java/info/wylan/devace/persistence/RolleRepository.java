@@ -42,6 +42,29 @@ public class RolleRepository {
 	}
 
 	/**
+	 * UC-001 step 2: die Rollen mit freigegebenem Fragenkatalog.
+	 */
+	public List<RolleOption> findMitFreigegebenemFragenkatalog() {
+		return this.ctx.select(ROLLE.ID, ROLLE.NAME)
+			.from(ROLLE)
+			// UC-001 BR-003: Nur Rollen, für die ein freigegebener Fragenkatalog besteht.
+			.where(DSL.exists(DSL.selectOne()
+				.from(FRAGENKATALOG)
+				.where(FRAGENKATALOG.ROLLE_ID.eq(ROLLE.ID).and(FRAGENKATALOG.STATUS.eq("Freigegeben")))))
+			.orderBy(DSL.lower(ROLLE.NAME))
+			.fetch(Records.mapping(RolleOption::new));
+	}
+
+	/**
+	 * UC-001 BR-003: hat die Rolle einen freigegebenen Fragenkatalog?
+	 */
+	public boolean hatFreigegebenenFragenkatalog(long rolleId) {
+		// UC-001 BR-003: Nur Rollen, für die ein freigegebener Fragenkatalog besteht.
+		return this.ctx.fetchExists(FRAGENKATALOG,
+				FRAGENKATALOG.ROLLE_ID.eq(rolleId).and(FRAGENKATALOG.STATUS.eq("Freigegeben")));
+	}
+
+	/**
 	 * Prüft, ob der Name einer anderen Rolle gehört. Beim Ändern wird die eigene Rolle über
 	 * {@code ausserId} ausgenommen.
 	 */

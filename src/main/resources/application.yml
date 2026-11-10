@@ -8,11 +8,26 @@ spring:
     password: ${DEVACE_DB_PASSWORD}
   flyway:
     locations: classpath:db/migration
+  mail:
+    # E-Mail-System für die Einladungen (UC-001); alle Werte aus der Umgebung.
+    host: ${DEVACE_MAIL_HOST:}
+    port: ${DEVACE_MAIL_PORT:587}
+    username: ${DEVACE_MAIL_USER:}
+    password: ${DEVACE_MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${DEVACE_MAIL_AUTH:false}
+      mail.smtp.starttls.enable: ${DEVACE_MAIL_STARTTLS:false}
 
 server:
   port: ${SERVER_PORT:8080}
 
 devace:
+  mail:
+    # Absenderadresse der Einladungen; ohne sie scheitert jeder Versand (UC-001 A4).
+    absender: ${DEVACE_MAIL_ABSENDER:}
+  einladung:
+    # Öffentliche Adresse der Anwendung für den Link in der E-Mail (UC-001 BR-007).
+    basis-url: ${DEVACE_BASIS_URL:http://localhost:8080}
   admin:
     # Optional first administrator, created at startup when none exists (OQ-031).
     username: ${DEVACE_ADMIN_USERNAME:}
