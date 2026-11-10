@@ -96,5 +96,7 @@ jobs:
           ./mvnw -B spring-boot:build-image \
             -DskipTests \
             -Dspring-boot.build-image.imageName="${IMAGE}:${GITHUB_SHA}" \
-            -Dspring-boot.build-image.tags="${IMAGE}:${VERSION}" \
             -Dspring-boot.build-image.publish=true
+          # build-image publishes only the main name, so the version tag is pushed separately.
+          docker tag "${IMAGE}:${GITHUB_SHA}" "${IMAGE}:${VERSION}"
+          docker push "${IMAGE}:${VERSION}"
