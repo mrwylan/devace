@@ -200,7 +200,7 @@ Anmeldekonto von Teamleitung, Schulungsverantwortlichen und Administratoren; die
 
 ### EINLADUNG
 
-Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt; sie ist einer MAG und Rolle zugeordnet, gilt 1 bis 30 Tage und berechtigt zu genau einem Assessment; die E-Mail-Adresse wird nicht gespeichert.
+Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt; sie ist einer MAG und Rolle zugeordnet, gilt 1 bis 30 Tage bis zu einem bei der Erstellung berechneten Ablaufdatum und berechtigt zu genau einem Assessment; die E-Mail-Adresse wird nicht gespeichert.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
@@ -211,7 +211,12 @@ Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt; sie is
 | erstellt_von_id | Teamleitung, die die Einladung erstellt hat | Long | 19 | Not Null, Foreign Key (BENUTZER.id) |
 | status | Stand der Einladung | String | 20 | Not Null, Values: Erstellt, Versendet, Eingelöst |
 | erstellt_am | Zeitpunkt der Erstellung | DateTime | - | Not Null |
-| gueltigkeit_tage | Gültigkeitsdauer in Tagen ab Erstellung | Integer | 10 | Not Null, Min: 1, Max: 30 |
+| gueltigkeit_tage | Angegebene Gültigkeitsdauer in Tagen; der Tag der Erstellung ist der erste Tag | Integer | 10 | Not Null, Min: 1, Max: 30 |
+| laeuft_ab_am | Letzter Tag der Gültigkeit; die Einladung gilt bis 24 Uhr dieses Tages | Date | - | Not Null |
+
+#### Constraints
+
+- Laeuft_ab_am ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
 
 ### STARTHINWEIS
 
