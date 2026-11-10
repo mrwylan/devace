@@ -100,7 +100,7 @@
 
 ### BR-001: Einladung gilt für ein Assessment
 
-Eine Einladung berechtigt zu genau einem Assessment. Das Assessment muss innerhalb der Gültigkeitsdauer der Einladung gestartet werden, danach ist die Einladung abgelaufen. Mit dem Start gilt sie als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach BR-009 gelöscht wurde. Ein gestartetes Assessment läuft nach Ablauf der Gültigkeitsdauer weiter.
+Eine Einladung berechtigt zu genau einem Assessment. Das Assessment muss bis zum Ablaufdatum der Einladung (24 Uhr des letzten Gültigkeitstags, festgelegt bei der Erstellung nach UC-001 BR-008) gestartet werden, danach ist die Einladung abgelaufen. Das System prüft nur dieses Datum. Mit dem Start gilt sie als eingelöst und kann nicht erneut verwendet werden, auch nicht, wenn das Assessment nach BR-009 gelöscht wurde. Ein gestartetes Assessment läuft nach dem Ablaufdatum weiter.
 
 ### BR-002: Starthinweis vor dem Start
 
