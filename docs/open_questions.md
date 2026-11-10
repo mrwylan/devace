@@ -540,7 +540,10 @@ Das Entity-Modell führt den Score als Dezimalzahl mit zwei Nachkommastellen (SC
 **Element:** UC-003 step 5
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Ja. Der Teilnehmer sieht beim Abschluss sein Radar-Chart, seine Scores je Handlungsfeld und den Textreport. Sie werden nicht gespeichert und nicht erneut angezeigt.
 
 Der Product Owner wünscht eine Auswertung für den Teilnehmer direkt beim Abschluss. Die Anforderungen kennen das Radar-Chart nur je MAG und Rolle für Teamleitung und Schulungsverantwortliche (FR-010, FR-011). Die Anforderung für die persönliche Auswertung fehlt und gehört in `/requirements`; das Glossar beschreibt das Radar-Chart nur je MAG und Rolle.
+
+**Answer:** Ja. Der Teilnehmer sieht beim Abschluss seines Assessments sein Radar-Chart, seine Scores je Handlungsfeld und den Textreport. Der Textreport würdigt seine Leistung, begründet seine Einstufung und gibt Hinweise, wo er als Nächstes investieren sollte; das KI-Modell erstellt ihn. Die Anforderung steht als FR-018 im Katalog.
+**Answered by:** Jakob Albrecht, 2026-11-10

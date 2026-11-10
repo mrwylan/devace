@@ -24,6 +24,7 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | FR-015 | MAGs und Rollen verwalten | Als Administrator möchte ich MAGs und Rollen anlegen und ändern, damit Einladungen und Radar-Charts der Organisation entsprechen. | Medium | Open |
 | FR-016 | KI-Bewertung mit Testfällen absichern | Als Administrator möchte ich Testfälle ausführen und deren Ergebnisse einsehen, damit Fehler der KI-Bewertung eingegrenzt und die Vorgaben verfeinert werden können. | High | Open |
 | FR-017 | Zuordnung der Kompetenzmatrix dokumentieren | Als Administrator möchte ich festhalten, welche Spalten der Kompetenzmatrix welchem Handlungsfeld zugeordnet sind, damit die Verdichtung nachvollziehbar ist. | Medium | Open |
+| FR-018 | Persönliche Auswertung ansehen | Als Teilnehmer möchte ich beim Abschluss meines Assessments mein Radar-Chart, meine Scores je Handlungsfeld und einen Textreport sehen, der meine Leistung würdigt, meine Einstufung begründet und Hinweise auf meine nächsten Investitionen gibt, damit ich meine Kompetenz einordnen und meine Weiterentwicklung gezielt planen kann. | High | Open |
 
 ## Nicht-funktionale Anforderungen
 

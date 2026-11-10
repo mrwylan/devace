@@ -20,8 +20,8 @@ Quelle: `docs/vision.md` (Entwurf 0.7). Pro Konzept gilt genau ein Begriff. Spal
 | Stufe | Ausprägung einer Antwort auf der Skala 0 bis 5 (0 Nie gehört, 1 Schon mal gehört, 2 Grundverständnis, 3 Sicherer Umgang, 4 Fortgeschrittene Expertise, 5 Expert:in / Lehrniveau). | Level |
 | Entscheidungsmodell | Vorgabe je Frage, welcher Stufe welche Antwort entspricht. Die KI ordnet die Antworten diesen Vorgaben zu. | Bewertungsschema |
 | Score | Ergebnis eines Handlungsfelds: Summe der Stufen aller Fragen dieses Handlungsfelds geteilt durch deren Anzahl, also ein Wert zwischen 0 und 5. | Punktzahl, Punkte |
-| Radar-Chart | Darstellung der Scores aller Handlungsfelder je MAG und Rolle als Netzdiagramm. | Spinnendiagramm |
-| Textreport | Textdokument zum Abschluss eines Assessments. Der Teilnehmer erhält es einmalig zum Download und verwaltet es selbst. | Bericht |
+| Radar-Chart | Darstellung der Scores aller Handlungsfelder als Netzdiagramm: je MAG und Rolle für Teamleitung und Schulungsverantwortliche, beim Abschluss eines Assessments die eigenen Scores des Teilnehmers. | Spinnendiagramm |
+| Textreport | Vom KI-Modell erstelltes Textdokument zum Abschluss eines Assessments: Es würdigt die Leistung des Teilnehmers, begründet seine Einstufung und gibt Hinweise auf seine nächsten Investitionen. Der Teilnehmer erhält es einmalig zum Download und verwaltet es selbst. | Bericht |
 | Einladung | Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt, einer MAG und Rolle zuordnet und per E-Mail verschickt. Sie gilt 1 bis 30 Tage und berechtigt in dieser Zeit zu genau einem Assessment. | Token |
 | Starthinweis | Information, die jeder Teilnehmer vor dem Assessment erhält: eingesetzte KI-Modelle, nicht zu erfassende Angaben und Geltung der Firmenweisungen zum Umgang mit KI. | |
 | Testfall | Vorgegebene Antwort mit erwarteter Stufe, mit dem die KI-Bewertung abgesichert wird. | |
