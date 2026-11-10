@@ -5,7 +5,11 @@ import java.util.stream.Collectors;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -38,9 +42,14 @@ public class MagsUndRollenView extends VerticalLayout {
 	public MagsUndRollenView(MagService magService, RolleService rolleService) {
 		this.magService = magService;
 		this.rolleService = rolleService;
-		setSizeFull();
+		setWidthFull();
 
-		add(magBereich(), rolleBereich());
+		H2 titel = new H2("MAGs und Rollen");
+		titel.addClassName("devace-seitentitel");
+		HorizontalLayout bereiche = new HorizontalLayout(magBereich(), rolleBereich());
+		bereiche.setWidthFull();
+		bereiche.setAlignItems(Alignment.START);
+		add(titel, bereiche);
 		aktualisieren();
 	}
 
@@ -61,8 +70,11 @@ public class MagsUndRollenView extends VerticalLayout {
 		this.magGrid.setAllRowsVisible(true);
 
 		Button anlegen = new Button("MAG anlegen", (event) -> magDialog(null));
+		anlegen.addThemeVariants(ButtonVariant.PRIMARY);
 		anlegen.setId("mag-anlegen");
-		return new VerticalLayout(new HorizontalLayout(new H2("MAGs"), anlegen), this.magGrid);
+		// UC-008 GR-004: Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.
+		return karte("MAGs", "Mitarbeitergruppen aus Scrum Team und Linienteam", this.magGrid,
+				"Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.", anlegen, 3);
 	}
 
 	private VerticalLayout rolleBereich() {
@@ -79,8 +91,26 @@ public class MagsUndRollenView extends VerticalLayout {
 		this.rolleGrid.setAllRowsVisible(true);
 
 		Button anlegen = new Button("Rolle anlegen", (event) -> rolleDialog(null));
+		anlegen.addThemeVariants(ButtonVariant.PRIMARY);
 		anlegen.setId("rolle-anlegen");
-		return new VerticalLayout(new HorizontalLayout(new H2("Rollen"), anlegen), this.rolleGrid);
+		// UC-008 GR-005: Der Use Case legt MAGs und Rollen an und ändert sie, er löscht sie nicht.
+		return karte("Rollen", "Die Bewertung erfolgt getrennt je Rolle", this.rolleGrid,
+				"MAGs und Rollen werden angelegt und geändert, aber nicht gelöscht.", anlegen, 2);
+	}
+
+	private static VerticalLayout karte(String titel, String untertitel, Grid<?> grid, String fussnote, Button anlegen,
+			int breite) {
+		H3 ueberschrift = new H3(titel);
+		Span unter = new Span(untertitel);
+		unter.addClassName("devace-untertitel");
+		Span note = new Span(fussnote);
+		note.addClassName("devace-fussnote");
+		VerticalLayout karte = new VerticalLayout(new Div(ueberschrift, unter), grid, note, anlegen);
+		karte.addClassName("devace-karte");
+		karte.setPadding(false);
+		karte.getStyle().set("flex", String.valueOf(breite));
+		karte.getStyle().set("padding", "1rem 1.25rem");
+		return karte;
 	}
 
 	private static String fragenkataloge(RolleListItem rolle) {

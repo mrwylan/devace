@@ -1,0 +1,78 @@
+/* Layout der Bildschirme aus den Figma-Mockups (UC-006, UC-008). Farben leiten sich von der Textfarbe ab und folgen dem dunklen Aura-Schema. */
+.devace-seitentitel {
+  font-size: var(--aura-font-size-l, 1.25rem);
+  font-weight: 600;
+  margin: 0;
+}
+
+.devace-karte {
+  box-sizing: border-box;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.devace-karte > h3 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.devace-untertitel,
+.devace-fussnote {
+  margin: 0;
+  color: color-mix(in srgb, currentColor 65%, transparent);
+}
+
+.devace-fussnote {
+  font-size: 0.75rem;
+}
+
+.devace-hinweis {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.devace-hinweis > .devace-hinweis-titel {
+  font-weight: 600;
+}
+
+.devace-hinweis > span:not(.devace-hinweis-titel) {
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.devace-hinweis[theme~='fehler'] {
+  background: color-mix(in srgb, var(--vaadin-error-color, #f66) 14%, transparent);
+}
+
+.devace-hinweis[theme~='warnung'] {
+  background: color-mix(in srgb, #f5c400 12%, transparent);
+}
+
+.devace-badge {
+  display: inline-block;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: #1f9d46;
+}
+
+.devace-badge[theme~='entwurf'] {
+  color: #1a1a1a;
+  background: #f5c400;
+}
+
+.devace-badge[theme~='fehler'] {
+  background: #d93a3a;
+}
+
+.devace-badge[theme~='neutral'] {
+  color: #1a1a1a;
+  background: #fff;
+}

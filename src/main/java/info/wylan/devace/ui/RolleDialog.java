@@ -4,6 +4,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
@@ -21,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  */
 class RolleDialog extends Dialog {
 
-	private final TextField name = new TextField("Name");
+	private final TextField name = new TextField("Name der Rolle");
 
 	private final Binder<Formular> binder = new Binder<>();
 
@@ -30,9 +32,11 @@ class RolleDialog extends Dialog {
 	RolleDialog(RolleService service, @Nullable RolleListItem vorhandene, Runnable nachSpeichern) {
 		setHeaderTitle((vorhandene == null) ? "Rolle anlegen" : "Rolle ändern");
 		setId("rolle-dialog");
+		setWidth("34rem");
 
 		this.name.setId("rolle-name");
 		this.name.setRequiredIndicatorVisible(true);
+		this.name.setHelperText("Pflichtangabe, höchstens 50 Zeichen");
 		this.name.setValueChangeMode(ValueChangeMode.EAGER);
 
 		// UC-008 GR-001: Der Name einer Rolle ist Pflichtangabe mit höchstens 50 Zeichen.
@@ -49,6 +53,13 @@ class RolleDialog extends Dialog {
 		FormLayout form = new FormLayout(this.name);
 		form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));
 		add(form);
+		if (vorhandene != null) {
+			// UC-008 GR-006: Die Änderung des Namens wirkt rückwirkend auf Einladungen, Fragenkataloge und Scores.
+			Div hinweis = new Div(hinweisTitel("Änderung wirkt rückwirkend"),
+					new Span("Bestehende Einladungen, Fragenkataloge und Scores dieser Rolle erscheinen mit dem neuen Namen."));
+			hinweis.addClassName("devace-hinweis");
+			add(hinweis);
+		}
 
 		Button speichern = new Button("Speichern", event -> speichern(service, vorhandene, nachSpeichern));
 		speichern.addThemeVariants(ButtonVariant.PRIMARY);
@@ -56,6 +67,12 @@ class RolleDialog extends Dialog {
 		Button abbrechen = new Button("Abbrechen", event -> close());
 		abbrechen.setId("rolle-abbrechen");
 		getFooter().add(abbrechen, speichern);
+	}
+
+	private static Span hinweisTitel(String text) {
+		Span titel = new Span(text);
+		titel.addClassName("devace-hinweis-titel");
+		return titel;
 	}
 
 	private void speichern(RolleService service, @Nullable RolleListItem vorhandene, Runnable nachSpeichern) {
