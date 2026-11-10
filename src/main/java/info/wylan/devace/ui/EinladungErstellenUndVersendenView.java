@@ -112,6 +112,8 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout {
 		Button erstellen = new Button("Einladungen erstellen und versenden", (event) -> anfordern());
 		erstellen.addThemeVariants(ButtonVariant.PRIMARY);
 		erstellen.setId("einladung-erstellen");
+		// UC-001 Pre-2: Ohne zugeordnete MAG gibt es nichts zu erstellen; die Aktion bleibt deaktiviert.
+		erstellen.setEnabled(this.mag.getValue() != null);
 		HorizontalLayout aktionen = new HorizontalLayout(abbrechen, erstellen);
 		aktionen.setWidthFull();
 		aktionen.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
