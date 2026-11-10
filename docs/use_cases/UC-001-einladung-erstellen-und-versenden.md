@@ -54,7 +54,7 @@
 
 ### A3: Teamleitung bricht ab
 
-**Auslöser:** Die Teamleitung bricht die Erstellung ab (Schritt 7)  
+**Auslöser:** Die Teamleitung bricht die Erstellung ab, vor der Anforderung oder bei der Zusammenfassung (Schritt 5 oder 7)  
 **Ablauf:**
 
 1. Das System verwirft die Angaben.
