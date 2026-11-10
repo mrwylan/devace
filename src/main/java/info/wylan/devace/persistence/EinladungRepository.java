@@ -1,5 +1,6 @@
 package info.wylan.devace.persistence;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.jooq.DSLContext;
@@ -24,11 +25,11 @@ public class EinladungRepository {
 	}
 
 	/**
-	 * UC-001 step 8: legt die Einladung mit dem Status Erstellt an und liefert die neue id. Eine bereits
+	 * UC-001 step 8: legt die Einladung mit Ablaufdatum und dem Status Erstellt an und liefert die neue id. Eine bereits
 	 * vergebene Referenz führt zu einer {@code DuplicateKeyException}.
 	 */
 	public long insert(String referenz, long magId, long rolleId, long erstelltVonId, LocalDateTime erstelltAm,
-			int gueltigkeitTage) {
+			int gueltigkeitTage, LocalDate laeuftAbAm) {
 		return this.ctx.insertInto(EINLADUNG)
 			.set(EINLADUNG.REFERENZ, referenz)
 			.set(EINLADUNG.MAG_ID, magId)
@@ -37,6 +38,7 @@ public class EinladungRepository {
 			.set(EINLADUNG.STATUS, ERSTELLT)
 			.set(EINLADUNG.ERSTELLT_AM, erstelltAm)
 			.set(EINLADUNG.GUELTIGKEIT_TAGE, gueltigkeitTage)
+			.set(EINLADUNG.LAEUFT_AB_AM, laeuftAbAm)
 			.returning(EINLADUNG.ID)
 			.fetchSingle()
 			.getId();

@@ -1,6 +1,7 @@
 package info.wylan.devace.service;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,8 +44,8 @@ public class EinladungService {
 	private static final String TEXT = "Sie sind zu einem devace-Assessment eingeladen. "
 			+ "Über den folgenden Link starten Sie es:";
 
-	// UC-001 BR-006: lokaler Teil, das Zeichen @ und ein Domänenteil, keine Leerzeichen.
-	private static final Pattern ADRESSE = Pattern.compile("[^@\\s]+@[^@\\s]+");
+	// UC-001 BR-006: lokaler Teil, @, Domänenteil mit mindestens einem Punkt, keine Leerzeichen.
+	private static final Pattern ADRESSE = Pattern.compile("[^@\\s]+@[^@\\s]+\\.[^@\\s]+");
 
 	private final EinladungRepository einladungRepository;
 
@@ -127,8 +128,11 @@ public class EinladungService {
 			String referenz = UUID.randomUUID().toString();
 			try {
 				// UC-001 BR-001: Die Referenz ist zufällig und eindeutig, ohne Namen oder Adresse einer Person.
+				LocalDateTime erstelltAm = LocalDateTime.now(this.clock);
+				// UC-001 BR-008: Ablaufdatum bei der Erstellung; der Erstellungstag ist der erste Tag, bis 24 Uhr.
+				LocalDate laeuftAbAm = erstelltAm.toLocalDate().plusDays(gueltigkeitTage - 1L);
 				long id = this.einladungRepository.insert(referenz, gepruefte.mag().id(), gepruefte.rolle().id(),
-						teamleitung.id(), LocalDateTime.now(this.clock), gueltigkeitTage);
+						teamleitung.id(), erstelltAm, gueltigkeitTage, laeuftAbAm);
 				return new Angelegt(id, referenz);
 			}
 			catch (DuplicateKeyException ex) {

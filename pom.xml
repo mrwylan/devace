@@ -27,6 +27,8 @@
         <postgres.image>postgres:17-alpine</postgres.image>
         <!-- Coverage measurement only (CLAUDE.md §3: coverage is uploaded by the pipeline), no minimum threshold. -->
         <jacoco-plugin.version>0.8.16</jacoco-plugin.version>
+        <!-- SMTP stub for the tests of the e-mail adapter (UC-001); test scope only. -->
+        <greenmail.version>2.1.15</greenmail.version>
     </properties>
 
     <dependencyManagement>
@@ -141,6 +143,19 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-dev</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail-junit5</artifactId>
+            <version>${greenmail.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <!-- bundles the classes of angus-mail, which spring-boot-starter-mail already brings (banDuplicateClasses) -->
+                <exclusion>
+                    <groupId>org.eclipse.angus</groupId>
+                    <artifactId>jakarta.mail</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.vaadin.addons</groupId>
