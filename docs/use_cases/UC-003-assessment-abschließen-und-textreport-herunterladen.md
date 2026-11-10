@@ -4,10 +4,10 @@
 
 **Use-Case-ID:** UC-003  
 **Use-Case-Name:** Assessment abschließen und Textreport herunterladen  
-**Primärer Akteur:** Befragte  
+**Primärer Akteur:** Teilnehmer  
 **Sekundäre Akteure:** KI-Modell  
-**Ziel:** Die Befragte schließt ihr Assessment ab, sieht ihre Auswertung mit Radar-Chart, Scores und Textreport und lädt den Textreport einmalig herunter, damit sie ihre Ergebnisse selbst verwaltet und von ihrem Assessment nur die Scores bleiben.  
-**Auslösendes Ereignis:** Die Befragte fordert den Abschluss ihres Assessments an.  
+**Ziel:** Der Teilnehmer schließt sein Assessment ab, sieht seine Auswertung mit Radar-Chart, Scores und Textreport und lädt den Textreport einmalig herunter, damit er seine Ergebnisse selbst verwaltet und von seinem Assessment nur die Scores bleiben.  
+**Auslösendes Ereignis:** Der Teilnehmer fordert den Abschluss seines Assessments an.  
 **Status:** Entwurf  
 
 **Anforderungen:** [FR-007, FR-008, FR-009, NFR-001, NFR-002, NFR-003, NFR-010, C-002, C-003, C-005](../requirements.md)  
@@ -15,16 +15,16 @@
 
 ## Vorbedingungen
 
-- Zur Einladung der Befragten besteht ein laufendes Assessment, in dem jede Frage beantwortet und einer Stufe zugeordnet ist.
+- Zur Einladung des Teilnehmers besteht ein laufendes Assessment, in dem jede Frage beantwortet und einer Stufe zugeordnet ist.
 
 ## Hauptablauf
 
-1. Die Befragte schließt ihr Assessment ab.
-2. Das System berechnet je Handlungsfeld den Score aus den Stufen ihrer Antworten.
-3. Das System lässt das KI-Modell den Textreport erstellen, der ihre Leistung würdigt, ihre Einstufung begründet und Hinweise auf ihre nächsten Investitionen gibt.
+1. Der Teilnehmer schließt sein Assessment ab.
+2. Das System berechnet je Handlungsfeld den Score aus den Stufen seiner Antworten.
+3. Das System lässt das KI-Modell den Textreport erstellen, der seine Leistung würdigt, seine Einstufung begründet und Hinweise auf seine nächsten Investitionen gibt.
 4. Das System speichert die Scores ohne Personenbezug und setzt das Assessment auf abgeschlossen.
-5. Das System zeigt der Befragten ihre Auswertung mit dem Radar-Chart, den erreichten Scores je Handlungsfeld und dem Textreport.
-6. Die Befragte lädt den Textreport herunter.
+5. Das System zeigt dem Teilnehmer seine Auswertung mit dem Radar-Chart, den erreichten Scores je Handlungsfeld und dem Textreport.
+6. Der Teilnehmer lädt den Textreport herunter.
 7. Das System stellt den Textreport einmalig bereit und löscht danach die Antworten des Assessments.
 
 ## Alternativabläufe
@@ -34,13 +34,13 @@
 **Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert keinen Textreport (Schritt 3)  
 **Ablauf:**
 
-1. Das System weist die Befragte darauf hin, dass der Textreport nicht erstellt werden konnte.
+1. Das System weist den Teilnehmer darauf hin, dass der Textreport nicht erstellt werden konnte.
 2. Das System speichert keine Scores und lässt das Assessment laufend.
 3. Der Use Case wird bei Schritt 1 fortgesetzt.
 
-### A2: Befragte lädt den Textreport nicht herunter
+### A2: Teilnehmer lädt den Textreport nicht herunter
 
-**Auslöser:** Die Befragte verlässt die Auswertung, ohne den Textreport herunterzuladen (Schritt 6)  
+**Auslöser:** Der Teilnehmer verlässt die Auswertung, ohne den Textreport herunterzuladen (Schritt 6)  
 **Ablauf:**
 
 1. Das System bietet den Textreport nicht erneut an.
@@ -49,26 +49,26 @@
 
 ### A3: Textreport nicht mehr verfügbar
 
-**Auslöser:** Die Befragte fordert den Textreport an, nachdem er heruntergeladen wurde oder verfallen ist (Schritt 6)  
+**Auslöser:** Der Teilnehmer fordert den Textreport an, nachdem er heruntergeladen wurde oder verfallen ist (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist die Befragte darauf hin, dass der Textreport nicht mehr zur Verfügung steht.
+1. Das System weist den Teilnehmer darauf hin, dass der Textreport nicht mehr zur Verfügung steht.
 2. Der Use Case endet.
 
 ## Nachbedingungen
 
 ### Erfolgsfall
 
-- Je Handlungsfeld mit Fragen ist ein Score gespeichert, der MAG und Rolle der Befragten zugeordnet ist und auf keine Einladung, kein Assessment und keine Person verweist.
+- Je Handlungsfeld mit Fragen ist ein Score gespeichert, der MAG und Rolle des Teilnehmers zugeordnet ist und auf keine Einladung, kein Assessment und keine Person verweist.
 - Das Assessment ist abgeschlossen.
-- Die Befragte hat den Textreport erhalten.
+- Der Teilnehmer hat den Textreport erhalten.
 - Alle Antworten des Assessments sind gelöscht.
 
 ### Fehlerfall
 
 - Ohne Textreport ist kein Score gespeichert und das Assessment nicht abgeschlossen.
 - Kein gespeicherter Score und kein Textreport verweist auf eine Einladung, eine E-Mail-Adresse oder eine Person.
-- Das KI-Modell erhält keine Angabe, die auf die Befragte schließen lässt.
+- Das KI-Modell erhält keine Angabe, die auf den Teilnehmer schließen lässt.
 - Eine bereits gespeicherte Antwort mit ihrer Stufe bleibt unverändert, bis das Assessment abgeschlossen ist oder nach 7 Tagen gelöscht wird.
 
 ## Geschäftsregeln
@@ -83,19 +83,19 @@ Das System speichert je Score nur MAG, Rolle, Handlungsfeld, Fragenkatalog, Wert
 
 ### GR-003: Inhalt des Textreports
 
-Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung der Befragten, begründet die Einstufung und gibt Hinweise auf ihre nächsten Investitionen. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
+Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
 
 ### GR-004: Anonyme Vorlage an das KI-Modell
 
-Das System legt dem KI-Modell nur die Rolle, die Handlungsfelder, die Fragen mit den Antworten und ihren zugeordneten Stufen sowie die Scores vor, aber weder die Einladung noch die E-Mail-Adresse oder eine andere Angabe, die auf die Befragte schließen lässt.
+Das System legt dem KI-Modell nur die Rolle, die Handlungsfelder, die Fragen mit den Antworten und ihren zugeordneten Stufen sowie die Scores vor, aber weder die Einladung noch die E-Mail-Adresse oder eine andere Angabe, die auf den Teilnehmer schließen lässt.
 
-### GR-005: Auswertung nur für die Befragte
+### GR-005: Auswertung nur für den Teilnehmer
 
-Radar-Chart, Scores und Textreport zeigt das System nur der Befragten, die das Assessment abgeschlossen hat, und nur beim Abschluss. Es speichert sie nicht für eine spätere Anzeige.
+Radar-Chart, Scores und Textreport zeigt das System nur dem Teilnehmer, der das Assessment abgeschlossen hat, und nur beim Abschluss. Es speichert sie nicht für eine spätere Anzeige.
 
 ### GR-006: Einmaliger Download
 
-Der Textreport steht der Befragten einmal zum Download bereit. Nach dem Download, nach seinem Verfall und bei erneuter Anforderung steht er nicht mehr zur Verfügung.
+Der Textreport steht dem Teilnehmer einmal zum Download bereit. Nach dem Download, nach seinem Verfall und bei erneuter Anforderung steht er nicht mehr zur Verfügung.
 
 ### GR-007: Löschung der Antworten
 

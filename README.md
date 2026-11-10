@@ -1,7 +1,7 @@
 # devace
 
 KI-gestütztes Kompetenz-Assessment für Entwicklungsteams. Ein Administrator erstellt je Rolle einen Fragenkatalog mit
-Entscheidungsmodell, Teamleitungen laden Befragte ein, die Befragten beantworten die Fragen im Dialog, die KI ordnet die
+Entscheidungsmodell, Teamleitungen laden Teilnehmer ein, die Teilnehmer beantworten die Fragen im Dialog, die KI ordnet die
 Antworten Stufen von 0 bis 5 zu. Das Ergebnis ist ein Radar-Chart je Mitarbeitergruppe (MAG).
 
 Fachliche Grundlagen stehen in [`docs/`](docs/): [Vision](docs/vision.md), [Anforderungen](docs/requirements.md),

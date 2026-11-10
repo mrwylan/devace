@@ -39,7 +39,7 @@ erDiagram
 
 ### MAG
 
-Mitarbeitergruppe aus Scrum Team und Linienteam, der Befragte und Scores zugeordnet werden.
+Mitarbeitergruppe aus Scrum Team und Linienteam, der Teilnehmer und Scores zugeordnet werden.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
@@ -54,7 +54,7 @@ Mitarbeitergruppe aus Scrum Team und Linienteam, der Befragte und Scores zugeord
 
 ### ROLLE
 
-Aufgabe einer Befragten im Team, nach der Fragenkatalog und Auswertung getrennt werden.
+Aufgabe eines Teilnehmers im Team, nach der Fragenkatalog und Auswertung getrennt werden.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
@@ -125,7 +125,7 @@ Eintrag des Entscheidungsmodells: Beschreibung der Antwort, die einer Stufe eine
 
 ### ASSESSMENT
 
-Ein Durchlauf einer Befragten; wird zusammen mit den Antworten gelöscht und trägt keinen Personenbezug.
+Ein Durchlauf eines Teilnehmers; wird zusammen mit den Antworten gelöscht und trägt keinen Personenbezug.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
@@ -146,14 +146,14 @@ Ein Durchlauf einer Befragten; wird zusammen mit den Antworten gelöscht und tr�
 
 ### ANTWORT
 
-Freitext einer Befragten zu einer Frage; wird nach dem Textreport gelöscht.
+Freitext eines Teilnehmers zu einer Frage; wird nach dem Textreport gelöscht.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
 | id | Unique identifier | Long | 19 | Primary Key, Sequence |
 | assessment_id | Assessment der Antwort | Long | 19 | Not Null, Foreign Key (ASSESSMENT.id) |
 | frage_id | Beantwortete Frage | Long | 19 | Not Null, Foreign Key (FRAGE.id) |
-| text | Freitext der Befragten | String | 500 | Not Null |
+| text | Freitext des Teilnehmers | String | 500 | Not Null |
 | beantwortet_am | Zeitpunkt der Antwort | DateTime | - | Not Null |
 
 #### Constraints
@@ -178,8 +178,8 @@ Score eines Handlungsfelds aus einem abgeschlossenen Assessment, fünf Jahre auf
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
 | id | Unique identifier | Long | 19 | Primary Key, Sequence |
-| mag_id | MAG der Befragten | Long | 19 | Not Null, Foreign Key (MAG.id) |
-| rolle_id | Rolle der Befragten | Long | 19 | Not Null, Foreign Key (ROLLE.id) |
+| mag_id | MAG des Teilnehmers | Long | 19 | Not Null, Foreign Key (MAG.id) |
+| rolle_id | Rolle des Teilnehmers | Long | 19 | Not Null, Foreign Key (ROLLE.id) |
 | handlungsfeld_id | Bewertetes Handlungsfeld | Long | 19 | Not Null, Foreign Key (HANDLUNGSFELD.id) |
 | fragenkatalog_id | Fragenkatalog, auf dem der Score beruht | Long | 19 | Not Null, Foreign Key (FRAGENKATALOG.id) |
 | wert | Summe der Stufen geteilt durch Anzahl der Fragen | Decimal | 10,2 | Not Null, Min: 0, Max: 5 |
@@ -200,7 +200,7 @@ Anmeldekonto von Teamleitung, Schulungsverantwortlichen und Administratoren; die
 
 ### EINLADUNG
 
-Eindeutige Referenz einer Teamleitung für eine Befragte, die einer MAG und Rolle zugeordnet ist, 1 bis 30 Tage gilt und zu genau einem Assessment berechtigt; die E-Mail-Adresse wird nicht gespeichert.
+Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt; sie ist einer MAG und Rolle zugeordnet, gilt 1 bis 30 Tage und berechtigt zu genau einem Assessment; die E-Mail-Adresse wird nicht gespeichert.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|

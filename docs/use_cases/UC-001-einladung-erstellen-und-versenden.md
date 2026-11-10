@@ -6,8 +6,8 @@
 **Use-Case-Name:** Einladung erstellen und versenden  
 **Primärer Akteur:** Teamleitung  
 **Sekundäre Akteure:** E-Mail-System  
-**Ziel:** Die Teamleitung lädt Befragte ihrer MAG zu einem Assessment ein, ohne dass die Einladung eine Person erkennen lässt.  
-**Auslösendes Ereignis:** Die Teamleitung fordert Einladungen für Befragte ihrer MAG an.  
+**Ziel:** Die Teamleitung lädt Teilnehmer ihrer MAG zu einem Assessment ein, ohne dass die Einladung eine Person erkennen lässt.  
+**Auslösendes Ereignis:** Die Teamleitung fordert Einladungen für Teilnehmer ihrer MAG an.  
 **Status:** Genehmigt  
 
 **Anforderungen:** [FR-001, FR-002, NFR-001, NFR-002, NFR-005, NFR-010](../requirements.md)  
@@ -25,7 +25,7 @@
 1. Die Teamleitung öffnet die Erstellung von Einladungen.
 2. Das System zeigt die MAGs der Teamleitung und die Rollen mit freigegebenem Fragenkatalog zur Auswahl an.
 3. Die Teamleitung wählt eine MAG und eine Rolle.
-4. Die Teamleitung gibt die E-Mail-Adressen der Befragten und die Gültigkeitsdauer der Einladungen an.
+4. Die Teamleitung gibt die E-Mail-Adressen der Teilnehmer und die Gültigkeitsdauer der Einladungen an.
 5. Die Teamleitung fordert die Erstellung an.
 6. Das System prüft die Angaben und zeigt eine Zusammenfassung mit der Anzahl der Einladungen (doppelte Adressen zählen nur einmal), der gewählten MAG und Rolle sowie der Gültigkeitsdauer.
 7. Die Teamleitung bestätigt die Zusammenfassung.
@@ -74,7 +74,7 @@
 ### Erfolgsfall
 
 - Für jede Adresse, deren Versand gelang, existiert eine Einladung mit eindeutiger Referenz, der angegebenen Gültigkeitsdauer, der gewählten MAG und Rolle sowie dem Status Versendet.
-- Jede Befragte hat eine E-Mail mit ihrer Einladung erhalten.
+- Jeder Teilnehmer hat eine E-Mail mit seiner Einladung erhalten.
 - Keine E-Mail-Adresse ist gespeichert.
 
 ### Fehlerfall
