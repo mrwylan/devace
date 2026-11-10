@@ -724,3 +724,13 @@ BR-008 lässt die Einladung bis 24:00 Uhr des letzten Gültigkeitstags gelten. U
 **Answer:** UC-001 berechnet und speichert das Ablaufdatum selbst; das Einlösen prüft nur dieses Datum.
 **Answered by:** Jakob Albrecht, 2026-11-10
 **Resolved in:** UC-001 step 8, UC-001 BR-008
+
+## OQ-057: Ist der Tag der Erstellung der erste Tag der Gültigkeitsdauer?
+
+**Element:** Entity: EINLADUNG.laeuft_ab_am
+**Raised by:** /entity-model, 2026-11-10
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Tag der Erstellung zählt als erster Tag: Eine Einladung mit einem Tag Gültigkeit gilt bis 24 Uhr des Erstellungstags; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
+
+BR-008 lässt die Gültigkeit mit der Erstellung beginnen und bis 24 Uhr des letzten Tages gelten, nennt aber nicht, ob der Erstellungstag mitzählt. Lesart (b): Der Erstellungstag zählt nicht, das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage.
