@@ -8,9 +8,9 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Der Teilnehmer schließt sein Assessment ab, sieht seine Auswertung mit Radar-Chart, Scores und Textreport und lädt den Textreport einmalig herunter, damit er seine Ergebnisse selbst verwaltet und von seinem Assessment nur die Scores bleiben.  
 **Auslösendes Ereignis:** Der Teilnehmer fordert den Abschluss seines Assessments an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
-**Anforderungen:** [FR-007, FR-008, FR-009, FR-018, NFR-001, NFR-002, NFR-003, NFR-010, C-002, C-003, C-005](../requirements.md)  
+**Anforderungen:** [FR-007, FR-008, FR-009, FR-018, NFR-001, NFR-002, NFR-003, NFR-006, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
 **Mockup:** [Auswertung](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4323), [Textreport nicht erstellt (A1)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4487), [Textreport nicht mehr verfügbar (A3)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4564)
 
@@ -36,7 +36,7 @@
 **Ablauf:**
 
 1. Das System weist den Teilnehmer darauf hin, dass der Textreport nicht erstellt werden konnte.
-2. Das System speichert keine Scores und lässt das Assessment laufend.
+2. Das System speichert keine Scores und lässt das Assessment laufend; die Antworten bleiben erhalten.
 3. Der Use Case wird bei Schritt 1 fortgesetzt.
 
 ### A2: Teilnehmer lädt den Textreport nicht herunter
@@ -62,8 +62,8 @@
 
 - Je Handlungsfeld mit Fragen ist ein Score gespeichert, der MAG und Rolle des Teilnehmers zugeordnet ist und auf keine Einladung, kein Assessment und keine Person verweist.
 - Das Assessment ist abgeschlossen.
-- Der Teilnehmer hat den Textreport erhalten.
-- Alle Antworten des Assessments sind gelöscht.
+- Hat der Teilnehmer den Textreport heruntergeladen, hat er ihn erhalten und alle Antworten des Assessments sind gelöscht.
+- Hat der Teilnehmer ihn nicht heruntergeladen (A2), hat er den Textreport nicht erhalten; die Scores sind gespeichert, das Assessment ist abgeschlossen und seine Antworten sind spätestens 1 Stunde nach Erstellung des Textreports gelöscht.
 
 ### Fehlerfall
 
@@ -76,7 +76,7 @@
 
 ### BR-001: Score je Handlungsfeld
 
-Der Score eines Handlungsfelds ist die Summe der Stufen aller Antworten dieses Handlungsfelds geteilt durch die Anzahl seiner Fragen. Er liegt zwischen 0 und 5 und hat höchstens zwei Nachkommastellen. Ein Handlungsfeld ohne Frage hat keinen Score.
+Der Score eines Handlungsfelds ist die Summe der Stufen aller Antworten dieses Handlungsfelds geteilt durch die Anzahl seiner Fragen. Er liegt zwischen 0 und 5 und wird kaufmännisch auf eine Nachkommastelle gerundet, gespeichert und immer mit einer Nachkommastelle ausgegeben. Die Skala des Radar-Charts zeigt nur die Ganzzahlen an. Ein Handlungsfeld ohne Frage hat keinen Score.
 
 ### BR-002: Scores ohne Personenbezug
 
@@ -84,7 +84,7 @@ Das System speichert je Score nur MAG, Rolle, Handlungsfeld, Fragenkatalog, Wert
 
 ### BR-003: Inhalt des Textreports
 
-Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
+Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Er enthält keine wörtlichen Antworttexte des Teilnehmers. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
 
 ### BR-004: Anonyme Vorlage an das KI-Modell
 

@@ -253,13 +253,14 @@ UC-002 setzt voraus, dass ein Starthinweis hinterlegt ist. Kein Use Case im Diag
 **Element:** UC-002 A2
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
 
 Die Vision verlangt den Hinweis vor jedem Assessment. Bei der Wiederaufnahme läuft dasselbe Assessment weiter.
 
 **Answer:** Bestätigt: Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-002 A2
 
 ## OQ-021: Verfällt eine Einladung, mit der noch kein Assessment gestartet wurde?
 
@@ -570,52 +571,58 @@ Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein bes
 **Element:** UC-003 BR-003
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Textreport enthält je Handlungsfeld die Würdigung der Leistung, die Begründung der Einstufung und Hinweise auf die nächsten Investitionen, aber keine wörtlichen Antworttexte des Teilnehmers.
 
 Die Vorgabe lautet, dass der Textreport die Leistung würdigt, die Einstufung begründet und Hinweise zu den nächsten Investitionen gibt. Ob er zusätzlich Fragen, Antworten und Stufen im Wortlaut aufführt, ist offen. Die Antworten werden nach dem Download gelöscht; der Textreport ist danach die einzige Aufzeichnung des Teilnehmers.
 
 **Answer:** Bestätigt: Der Textreport enthält je Handlungsfeld die Würdigung der Leistung, die Begründung der Einstufung und Hinweise auf die nächsten Investitionen, aber keine wörtlichen Antworttexte des Teilnehmers.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-003 BR-003
 
 ## OQ-046: Wie läuft der einmalige Download, und wann verfällt der Textreport?
 
 **Element:** UC-003 step 7
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Textreport steht nach dem Abschluss einmal zum Download bereit. Die Antworten werden nach dem Download gelöscht, spätestens 1 Stunde nach Erstellung des Textreports (NFR-003). Wird er nicht heruntergeladen, verfällt er und die Scores bleiben.
 
 FR-008 verlangt den einmaligen Download, FR-009 die Löschung der Antworten nach der Erstellung des Textreports, NFR-003 die Löschung innerhalb einer Stunde. Offen ist, was geschieht, wenn der Download scheitert oder nicht stattfindet, und ob ein abgebrochener Download wiederholt werden darf.
 
 **Answer:** Bestätigt: Der Textreport steht nach dem Abschluss einmal zum Download bereit. Die Antworten werden nach dem Download gelöscht, spätestens 1 Stunde nach Erstellung des Textreports (NFR-003). Wird er nicht heruntergeladen, verfällt er und die Scores bleiben.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-003 BR-006, UC-003 BR-007, UC-003 A2
 
 ## OQ-047: Was geschieht, wenn das KI-Modell den Textreport nicht erstellt?
 
 **Element:** UC-003 A1
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Das System weist darauf hin, speichert keine Scores und lässt das Assessment laufend. Der Teilnehmer kann den Abschluss erneut anfordern; die Antworten bleiben bis dahin erhalten (NFR-004).
 
 Weder die Anforderungen noch die Vision sagen, wie das System mit einem Ausfall des KI-Modells beim Abschluss umgeht. Alternativen: Scores sofort speichern und den Textreport später nachliefern, oder den Abschluss ohne Textreport zulassen.
 
 **Answer:** Bestätigt: Das System weist darauf hin, speichert keine Scores und lässt das Assessment laufend. Der Teilnehmer kann den Abschluss erneut anfordern; die Antworten bleiben bis dahin erhalten (NFR-004).
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-003 A1
 
 ## OQ-048: Wie wird der Score gerundet?
 
 **Element:** UC-003 BR-001
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Score hat höchstens zwei Nachkommastellen (kaufmännisch gerundet); ein Handlungsfeld ohne Frage hat keinen Score.
 
 Das Entity-Modell führt den Score als Dezimalzahl mit zwei Nachkommastellen (SCORE.wert). Die Anforderung nennt keine Rundung, und ein Handlungsfeld ohne Frage ergäbe eine Division durch null.
 
 **Answer:** Wird immer mit einer Nachkommastelle, kaufmännisch gerundet ausgegeben. Die Skala auf dem Radar zeigt aber nur die Ganzzahlen an
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Answer (Ergänzung):** Die Rundung auf eine Nachkommastelle gilt auch für den gespeicherten Score; SCORE.wert im Entity-Modell ist dem noch anzupassen (/entity-model).
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-003 BR-001
 
 ## OQ-049: Zeigt das System dem Teilnehmer seine eigene Auswertung mit Radar-Chart und Scores?
 
