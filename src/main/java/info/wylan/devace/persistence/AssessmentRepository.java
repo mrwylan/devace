@@ -141,7 +141,7 @@ public class AssessmentRepository {
 	}
 
 	/**
-	 * UC-003 step 4 und 7: setzt das Assessment auf abgeschlossen und löscht seine Antworten mit ihren Stufen.
+	 * UC-003 step 4: setzt das Assessment auf abgeschlossen und löscht seine Antworten mit ihren Stufen.
 	 */
 	public void abschliessen(long assessmentId) {
 		this.ctx.update(ASSESSMENT).set(ASSESSMENT.STATUS, ABGESCHLOSSEN).where(ASSESSMENT.ID.eq(assessmentId)).execute();

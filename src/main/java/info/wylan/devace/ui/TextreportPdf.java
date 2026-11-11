@@ -15,7 +15,7 @@ import org.openpdf.text.pdf.PdfWriter;
 
 /**
  * UC-003 step 7: der Textreport als PDF zum einmaligen Download. Er enthält keine Angabe zur Person und keine
- * Einladung, nur Rolle, Scores und den Text des KI-Modells.
+ * Einladung, nur Rolle, Erstellungsdatum, Scores und den Text des KI-Modells.
  */
 final class TextreportPdf {
 

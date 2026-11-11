@@ -192,7 +192,7 @@ public class AssessmentService {
 	}
 
 	/**
-	 * UC-003 steps 1–4 und 7: berechnet die Scores, lässt den Textreport erstellen, speichert die Scores ohne
+	 * UC-003 steps 1–4: berechnet die Scores, lässt den Textreport erstellen, speichert die Scores ohne
 	 * Personenbezug, setzt das Assessment auf abgeschlossen und löscht seine Antworten; A1 wenn kein Textreport
 	 * entsteht, dann bleibt alles, wie es war. Der Aufruf des KI-Modells hält keine Datenbanktransaktion offen.
 	 */
