@@ -46,6 +46,9 @@ class KiModellClientTest {
 
 	private volatile String antwortKoerper = "";
 
+	/** Verzögerung der Antwort des Stubs in Millisekunden. */
+	private volatile long verzoegerung;
+
 	/** Status der ersten Aufrufe, danach gilt {@link #status}. */
 	private final Deque<Integer> statusFolge = new ConcurrentLinkedDeque<>();
 
@@ -56,6 +59,14 @@ class KiModellClientTest {
 			this.pfade.add(austausch.getRequestURI().getPath());
 			this.koepfe.add(String.valueOf(austausch.getRequestHeaders().getFirst("Authorization")));
 			this.koerper.add(new String(austausch.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+			if (this.verzoegerung > 0) {
+				try {
+					Thread.sleep(this.verzoegerung);
+				}
+				catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
+				}
+			}
 			byte[] antwort = this.antwortKoerper.getBytes(StandardCharsets.UTF_8);
 			austausch.getResponseHeaders().add("Content-Type", "application/json");
 			Integer naechster = this.statusFolge.poll();
@@ -317,6 +328,21 @@ class KiModellClientTest {
 			.isInstanceOf(KiModellNichtErreichbarException.class);
 
 		assertThat(this.pfade).isEmpty();
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich", requirements = { "NFR-006" })
+	void bricht_nach_3_sekunden_ab_und_wiederholt_eine_zeitueberschreitung_nicht() {
+		this.verzoegerung = 5_000;
+		this.antwortKoerper = jevAntwort("{\"3\":1}");
+		long start = System.nanoTime();
+
+		assertThatThrownBy(() -> bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung()))
+			.isInstanceOf(KiModellNichtErreichbarException.class);
+
+		long dauerMs = (System.nanoTime() - start) / 1_000_000;
+		assertThat(dauerMs).isBetween(2_500L, 4_500L);
+		assertThat(this.pfade).hasSize(1);
 	}
 
 }

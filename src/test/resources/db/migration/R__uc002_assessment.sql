@@ -32,3 +32,17 @@ INSERT INTO starthinweis (id, version, text, ki_modelle, gueltig_ab)
 VALUES (9301, 9301, 'UC002 Nennen Sie keine Namen von Personen und keine Kundenprojekte. Es gelten die Firmenweisungen zum Umgang mit KI.',
         'UC002 Jev (Bewertung)', DATE '2000-01-01')
 ON CONFLICT DO NOTHING;
+
+-- ein Entwurf derselben Rolle mit einer eigenen Frage: er darf im Assessment nicht erscheinen (BR-003)
+INSERT INTO fragenkatalog (id, rolle_id, version, status, erstellt_am)
+VALUES (9302, 9301, 2, 'Entwurf', TIMESTAMP '2026-02-01 08:00:00')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO frage (id, fragenkatalog_id, handlungsfeld_id, text, position)
+VALUES (9303, 9302, (SELECT min(id) FROM handlungsfeld), 'UC002 Entwurfsfrage, nicht freigegeben', 1)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO stufenvorgabe (frage_id, stufe, beschreibung)
+SELECT 9303, s, 'UC002 Entwurfsvorgabe ' || s
+FROM generate_series(0, 5) AS s
+ON CONFLICT DO NOTHING;

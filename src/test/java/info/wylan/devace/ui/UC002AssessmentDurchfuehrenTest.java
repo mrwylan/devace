@@ -313,6 +313,73 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 		assertThat(stufen(referenz)).containsExactly(0);
 	}
 
+	// ---------------------------------------------------------------- Ergänzungen nach dem Coverage-Audit
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A2: Laufendes Assessment wiederaufnehmen", businessRules = { "BR-001" })
+	void gestartetes_assessment_laeuft_nach_dem_ablaufdatum_weiter() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		starten(referenz);
+		antworten("Erste Antwort.");
+		// die Einladung ist inzwischen abgelaufen: Erstellung vor 40 Tagen, 30 Tage gültig
+		LocalDate erstellt = LocalDate.now().minusDays(40);
+		this.jdbc.sql("update einladung set erstellt_am = ?, laeuft_ab_am = ? where referenz = ?")
+			.params(erstellt.atTime(9, 0), erstellt.plusDays(29), referenz)
+			.update();
+
+		navigate(AssessmentView.class, referenz);
+
+		assertThat(text()).contains("Frage 2 von 2").contains(FRAGE_2);
+		antworten("Zweite Antwort.");
+		assertThat(stufen(referenz)).containsExactly(3, 3);
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "Main Success Scenario", businessRules = { "BR-003" })
+	void fragen_eines_entwurfs_derselben_rolle_erscheinen_nicht() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		starten(referenz);
+
+		assertThat(text()).contains("Frage 1 von 2").contains(FRAGE_1).doesNotContain("UC002 Entwurfsfrage");
+		antworten("Erste Antwort.");
+		antworten("Zweite Antwort.");
+
+		// beantwortet sind genau die zwei Fragen des freigegebenen Fragenkatalogs, keine des Entwurfs
+		assertThat(this.jdbc.sql("""
+				select an.frage_id from antwort an join assessment a on a.id = an.assessment_id
+				join einladung e on e.id = a.einladung_id where e.referenz = ? order by an.frage_id
+				""").param(referenz).query(Long.class).list()).containsExactly(9301L, 9302L);
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A1: Einladung unbekannt, eingelöst oder abgelaufen", businessRules = { "BR-009" },
+			requirements = { "NFR-004" })
+	void assessment_ohne_eingabe_seit_7_tagen_laeuft_nicht_mehr() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		starten(referenz);
+		antworten("Erste Antwort.");
+		// die letzte Eingabe liegt 8 Tage zurück, der Löschlauf hat das Assessment noch nicht entfernt
+		this.jdbc.sql("""
+				update assessment set letzte_eingabe_am = now() - interval '8 days'
+				where einladung_id = (select id from einladung where referenz = ?)
+				""").param(referenz).update();
+
+		navigate(AssessmentView.class, referenz);
+
+		// die Einladung ist eingelöst und es gibt kein laufendes Assessment mehr: A1
+		assertThat(nichtNutzbar()).contains(NICHT_NUTZBAR);
+		assertThat(find(TextArea.class).withId("assessment-antwort").exists()).isFalse();
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "Main Success Scenario", requirements = { "NFR-010" })
+	void antwortfeld_hat_einen_zugaenglichen_namen() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		starten(referenz);
+
+		assertThat(antwortFeld().getAriaLabel()).contains("Ihre Antwort");
+	}
+
 	// ---------------------------------------------------------------- Hilfen
 
 	/** Legt eine Einladung an; das Ablaufdatum folgt aus Erstellung und Gültigkeit (UC-001 BR-008). */
