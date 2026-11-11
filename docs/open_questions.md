@@ -842,41 +842,51 @@ Ein Testfall gehört zu einer Frage (UC-009 BR-001). UC-006 Schritt 3 erlaubt, d
 **Element:** UC-002
 **Raised by:** /use-case-implement, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A1 und A4 sagen nur, das System weise darauf hin. Das Mockup zeigt für A1 „Einladung nicht nutzbar“ mit „Diese Einladung wurde bereits eingelöst oder ist abgelaufen.“ und für eine zu lange Antwort „Die Antwort ist zu lang: 562 von höchstens 500 Zeichen.“; für eine leere Antwort zeigt es nichts.
 
 **Answer:** Der Wortlaut des Mockups gilt für A1 und die zu lange Antwort (mit der tatsächlichen Zahl der Zeichen); für die leere Antwort gilt „Bitte geben Sie eine Antwort ein.“
 **Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-002 A1, UC-002 A4
 
 ## OQ-066: Wie wirkt die Schaltfläche „Assessment abschließen“, solange UC-003 nicht umgesetzt ist?
 
 **Element:** UC-002 step 8
 **Raised by:** /use-case-implement, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Schritt 8 bietet den Abschluss an, den UC-003 ausführt. Das Mockup zeigt die Schaltfläche „Assessment abschließen“.
 
 **Answer:** Die Schaltfläche ist sichtbar, aber deaktiviert, bis UC-003 umgesetzt ist.
 **Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-002 step 8
 
 ## OQ-067: Was sieht der Teilnehmer, wenn kein Starthinweis oder kein freigegebener Fragenkatalog hinterlegt ist?
 
 **Element:** UC-002
 **Raised by:** /use-case-implement, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Die Anwendung zeigt die Standard-Fehlerseite; ein eigener Hinweis besteht nicht.
 
 Die Vorbedingungen verlangen einen hinterlegten Starthinweis und einen freigegebenen Fragenkatalog der Rolle. Für den Fall, dass sie nicht erfüllt sind, nennt die Spezifikation keinen Ablauf und keinen Hinweis. Ein Starthinweis lässt sich erst mit UC-011 anlegen. Lesarten: (a) die Vorbedingung gilt als Vertrag, ein Ablauf ist nicht nötig; (b) neuer Alternativablauf mit Hinweis „derzeit nicht verfügbar“.
+
+**Answer:** Die Vorbedingung gilt als Vertrag; ein eigener Ablauf ist nicht nötig. UC-001 lädt nur zu Rollen mit freigegebenem Fragenkatalog ein, den Starthinweis legt UC-011 an.
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-002
 
 ## OQ-068: Gehören die Fußzeilenlinks „Datenschutz“ und „Hinweise zur KI-Nutzung“ des Mockups zu UC-002?
 
 **Element:** UC-002
 **Raised by:** /use-case-implement, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Nein: Die Spezifikation nennt weder Schritt noch Regel dafür; die Ansicht baut sie nicht.
 
 Alle UC-002-Mockups zeigen unten links „devace · Kompetenz-Assessment · Zielbild 2030“ und rechts die Links „Datenschutz“ und „Hinweise zur KI-Nutzung“. Weder ein Schritt noch eine Regel von UC-002 nennt sie, und kein anderer Use Case nennt Seiten dafür.
+
+**Answer:** Nein, die Fußzeilenlinks gehören nicht zu UC-002; die Ansicht baut sie nicht.
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-002
