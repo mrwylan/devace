@@ -3,10 +3,14 @@ package info.wylan.devace.client.kimodell;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Deque;
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.sun.net.httpserver.HttpServer;
+import info.wylan.devace.service.KiModellClient.BewertungAnfrage;
 import info.wylan.devace.service.KiModellClient.EntwurfAnfrage;
 import info.wylan.devace.service.KiModellClient.HandlungsfeldAnfrage;
 import info.wylan.devace.service.KiModellClient.VorgeschlageneFrage;
@@ -21,7 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * Adapter des KI-Modells gegen einen Stub der Chat-Schnittstelle: kein Aufruf eines echten Modells.
+ * Adapter des KI-Modells gegen einen Stub der Schnittstellen von OpenRouter (Chat für UC-006, System One von Jev für
+ * UC-002, ADR-003): kein Aufruf eines echten Modells.
  */
 class KiModellClientTest {
 
@@ -41,6 +46,9 @@ class KiModellClientTest {
 
 	private volatile String antwortKoerper = "";
 
+	/** Status der ersten Aufrufe, danach gilt {@link #status}. */
+	private final Deque<Integer> statusFolge = new ConcurrentLinkedDeque<>();
+
 	@BeforeEach
 	void startStub() throws IOException {
 		this.stub = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
@@ -50,7 +58,8 @@ class KiModellClientTest {
 			this.koerper.add(new String(austausch.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
 			byte[] antwort = this.antwortKoerper.getBytes(StandardCharsets.UTF_8);
 			austausch.getResponseHeaders().add("Content-Type", "application/json");
-			austausch.sendResponseHeaders(this.status, antwort.length);
+			Integer naechster = this.statusFolge.poll();
+			austausch.sendResponseHeaders((naechster != null) ? naechster : this.status, antwort.length);
 			austausch.getResponseBody().write(antwort);
 			austausch.close();
 		});
@@ -193,6 +202,119 @@ class KiModellClientTest {
 		assertThatThrownBy(() -> adapter(MODELL, " ").fragenEntwerfen(anfrage()))
 			.isInstanceOf(KiModellNichtErreichbarException.class)
 			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+
+		assertThat(this.pfade).isEmpty();
+	}
+
+	// ---------------------------------------------------------------- UC-002: Bewertung über Jev (ADR-003)
+
+	private static final String JEV = "typesafe/jev-test";
+
+	private OpenRouterKiModellClient bewertungsAdapter(String modell, String schluessel) {
+		String basis = "http://127.0.0.1:" + this.stub.getAddress().getPort() + "/api/v1";
+		return new OpenRouterKiModellClient(new KiProperties(basis, schluessel, new KiProperties.Modelle("", modell)),
+				new ClassPathResource("prompts/fragenkatalog-entwurf.st"));
+	}
+
+	private static BewertungAnfrage bewertung() {
+		return new BewertungAnfrage("Wie begründen Sie eine Architekturentscheidung?",
+				List.of("v0", "v1", "v2", "v3", "v4", "v5"), "Ich halte Kontext, Alternativen und Folgen fest.");
+	}
+
+	/** Antwort von Jev mit den Wahrscheinlichkeiten je Stufe, die Schlüssel bewusst nicht in Reihenfolge. */
+	private static String jevAntwort(String wahrscheinlichkeiten) {
+		return "{\"model\":\"typesafe/jev-test-1\",\"answers\":{\"stufe\":{\"type\":\"score\",\"score\":3.1,"
+				+ "\"probabilities\":" + wahrscheinlichkeiten + ",\"confidence\":0.8}},\"usage\":{\"input_tokens\":1}}";
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "Main Success Scenario", businessRules = { "BR-006" })
+	void ordnet_die_stufe_mit_der_hoechsten_wahrscheinlichkeit_zu_gelesen_ueber_den_namen() {
+		this.antwortKoerper = jevAntwort("{\"5\":0.01,\"2\":0.1,\"4\":0.2,\"0\":0,\"3\":0.69,\"1\":0}");
+
+		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung())).isEqualTo(OptionalInt.of(3));
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "Main Success Scenario", businessRules = { "BR-007" })
+	void sendet_nur_frage_stufenvorgaben_und_antworttext_an_die_system_one_route() {
+		this.antwortKoerper = jevAntwort("{\"0\":1}");
+
+		bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung());
+
+		// ADR-003: über OpenRouter, nicht direkt beim Anbieter
+		assertThat(this.pfade).containsExactly("/api/v1/systemone");
+		assertThat(this.koepfe).containsExactly("Bearer " + SCHLUESSEL);
+		String gesendet = this.koerper.get(0);
+		assertThat(gesendet).contains("\"model\":\"" + JEV + "\"")
+			.contains("\"state\":\"Ich halte Kontext, Alternativen und Folgen fest.\"")
+			.contains("\"type\":\"score\"")
+			.contains("Wie begründen Sie eine Architekturentscheidung?")
+			.contains("\"criteria\":[\"Stufe 0: v0\",\"Stufe 1: v1\",\"Stufe 2: v2\",\"Stufe 3: v3\",\"Stufe 4: v4\",\"Stufe 5: v5\"]");
+		// BR-007: keine Einladung, keine E-Mail-Adresse, keine Angabe zur Person
+		assertThat(gesendet).doesNotContain("@").doesNotContainIgnoringCase("einladung").doesNotContainIgnoringCase("referenz");
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich", businessRules = { "BR-006" })
+	void liefert_keine_stufe_wenn_jev_keine_wahrscheinlichkeiten_nennt() {
+		this.antwortKoerper = "{\"model\":\"typesafe/jev-test-1\",\"answers\":{}}";
+
+		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung())).isEmpty();
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich")
+	void wiederholt_bei_429_und_529_und_ordnet_dann_zu() {
+		this.statusFolge.add(429);
+		this.statusFolge.add(529);
+		this.antwortKoerper = jevAntwort("{\"4\":0.9,\"3\":0.1}");
+
+		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung())).isEqualTo(OptionalInt.of(4));
+		// ADR-003: höchstens drei Versuche
+		assertThat(this.pfade).hasSize(3);
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich")
+	void meldet_nicht_erreichbar_nach_drei_versuchen_mit_429() {
+		this.status = 429;
+		this.antwortKoerper = "{\"error\":{\"message\":\"zu viele\",\"code\":429}}";
+
+		assertThatThrownBy(() -> bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+		assertThat(this.pfade).hasSize(3);
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich")
+	void meldet_nicht_erreichbar_ohne_wiederholung_bei_anderen_fehlern() {
+		this.status = 422;
+		this.antwortKoerper = "{\"error\":{\"message\":\"interner-anbietertext\",\"code\":422}}";
+
+		assertThatThrownBy(() -> bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+		assertThat(this.pfade).hasSize(1);
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich")
+	void meldet_nicht_erreichbar_wenn_keine_verbindung_besteht_bei_der_bewertung() {
+		OpenRouterKiModellClient adapter = bewertungsAdapter(JEV, SCHLUESSEL);
+		this.stub.stop(0);
+
+		assertThatThrownBy(() -> adapter.antwortBewerten(bewertung())).isInstanceOf(KiModellNichtErreichbarException.class);
+	}
+
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich")
+	void ruft_jev_ohne_modell_oder_schluessel_nicht_auf() {
+		assertThatThrownBy(() -> bewertungsAdapter("", SCHLUESSEL).antwortBewerten(bewertung()))
+			.isInstanceOf(KiModellNichtErreichbarException.class);
+		assertThatThrownBy(() -> bewertungsAdapter(JEV, " ").antwortBewerten(bewertung()))
+			.isInstanceOf(KiModellNichtErreichbarException.class);
 
 		assertThat(this.pfade).isEmpty();
 	}
