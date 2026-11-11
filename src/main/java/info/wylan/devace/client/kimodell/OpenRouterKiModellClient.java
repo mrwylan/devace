@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Das KI-Modell über OpenRouter: Spring AI für den Fragenkatalog (UC-006 step 6), Jev für die Bewertung (UC-002 step 6,
- * ADR-003).
+ * ADR-004).
  */
 @Component
 class OpenRouterKiModellClient implements KiModellClient {
@@ -83,14 +83,17 @@ class OpenRouterKiModellClient implements KiModellClient {
 	/** Schlüssel der einen Frage an Jev; er geht nicht ans Modell. */
 	static final String FRAGE = "stufe";
 
-	/** Wartezeiten zwischen den Versuchen bei 429 und 529 (ADR-003): höchstens drei Versuche, unter 10 Sekunden. */
+	/** Wartezeiten zwischen den Versuchen bei 429 und 529 (ADR-004): höchstens drei Versuche. */
 	private static final long[] WARTEZEIT_MS = { 500, 1500 };
 
 	/** Zeitlimit je Versuch (NFR-006); eine Zeitüberschreitung ist UC-002 A5 und wird nicht wiederholt. */
 	static final Duration ZEITLIMIT = Duration.ofSeconds(3);
 
+	/** Gesamtbudget aller Versuche und Wartezeiten einer Bewertung (NFR-006, ADR-004). */
+	static final Duration GESAMTBUDGET = Duration.ofSeconds(10);
+
 	/**
-	 * UC-002 step 6 — Jev über die System-One-Route von OpenRouter (ADR-003); die Anfrage enthält nur Frage,
+	 * UC-002 step 6 — Jev über die System-One-Route von OpenRouter (ADR-004); die Anfrage enthält nur Frage,
 	 * Stufenvorgaben und Antworttext (BR-007).
 	 */
 	@Override
@@ -108,30 +111,27 @@ class OpenRouterKiModellClient implements KiModellClient {
 		JevAnfrage jev = new JevAnfrage(anfrage.antwort(), modell,
 				Map.of(FRAGE, new JevAnfrage.Frage("score", "Frage aus einem Kompetenz-Assessment: " + anfrage.frage()
 						+ " Ordne die Antwort der Stufe zu, deren Beschreibung am besten passt.", stufen)));
-		java.net.http.HttpClient http = java.net.http.HttpClient.newBuilder().connectTimeout(ZEITLIMIT).build();
-		JdkClientHttpRequestFactory fabrik = new JdkClientHttpRequestFactory(http);
-		fabrik.setReadTimeout(ZEITLIMIT);
-		RestClient client = RestClient.builder()
-			.requestFactory(fabrik)
-			.baseUrl(this.properties.baseUrl())
-			.defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + this.properties.apiKey())
-			.build();
+		long frist = System.nanoTime() + GESAMTBUDGET.toNanos();
 		for (int versuch = 0;; versuch++) {
+			// NFR-006: jeder Versuch höchstens 3 s, alle Versuche zusammen höchstens 10 s
+			Duration zeitlimit = kleinere(ZEITLIMIT, rest(frist));
 			try {
-				JevAntwort antwort = client.post()
+				JevAntwort antwort = client(zeitlimit).post()
 					.uri("/systemone")
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(jev)
 					.retrieve()
 					.body(JevAntwort.class);
-				// ADR-003: das verwendete Modell protokollieren, nie den Antworttext
+				// ADR-004: das verwendete Modell protokollieren, nie den Antworttext
 				log.info("Jev bewertete mit Modell {}", (antwort != null) ? antwort.model() : "unbekannt");
 				return stufe(antwort);
 			}
 			catch (HttpStatusCodeException ex) {
 				int status = ex.getStatusCode().value();
-				// ADR-003: bei 429 und 529 mit wachsender Wartezeit wiederholen, höchstens dreimal
-				if ((status == 429 || status == 529) && versuch < WARTEZEIT_MS.length) {
+				// ADR-004: bei 429 und 529 mit wachsender Wartezeit wiederholen, höchstens dreimal und nur,
+				// solange nach der Wartezeit noch Zeit für einen Versuch im Gesamtbudget bleibt
+				if ((status == 429 || status == 529) && versuch < WARTEZEIT_MS.length
+						&& rest(frist).toMillis() > WARTEZEIT_MS[versuch]) {
 					warte(WARTEZEIT_MS[versuch]);
 					continue;
 				}
@@ -144,6 +144,26 @@ class OpenRouterKiModellClient implements KiModellClient {
 				throw new KiModellNichtErreichbarException(ex);
 			}
 		}
+	}
+
+	private RestClient client(Duration zeitlimit) {
+		java.net.http.HttpClient http = java.net.http.HttpClient.newBuilder().connectTimeout(zeitlimit).build();
+		JdkClientHttpRequestFactory fabrik = new JdkClientHttpRequestFactory(http);
+		fabrik.setReadTimeout(zeitlimit);
+		return RestClient.builder()
+			.requestFactory(fabrik)
+			.baseUrl(this.properties.baseUrl())
+			.defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + this.properties.apiKey())
+			.build();
+	}
+
+	private static Duration rest(long frist) {
+		long nanos = frist - System.nanoTime();
+		return (nanos > 0) ? Duration.ofNanos(nanos) : Duration.ofMillis(1);
+	}
+
+	private static Duration kleinere(Duration a, Duration b) {
+		return (a.compareTo(b) <= 0) ? a : b;
 	}
 
 	/** UC-002 BR-006: die Stufe mit der höchsten Wahrscheinlichkeit, gelesen über ihren Namen; leer ohne Zuordnung. */

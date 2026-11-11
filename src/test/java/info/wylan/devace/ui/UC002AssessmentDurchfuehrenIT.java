@@ -85,6 +85,8 @@ class UC002AssessmentDurchfuehrenIT extends AbstractBasePlaywrightIT {
 		@DisplayName("Steps 1-8: Starthinweis bestätigen und alle Fragen beantworten")
 		void starthinweis_bestaetigen_und_fragen_beantworten() {
 			PlaywrightAssertions.assertThat(page.getByText("UC002 Jev (Bewertung)")).isVisible();
+			// NFR-010: die Seite meldet ihre Sprache (WCAG 3.1.1)
+			PlaywrightAssertions.assertThat(page.locator("html")).hasAttribute("lang", "de-CH");
 			PlaywrightAssertions.assertThat(page.locator("#assessment-starten")).isDisabled();
 
 			page.locator("#assessment-bestaetigung").click();
