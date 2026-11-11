@@ -20,7 +20,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.textfield.TextArea;
 import info.wylan.devace.TestcontainersConfiguration;
 import info.wylan.devace.service.KiModellClient;
+import info.wylan.devace.service.KiModellClient.Abschnitt;
 import info.wylan.devace.service.KiModellClient.BewerteteFrage;
+import info.wylan.devace.service.KiModellClient.Textreport;
 import info.wylan.devace.service.KiModellClient.HandlungsfeldAuswertung;
 import info.wylan.devace.service.KiModellClient.TextreportAnfrage;
 import info.wylan.devace.service.KiModellClientFake;
@@ -60,6 +62,9 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	private static final String FELD_1 = "Domänenwissen & Business Alignment";
 
 	private static final String FELD_2 = "Architektur & Engineering";
+
+	/** Erste Antwort mit mehr als acht Wörtern, für BR-003. */
+	private static final String ANTWORT_LANG = "Wir halten Kontext, Alternativen und Folgen jeder Entscheidung fest, meist in einem ADR.";
 
 	private static final String NICHT_NUTZBAR = "Diese Einladung wurde bereits eingelöst oder ist abgelaufen.";
 
@@ -107,7 +112,11 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 
 		// Schritt 5: Auswertung mit Radar-Chart, Scores je Handlungsfeld und Textreport
 		assertThat(text()).contains("Ihre Auswertung").contains("Rolle: UC003 Entwicklung");
-		assertThat(find(Div.class).withId("assessment-abgeschlossen").exists()).isTrue();
+		assertThat(find(Div.class).withId("assessment-abgeschlossen").single().getElement().getTextRecursively())
+			.contains("Assessment abgeschlossen")
+			.contains("Ihre Auswertung ist fertig. Radar-Chart, Scores und Textreport sehen nur Sie, und nur jetzt.");
+		assertThat(text()).contains(
+				"Der Textreport steht einmal zum Download bereit. Ihre Antworten sind bereits gelöscht, Ihre Scores bleiben ohne Personenbezug erhalten.");
 		assertThat(find(Html.class).single().getElement().getOuterHTML()).contains("Radar-Chart der Scores je Handlungsfeld");
 		// BR-001: kaufmännisch auf eine Nachkommastelle gerundet und immer mit einer Nachkommastelle ausgegeben;
 		// ein Handlungsfeld ohne Frage hat keinen Score
@@ -131,8 +140,10 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 			.query(String.class)
 			.list()).containsExactlyInAnyOrder("id", "mag_id", "rolle_id", "handlungsfeld_id", "fragenkatalog_id", "wert",
 					"erfasst_am");
-		// Schritt 4: das Assessment ist abgeschlossen
+		// Schritt 4, BR-007: das Assessment ist abgeschlossen, die Antworten sind schon vor dem Download gelöscht
 		assertThat(assessmentStatus(referenz)).isEqualTo("Abgeschlossen");
+		assertThat(antworten(referenz)).isZero();
+		assertThat(bewertungen(referenz)).isZero();
 	}
 
 	@Test
@@ -218,6 +229,9 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		assertThat(assessmentStatus(referenz)).isEqualTo("Laufend");
 		assertThat(antworten(referenz)).isEqualTo(5L);
 		assertThat(bewertungen(referenz)).isEqualTo(5L);
+		// Fehlerfall: jede gespeicherte Antwort bleibt mit Text und Stufe unverändert
+		assertThat(antwortenMitStufen(referenz)).containsExactly("Antwort 1.|4", "Antwort 2.|3", "Antwort 3.|3",
+				"Antwort 4.|3", "Antwort 5.|2");
 
 		// A1 Schritt 3: weiter bei Schritt 1
 		test(button("assessment-abschluss-erneut")).click();
@@ -239,6 +253,36 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		assertThat(this.jdbc.sql("select count(*) from score where mag_id = 9401").query(Long.class).single()).isZero();
 		assertThat(assessmentStatus(referenz)).isEqualTo("Laufend");
 		assertThat(antworten(referenz)).isEqualTo(5L);
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport", businessRules = { "BR-003" })
+	void textreport_mit_acht_woertern_einer_antwort_gilt_als_nicht_erstellt() {
+		String referenz = alleFragenBeantwortet(ANTWORT_LANG);
+		// acht aufeinanderfolgende Wörter der ersten Antwort, mit anderer Schreibweise und Satzzeichen
+		KI.liefertNaechstenTextreport(new Textreport("Überblick.", List.of(new Abschnitt(FELD_1,
+				"Sie schreiben: „Wir halten Kontext, Alternativen und Folgen jeder Entscheidung fest“.", "Weiter so."))));
+
+		test(button("assessment-abschliessen")).click();
+
+		assertThat(find(Div.class).withId("textreport-nicht-erstellt").exists()).isTrue();
+		assertThat(this.jdbc.sql("select count(*) from score where mag_id = 9401").query(Long.class).single()).isZero();
+		assertThat(assessmentStatus(referenz)).isEqualTo("Laufend");
+		assertThat(antworten(referenz)).isEqualTo(5L);
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "Main Success Scenario", businessRules = { "BR-003" })
+	void textreport_mit_sieben_woertern_einer_antwort_wird_angenommen() {
+		String referenz = alleFragenBeantwortet(ANTWORT_LANG);
+		// nur sieben aufeinanderfolgende Wörter der ersten Antwort
+		KI.liefertNaechstenTextreport(new Textreport("Überblick.", List.of(new Abschnitt(FELD_1,
+				"Sie halten Kontext, Alternativen und Folgen jeder Entscheidung bewusst fest.", "Weiter so."))));
+
+		test(button("assessment-abschliessen")).click();
+
+		assertThat(text()).contains("Ihre Auswertung");
+		assertThat(assessmentStatus(referenz)).isEqualTo("Abgeschlossen");
 	}
 
 	// ---------------------------------------------------------------- A2
@@ -330,6 +374,11 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	 * 3 im Handlungsfeld 1 und 2 im Handlungsfeld 2.
 	 */
 	private String alleFragenBeantwortet() {
+		return alleFragenBeantwortet(null);
+	}
+
+	/** Wie {@link #alleFragenBeantwortet()}, die erste Antwort mit dem angegebenen Text. */
+	private String alleFragenBeantwortet(String ersteAntwort) {
 		String referenz = UUID.randomUUID().toString();
 		LocalDate heute = LocalDate.now();
 		this.jdbc.sql("""
@@ -342,7 +391,8 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		int[] stufen = { 4, 3, 3, 3, 2 };
 		for (int i = 0; i < stufen.length; i++) {
 			KI.bewertetNaechsteMit(OptionalInt.of(stufen[i]));
-			test(find(TextArea.class).withId("assessment-antwort").single()).setValue("Antwort " + (i + 1) + ".");
+			String text = (i == 0 && ersteAntwort != null) ? ersteAntwort : "Antwort " + (i + 1) + ".";
+			test(find(TextArea.class).withId("assessment-antwort").single()).setValue(text);
 			test(button("assessment-senden")).click();
 		}
 		assertThat(find(Div.class).withId("assessment-fertig").exists()).isTrue();
@@ -377,6 +427,14 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 				select count(*) from antwort an join assessment a on a.id = an.assessment_id
 				join einladung e on e.id = a.einladung_id where e.referenz = ?
 				""").param(referenz).query(Long.class).single();
+	}
+
+	private List<String> antwortenMitStufen(String referenz) {
+		return this.jdbc.sql("""
+				select an.text || '|' || b.stufe from antwort an join bewertung b on b.antwort_id = an.id
+				join assessment a on a.id = an.assessment_id join einladung e on e.id = a.einladung_id
+				join frage f on f.id = an.frage_id where e.referenz = ? order by f.position
+				""").param(referenz).query(String.class).list();
 	}
 
 	private long bewertungen(String referenz) {

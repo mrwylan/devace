@@ -488,6 +488,24 @@ class KiModellClientTest {
 	}
 
 	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport", requirements = { "NFR-006" })
+	void meldet_nicht_erreichbar_ohne_textreport_innerhalb_von_10_sekunden() {
+		// der Dienst antwortet erst nach 12 s
+		this.verzoegerung = 12_000;
+		this.antwortKoerper = chatAntwort("{\"ueberblick\":\"zu spät\",\"abschnitte\":[]}");
+		long start = System.nanoTime();
+
+		assertThatThrownBy(() -> textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+
+		long dauerMs = (System.nanoTime() - start) / 1_000_000;
+		assertThat(dauerMs).isBetween(9_500L, 11_000L);
+		// ohne Wiederholung
+		assertThat(this.pfade).hasSize(1);
+	}
+
+	@Test
 	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport")
 	void ruft_ohne_textreport_modell_oder_schluessel_das_kimodell_nicht_auf() {
 		assertThatThrownBy(() -> textreportAdapter("", SCHLUESSEL).textreportErstellen(textreportAnfrage()))

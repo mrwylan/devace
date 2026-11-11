@@ -91,6 +91,8 @@ public class KiModellClientFake implements KiModellClient {
 
 	private boolean naechsterTextreportLeer;
 
+	private Textreport naechsterTextreport;
+
 	@Override
 	public Optional<Textreport> textreportErstellen(TextreportAnfrage anfrage) {
 		this.textreportAnfragen.add(anfrage);
@@ -102,6 +104,11 @@ public class KiModellClientFake implements KiModellClient {
 		if (this.naechsterTextreportLeer) {
 			this.naechsterTextreportLeer = false;
 			return Optional.empty();
+		}
+		if (this.naechsterTextreport != null) {
+			Textreport textreport = this.naechsterTextreport;
+			this.naechsterTextreport = null;
+			return Optional.of(textreport);
 		}
 		return Optional.of(new Textreport("Überblick des KI-Modells.", anfrage.handlungsfelder()
 			.stream()
@@ -117,6 +124,11 @@ public class KiModellClientFake implements KiModellClient {
 	/** UC-003 A1: das KI-Modell liefert beim nächsten Mal keinen verwertbaren Textreport. */
 	public void liefertNaechstenTextreportNicht() {
 		this.naechsterTextreportLeer = true;
+	}
+
+	/** UC-003 BR-003: der nächste Textreport hat diesen Inhalt. */
+	public void liefertNaechstenTextreport(Textreport textreport) {
+		this.naechsterTextreport = textreport;
 	}
 
 	/** UC-003 BR-004: die Anfragen für den Textreport. */
@@ -148,6 +160,7 @@ public class KiModellClientFake implements KiModellClient {
 		this.textreportAnfragen.clear();
 		this.naechsterTextreportFehler = null;
 		this.naechsterTextreportLeer = false;
+		this.naechsterTextreport = null;
 	}
 
 }
