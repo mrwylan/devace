@@ -35,7 +35,7 @@
 **Auslöser:** Eine Pflichtangabe fehlt oder eine Angabe ist zu lang (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
+1. Das System weist am jeweiligen Feld auf die fehlenden oder ungültigen Angaben hin: „Pflichtangabe fehlt.“ oder „Höchstens 100 Zeichen.“ (bei einer Rolle „Höchstens 50 Zeichen.“)
 2. Der Administrator korrigiert die Angaben.
 3. Der Use Case wird bei Schritt 4 fortgesetzt.
 
@@ -44,7 +44,7 @@
 **Auslöser:** Die Kombination aus Scrum Team und Linienteam oder der Name der Rolle gehört bereits zu einem anderen Eintrag (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist darauf hin, dass die MAG oder die Rolle bereits besteht.
+1. Das System weist darauf hin, dass die MAG oder die Rolle bereits besteht: „Diese MAG besteht bereits.“ bzw. „Diese Rolle besteht bereits.“
 2. Der Administrator korrigiert die Angaben.
 3. Der Use Case wird bei Schritt 4 fortgesetzt.
 
@@ -85,7 +85,7 @@ Der Name einer Rolle gehört zu höchstens einer Rolle. Beim Vergleich bleiben G
 
 ### BR-004: Teamleitung einer MAG
 
-Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen Teamleitungen. Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen.
+Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen Teamleitungen. Eine MAG ohne Teamleitung ist zulässig; für sie kann niemand Einladungen erstellen. Eine nicht vorhandene Teamleitung wird mit „Diese Teamleitung ist nicht vorhanden.“ abgewiesen. Die Verwaltung der Benutzerkonten gehört nicht zu diesem Use Case.
 
 ### BR-005: Anlegen und Ändern ohne Löschen
 
@@ -97,4 +97,4 @@ Der Use Case legt MAGs und Rollen an und ändert sie. Er löscht sie nicht.
 
 ### BR-007: Nur für Administratoren
 
-Nur der angemeldete Administrator verwaltet MAGs und Rollen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen.
+Nur der angemeldete Administrator verwaltet MAGs und Rollen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen. Die Navigation zeigt Einträge, für die der Administrator keine passende Berechtigung hat, deaktiviert.

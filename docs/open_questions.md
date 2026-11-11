@@ -333,77 +333,83 @@ BR-007 sagt, die E-Mail enthalte nur die Einladung. Betreff, Text, Absender und 
 **Element:** UC-008 BR-004
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Die Verwaltung der Benutzerkonten liegt außerhalb von UC-008; UC-008 wählt die Teamleitung aus vorhandenen Teamleitungen. Hand-off an /requirements für eine Anforderung und an /use-case-diagram für einen Use Case.
 
 Die Anmeldung (OQ-023) setzt Benutzerkonten voraus. Keine Anforderung und kein Use Case legt sie an oder ändert sie.
 
 **Answer:** Bestätigt: Die Verwaltung der Benutzerkonten liegt außerhalb von UC-008; UC-008 wählt die Teamleitung aus vorhandenen Teamleitungen. Hand-off an /requirements für eine Anforderung und an /use-case-diagram für einen Use Case.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-008 BR-004
 
 ## OQ-026: Wird bei der Eindeutigkeit von MAG und Rolle die Schreibweise unterschieden?
 
 **Element:** UC-008 BR-002
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Nein, Groß- und Kleinschreibung sowie umgebende Leerzeichen bleiben beim Vergleich unberücksichtigt.
 
 Ohne diese Regel entstünden "Entwicklung" und "entwicklung" als zwei Rollen mit getrennten Radar-Charts.
 
 **Answer:** Bestätigt: Nein, Groß- und Kleinschreibung sowie umgebende Leerzeichen bleiben beim Vergleich unberücksichtigt.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-008 BR-002, UC-008 BR-003
 
 ## OQ-027: Wie viele Entwürfe hat eine Rolle?
 
 **Element:** UC-006 BR-004
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Höchstens einen. Besteht ein Entwurf, setzt der Administrator ihn fort; ein weiterer Entwurf entsteht nicht.
 
 Das Entity-Modell begrenzt nur die freigegebenen Fragenkataloge je Rolle auf einen. Mehrere parallele Entwürfe würden die Freigabe (UC-007) mehrdeutig machen.
 
 **Answer:** Bestätigt: Höchstens einen. Besteht ein Entwurf, setzt der Administrator ihn fort; ein weiterer Entwurf entsteht nicht.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-006 BR-004
 
 ## OQ-028: Wie viele Fragen je Handlungsfeld darf der Administrator für den KI-Entwurf anfordern?
 
 **Element:** UC-006 BR-003
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** 1 bis 10, Vorschlag 3.
 
 Die Vision nennt keine Zahl. Die Grenze ist ein Vorschlag für den Pilot mit Lernenden.
 
 **Answer:** Bestätigt: 1 bis 10, Vorschlag 3.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-006 BR-003
 
 ## OQ-029: Darf ein Entwurf Handlungsfelder ohne Frage enthalten?
 
 **Element:** UC-006 BR-006
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Ja. Ob ein Fragenkatalog vollständig genug für die Freigabe ist (zum Beispiel mindestens eine Frage je Handlungsfeld), prüft UC-007.
 
 Ohne Frage in einem Handlungsfeld ließe sich kein Score für dieses Handlungsfeld berechnen. Das betrifft die Freigabe, nicht die Erstellung.
 
 **Answer:** Bestätigt: Ja. Ob ein Fragenkatalog vollständig genug für die Freigabe ist (zum Beispiel mindestens eine Frage je Handlungsfeld), prüft UC-007.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-006 BR-006
 
 ## OQ-030: Welchen Wortlaut haben die Hinweise bei fehlenden oder ungültigen Angaben und bei bestehender MAG oder Rolle?
 
 **Element:** UC-008 A1
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A1 und A2 sagen nur, das System weise auf fehlende oder ungültige Angaben bzw. darauf hin, dass die MAG oder die Rolle bereits besteht. Ein Wortlaut fehlt.
 
 **Answer:** Hinweise am jeweiligen Feld: "Pflichtangabe fehlt." bzw. "Höchstens 100 Zeichen." (Rolle: 50) für A1, "Diese MAG besteht bereits." bzw. "Diese Rolle besteht bereits." für A2.
 **Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** UC-008 A1, UC-008 A2
 
 ## OQ-031: Welche Tabelle hält die Benutzerkonten, und wie entsteht der erste Administrator?
 
@@ -423,12 +429,13 @@ Das Entity-Modell nennt BENUTZER nur als externe Systemgrenze mit der Spalte id.
 **Element:** UC-008 BR-004
 **Raised by:** /spring-service-test, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 BR-004 verlangt, dass die Teamleitung aus den vorhandenen Teamleitungen ausgewählt wird. Kein Ablauf und kein Wortlaut sagt, was geschieht, wenn eine Angabe außerhalb der Oberfläche eine nicht vorhandene Person oder einen Benutzer ohne Funktion Teamleitung nennt. Der Dienst lehnt sie mit dem Hinweis "Die Teamleitung ist nicht vorhanden." ab; der Wortlaut stammt aus der Umsetzung, nicht aus der Spezifikation. Der Test prüft deshalb nur die Ablehnung, nicht den Text.
 
 **Answer:** „Diese Teamleitung ist nicht vorhanden.“
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-008 BR-004
 
 ## OQ-033: Welchen Wortlaut haben die Hinweise und Bestätigungen beim Erstellen des Fragenkatalogs?
 
@@ -498,24 +505,26 @@ Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs 
 **Element:** UC-006 BR-009
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". BR-009 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-006 BR-009
 
 ## OQ-039: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
 **Element:** UC-008 BR-007
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs und Rollen, Testfälle, Matrix-Zuordnung) neben "Alex Beispiel · Teamleitung". BR-007 lässt nur die berechtigte Rolle zu. Ersetzt OQ-037.
 
 **Answer:** Die Navigation zeigt alle Einträge. Einträge ohne passende Berechtigung sind sichtbar, aber deaktiviert. Ein Aufruf ohne Berechtigung wird weiterhin abgewiesen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-008 BR-007
 
 ## OQ-040: Wie erscheinen Navigationseinträge, für die der Benutzer keine Berechtigung hat?
 
@@ -535,36 +544,39 @@ Alle Mockups zeigen links die Einträge der Administration (Fragenkatalog, MAGs 
 **Element:** UC-006
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A2, A3, A4 und A6 sprechen von Hinweisen, Schritt 12 von einer Bestätigung, nennen aber keinen Wortlaut. Ersetzt OQ-033, dessen Element mehrere Stellen nannte.
 
 **Answer:** A2: "Das KI-Modell hat keinen Entwurf geliefert."; A3: "Die Zahl muss zwischen 1 und 10 liegen." und "Höchstens 2000 Zeichen."; A4: "Wortlaut fehlt.", "Vorgabe fehlt." und "Höchstens 500 Zeichen."; A6: "Jedes Handlungsfeld hat bereits mindestens N Fragen." mit den Auswahlmöglichkeiten "Abbrechen" und "Weitere Fragen ergänzen"; Bestätigung: "Entwurf gespeichert."
 **Answered by:** Jakob Albrecht, 2026-11-08
+**Resolved in:** UC-006 A2, UC-006 A3, UC-006 A4, UC-006 A6, UC-006 step 12
 
 ## OQ-042: Welcher Wortlaut gilt in UC-006, wenn das Mockup von früheren Antworten abweicht?
 
 **Element:** UC-006
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Das Mockup zeigt für A2, A3, A4 und A6 andere Hinweistexte als OQ-041 festlegt, z. B. "Kein Entwurf entstanden – Das KI-Modell ist nicht erreichbar. Der Ausgangspunkt und Ihre bisherigen Angaben bleiben erhalten." Ersetzt den UC-006-Teil von OQ-036.
 
 **Answer:** Die bisherige Antwort OQ-041 gilt. Der Wortlaut im Mockup ist ein Platzhalter; das Layout folgt dem Mockup.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-006 A2, UC-006 A3, UC-006 A4, UC-006 A6
 
 ## OQ-043: Welcher Wortlaut gilt in UC-008, wenn das Mockup von früheren Antworten abweicht?
 
 **Element:** UC-008
 **Raised by:** /use-case-spec, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Das Mockup zeigt für A1 und A2 andere Hinweistexte als OQ-030 festlegt, z. B. "Scrum Team ist eine Pflichtangabe." und "Diese MAG besteht bereits: Scrum Team Alpha · Linienteam Entwicklung." Ersetzt den UC-008-Teil von OQ-036.
 
 **Answer:** Die bisherige Antwort OQ-030 gilt. Der Wortlaut im Mockup ist ein Platzhalter; das Layout folgt dem Mockup.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-008 A1, UC-008 A2
 
 ## OQ-044: Wie werden die KI-Modelle je Aufgabe gewählt?
 
