@@ -77,7 +77,7 @@ public class AssessmentService {
 		if (einladung.isEmpty()) {
 			return new Einstieg.NichtNutzbar();
 		}
-		Optional<LaufendesAssessment> laufend = this.assessmentRepository.findLaufend(einladung.get().id());
+		Optional<LaufendesAssessment> laufend = this.assessmentRepository.findLaufend(einladung.get().id(), grenze());
 		if (laufend.isPresent()) {
 			return new Einstieg.Fortsetzen(dialog(laufend.get()));
 		}
@@ -99,7 +99,7 @@ public class AssessmentService {
 		}
 		EinladungZustand einladung = this.einladungRepository.findByReferenz(referenz)
 			.orElseThrow(EinladungNichtNutzbarException::new);
-		Optional<LaufendesAssessment> laufend = this.assessmentRepository.findLaufend(einladung.id());
+		Optional<LaufendesAssessment> laufend = this.assessmentRepository.findLaufend(einladung.id(), grenze());
 		if (laufend.isPresent()) {
 			return dialog(laufend.get());
 		}
@@ -126,7 +126,7 @@ public class AssessmentService {
 	public Dialog antworten(String referenz, String text) {
 		EinladungZustand einladung = this.einladungRepository.findByReferenz(referenz)
 			.orElseThrow(EinladungNichtNutzbarException::new);
-		LaufendesAssessment assessment = this.assessmentRepository.findLaufend(einladung.id())
+		LaufendesAssessment assessment = this.assessmentRepository.findLaufend(einladung.id(), grenze())
 			.orElseThrow(EinladungNichtNutzbarException::new);
 		String antwort = (text != null) ? text.strip() : "";
 		// UC-002 BR-004: Eine Antwort ist nicht leer und hat höchstens 500 Zeichen.
@@ -159,7 +159,12 @@ public class AssessmentService {
 	 */
 	@Transactional
 	public int loescheLiegengebliebene() {
-		return this.assessmentRepository.loescheLaufendeSeit(LocalDateTime.now(this.clock).minus(AUFBEWAHRUNG));
+		return this.assessmentRepository.loescheLaufendeSeit(grenze());
+	}
+
+	/** UC-002 BR-009: Vor dieser Zeit liegt die letzte Eingabe eines Assessments, das nicht mehr läuft. */
+	private LocalDateTime grenze() {
+		return LocalDateTime.now(this.clock).minus(AUFBEWAHRUNG);
 	}
 
 	private int stufeZuordnen(BeantwortbareFrage frage, String antwort) {

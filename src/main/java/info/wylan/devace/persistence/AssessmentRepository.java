@@ -28,13 +28,16 @@ public class AssessmentRepository {
 	}
 
 	/**
-	 * UC-002 A2: das laufende Assessment zur Einladung, falls es eines gibt.
+	 * UC-002 A2: das laufende Assessment zur Einladung, falls es eines gibt, dessen letzte Eingabe nicht vor der
+	 * Grenze liegt.
 	 */
-	public Optional<LaufendesAssessment> findLaufend(long einladungId) {
+	public Optional<LaufendesAssessment> findLaufend(long einladungId, LocalDateTime grenze) {
 		return this.ctx.select(ASSESSMENT.ID, ASSESSMENT.ROLLE_ID, ASSESSMENT.FRAGENKATALOG_ID)
 			.from(ASSESSMENT)
 			.where(ASSESSMENT.EINLADUNG_ID.eq(einladungId))
 			.and(ASSESSMENT.STATUS.eq(LAUFEND))
+			// UC-002 BR-009: Nach 7 Tagen ohne Eingabe läuft das Assessment nicht mehr.
+			.and(ASSESSMENT.LETZTE_EINGABE_AM.ge(grenze))
 			.fetchOptional(Records.mapping(LaufendesAssessment::new));
 	}
 

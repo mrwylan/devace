@@ -21,7 +21,8 @@ class AssessmentAufbewahrung {
 		this.service = service;
 	}
 
-	@Scheduled(cron = "0 15 3 * * *")
+	// UC-002 BR-009: alle 5 Minuten; ein abgelaufenes Assessment ist schon vorher nicht mehr erreichbar.
+	@Scheduled(cron = "0 */5 * * * *")
 	void loescheLiegengebliebene() {
 		int geloescht = this.service.loescheLiegengebliebene();
 		if (geloescht > 0) {

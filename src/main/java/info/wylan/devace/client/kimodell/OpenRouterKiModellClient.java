@@ -1,5 +1,6 @@
 package info.wylan.devace.client.kimodell;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,6 +86,9 @@ class OpenRouterKiModellClient implements KiModellClient {
 	/** Wartezeiten zwischen den Versuchen bei 429 und 529 (ADR-003): höchstens drei Versuche, unter 10 Sekunden. */
 	private static final long[] WARTEZEIT_MS = { 500, 1500 };
 
+	/** Zeitlimit je Versuch (NFR-006); eine Zeitüberschreitung ist UC-002 A5 und wird nicht wiederholt. */
+	static final Duration ZEITLIMIT = Duration.ofSeconds(3);
+
 	/**
 	 * UC-002 step 6 — Jev über die System-One-Route von OpenRouter (ADR-003); die Anfrage enthält nur Frage,
 	 * Stufenvorgaben und Antworttext (BR-007).
@@ -103,7 +108,11 @@ class OpenRouterKiModellClient implements KiModellClient {
 		JevAnfrage jev = new JevAnfrage(anfrage.antwort(), modell,
 				Map.of(FRAGE, new JevAnfrage.Frage("score", "Frage aus einem Kompetenz-Assessment: " + anfrage.frage()
 						+ " Ordne die Antwort der Stufe zu, deren Beschreibung am besten passt.", stufen)));
+		java.net.http.HttpClient http = java.net.http.HttpClient.newBuilder().connectTimeout(ZEITLIMIT).build();
+		JdkClientHttpRequestFactory fabrik = new JdkClientHttpRequestFactory(http);
+		fabrik.setReadTimeout(ZEITLIMIT);
 		RestClient client = RestClient.builder()
+			.requestFactory(fabrik)
 			.baseUrl(this.properties.baseUrl())
 			.defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + this.properties.apiKey())
 			.build();

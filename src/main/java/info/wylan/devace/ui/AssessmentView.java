@@ -141,6 +141,8 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		TextArea antwort = new TextArea();
 		antwort.setId("assessment-antwort");
 		antwort.setPlaceholder("Ihre Antwort in eigenen Worten …");
+		// NFR-010: zugänglicher Name des Antwortfelds (WCAG 2.1 AA), das Layout bleibt wie im Mockup ohne sichtbares Label
+		antwort.setAriaLabel("Ihre Antwort");
 		antwort.setWidthFull();
 		antwort.setMinHeight("6rem");
 		antwort.getStyle().set("margin-top", "0.75rem");
