@@ -9,52 +9,56 @@ history.
 **Element:** NFR-003
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** 1 Stunde nach Erstellung des Textreports.
 
 Die Vision verlangt Löschung nach Erstellung des Textreports, nennt aber keine Frist.
 
 **Answer:** Bestätigt: 1 Stunde nach Erstellung des Textreports.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** NFR-003
 
 ## OQ-002: Was geschieht mit Antworten eines abgebrochenen Assessments?
 
 **Element:** NFR-004
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Löschung 7 Tage nach der letzten Eingabe.
 
 Die Vision regelt nur den Abschluss. Ohne Regel bliebe Freitext unbegrenzt gespeichert.
 
 **Answer:** Bestätigt: Löschung 7 Tage nach der letzten Eingabe.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** NFR-004
 
 ## OQ-003: Welche Rollen und welche Anmeldung berechtigen zum Zugriff auf die Auswertung?
 
 **Element:** NFR-005
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Alle drei Rollen melden sich an; Befragte nutzen nur die Einladung.
 
 Die Antwort der Teamleitung nennt Anmeldung nur für die Teamleitung. Für Schulungsverantwortliche und Administrator wurde dasselbe angenommen.
 
 **Answer:** Bestätigt: Alle drei Rollen melden sich an; Befragte nutzen nur die Einladung.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** NFR-005, FR-003
 
 ## OQ-004: Sehen Schulungsverantwortliche die Radar-Charts aller MAGs?
 
 **Element:** FR-011
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Alle MAGs, nur Radar-Charts, keine Einladungen.
 
 Die Vision nennt ihren Nutzen (Bedarf priorisieren), aber nicht den Umfang ihrer Sicht.
 
 **Answer:** Bestätigt: Alle MAGs, nur Radar-Charts, keine Einladungen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** FR-011
 
 ## OQ-005: Wie lange gilt eine Einladung, und wie oft kann sie genutzt werden?
 
@@ -74,49 +78,56 @@ Die Antwort legt fest, dass die Einladung zu einer Befragten gehört. Gültigkei
 **Element:** FR-012
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Je Rolle ein eigener Fragenkatalog.
 
 Die Vision verlangt getrennte Bewertung je Rolle; ob dafür getrennte Fragensätze nötig sind, ist offen.
+
+**Answer:** Bestätigt: Je Rolle ein eigener Fragenkatalog.
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** FR-012
 
 ## OQ-007: Antwortzeiten und Last (10 s Dialog, 3 s Radar-Chart, 50 gleichzeitige Assessments)?
 
 **Element:** NFR-006
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** 10 s (95 %), 3 s (95 %), 50 gleichzeitige Assessments.
 
 Die Vision nennt keine Zahlen. Die Werte sind Vorschläge für den Pilot mit Lernenden.
 
 **Answer:** Bestätigt: 10 s (95 %), 3 s (95 %), 50 gleichzeitige Assessments.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** NFR-006, NFR-007, NFR-008
 
 ## OQ-008: Schwelle für die faire Bewertung?
 
 **Element:** NFR-009
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Mindestens 90 % der Testfälle ergeben die erwartete Stufe.
 
 Die Vision verlangt Testfälle, nennt aber keine Erfolgsquote.
 
 **Answer:** Bestätigt: Mindestens 90 % der Testfälle ergeben die erwartete Stufe.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** NFR-009
 
 ## OQ-009: Gilt WCAG 2.1 AA und ausschließlich Deutsch?
 
 **Element:** NFR-010
 **Raised by:** /requirements, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Deutsch; WCAG 2.1 AA.
 
 Die Vision nennt weder Sprache noch Zugänglichkeitsstufe.
 
 **Answer:** Bestätigt: Deutsch; WCAG 2.1 AA.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** NFR-010
 
 ## OQ-010: Welche Fassung der Firmenweisungen zum Umgang mit KI gilt?
 
@@ -227,26 +238,28 @@ Die Wahl 'mehrere Adressen je Durchgang' nennt keine Obergrenze.
 **Element:** FR-015
 **Raised by:** /spec-review UC-001 (angenommen von /use-case-spec), 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Administrator ordnet in UC-008 jeder MAG eine Teamleitung zu.
 
 UC-001 setzt voraus, dass der Teamleitung mindestens eine MAG zugeordnet ist (Entity MAG.teamleitung_id). FR-015 nennt die Zuordnung nicht.
 
 **Answer:** Bestätigt: Der Administrator ordnet in UC-008 jeder MAG eine Teamleitung zu.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** FR-015
 
 ## OQ-019: Wer pflegt den Starthinweis, und in welchem Use Case?
 
 **Element:** FR-004
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Administrator pflegt den Starthinweis; ein Use Case dafür fehlt noch (Hand-off an /requirements und /use-case-diagram).
 
 UC-002 setzt voraus, dass ein Starthinweis hinterlegt ist. Kein Use Case im Diagramm pflegt ihn (Text, KI-Modelle, Version).
 
 **Answer:** Bestätigt: Der Administrator pflegt den Starthinweis; ein Use Case dafür fehlt noch (Hand-off an /requirements und /use-case-diagram).
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** FR-019
 
 ## OQ-020: Wird der Starthinweis bei der Wiederaufnahme erneut gezeigt?
 
