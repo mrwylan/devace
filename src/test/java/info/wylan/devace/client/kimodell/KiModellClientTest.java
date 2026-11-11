@@ -1,16 +1,23 @@
 package info.wylan.devace.client.kimodell;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.sun.net.httpserver.HttpServer;
+import info.wylan.devace.service.KiModellClient.Abschnitt;
+import info.wylan.devace.service.KiModellClient.BewerteteFrage;
 import info.wylan.devace.service.KiModellClient.BewertungAnfrage;
+import info.wylan.devace.service.KiModellClient.HandlungsfeldAuswertung;
+import info.wylan.devace.service.KiModellClient.Textreport;
+import info.wylan.devace.service.KiModellClient.TextreportAnfrage;
 import info.wylan.devace.service.KiModellClient.EntwurfAnfrage;
 import info.wylan.devace.service.KiModellClient.HandlungsfeldAnfrage;
 import info.wylan.devace.service.KiModellClient.VorgeschlageneFrage;
@@ -360,6 +367,137 @@ class KiModellClientTest {
 		long dauerMs = (System.nanoTime() - start) / 1_000_000;
 		assertThat(dauerMs).isLessThanOrEqualTo(10_500L);
 		assertThat(this.pfade).hasSizeBetween(1, 3);
+	}
+
+	// ---------------------------------------------------------------- UC-003: Textreport über Spring AI
+
+	private static final String TEXTREPORT_MODELL = "test/textreport";
+
+	private OpenRouterKiModellClient textreportAdapter(String modell, String schluessel) {
+		String basis = "http://127.0.0.1:" + this.stub.getAddress().getPort() + "/api/v1";
+		return new OpenRouterKiModellClient(new KiProperties(basis, schluessel, new KiProperties.Modelle("", "", modell)),
+				new ClassPathResource("prompts/fragenkatalog-entwurf.st"));
+	}
+
+	private static TextreportAnfrage textreportAnfrage() {
+		return new TextreportAnfrage("Entwicklung",
+				List.of(new HandlungsfeldAuswertung("Architektur & Engineering", new BigDecimal("3.5"),
+						List.of(new BewerteteFrage("Wie begründen Sie eine Architekturentscheidung?",
+								"Ich halte Kontext, Alternativen und Folgen fest.", 4),
+								new BewerteteFrage("Wie gehen Sie mit technischen Schulden um?",
+										"Wir planen Zeit für Aufräumarbeiten ein.", 3)))));
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "Main Success Scenario")
+	void bildet_die_antwort_auf_ueberblick_und_abschnitte_je_handlungsfeld_ab() {
+		this.antwortKoerper = chatAntwort("""
+				{"ueberblick":"Sie zeigen solide Grundlagen.",
+				 "abschnitte":[{"handlungsfeld":"Architektur & Engineering","wuerdigung":"Sie begründen nachvollziehbar.",
+				  "naechsterSchritt":"Halten Sie Entscheidungen in ADRs fest."}]}""");
+
+		Optional<Textreport> textreport = textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL)
+			.textreportErstellen(textreportAnfrage());
+
+		assertThat(textreport).contains(new Textreport("Sie zeigen solide Grundlagen.",
+				List.of(new Abschnitt("Architektur & Engineering", "Sie begründen nachvollziehbar.",
+						"Halten Sie Entscheidungen in ADRs fest."))));
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "Main Success Scenario", businessRules = { "BR-004" },
+			requirements = { "NFR-001" })
+	void sendet_nur_rolle_handlungsfelder_scores_fragen_antworten_und_stufen() {
+		this.antwortKoerper = chatAntwort("{\"ueberblick\":\"\",\"abschnitte\":[]}");
+
+		textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage());
+
+		assertThat(this.pfade).containsExactly("/api/v1/chat/completions");
+		assertThat(this.koepfe).containsExactly("Bearer " + SCHLUESSEL);
+		String gesendet = this.koerper.get(0);
+		assertThat(gesendet).contains("\"model\":\"" + TEXTREPORT_MODELL + "\"")
+			.contains("Rolle: Entwicklung")
+			.contains("Architektur & Engineering")
+			.contains("Score 3.5")
+			.contains("Wie begründen Sie eine Architekturentscheidung?")
+			.contains("Ich halte Kontext, Alternativen und Folgen fest.")
+			.contains("Stufe: 4")
+			.contains("Stufe: 3");
+		// BR-004: keine Einladung, keine E-Mail-Adresse, keine Angabe zur Person
+		assertThat(gesendet).doesNotContainIgnoringCase("e-mail")
+			.doesNotContain("@")
+			.doesNotContainIgnoringCase("einladung")
+			.doesNotContainIgnoringCase("benutzer");
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "Main Success Scenario", businessRules = { "BR-003" })
+	void verlangt_deutsch_wuerdigung_begruendung_naechsten_schritt_und_keine_woertlichen_antworten() {
+		this.antwortKoerper = chatAntwort("{\"ueberblick\":\"\",\"abschnitte\":[]}");
+
+		textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage());
+
+		assertThat(this.koerper.get(0)).contains("Schreibe auf Deutsch")
+			.contains("würdige die Leistung")
+			.contains("begründe die Einstufung")
+			.contains("nächsten Schritt")
+			.contains("Zitiere keine Antworten wörtlich")
+			.contains("kein Bestandteil einer Leistungsbeurteilung");
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport")
+	void liefert_keinen_textreport_ohne_ueberblick_oder_ohne_abschnitt() {
+		this.antwortKoerper = chatAntwort("{\"ueberblick\":\"\",\"abschnitte\":[{\"handlungsfeld\":\"A\",\"wuerdigung\":\"W\"}]}");
+		assertThat(textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage())).isEmpty();
+
+		this.antwortKoerper = chatAntwort("{\"ueberblick\":\"Überblick\",\"abschnitte\":[]}");
+		assertThat(textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage())).isEmpty();
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport")
+	void meldet_nicht_erreichbar_wenn_der_dienst_beim_textreport_mit_fehler_antwortet() {
+		this.status = 500;
+		this.antwortKoerper = "{\"error\":{\"message\":\"interner-anbietertext\",\"code\":500}}";
+
+		assertThatThrownBy(() -> textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport")
+	void meldet_nicht_erreichbar_wenn_der_textreport_nicht_lesbar_ist() {
+		this.antwortKoerper = chatAntwort("das ist kein json");
+
+		assertThatThrownBy(() -> textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL).textreportErstellen(textreportAnfrage()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport")
+	void meldet_nicht_erreichbar_wenn_beim_textreport_keine_verbindung_besteht() {
+		OpenRouterKiModellClient adapter = textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL);
+		this.stub.stop(0);
+
+		assertThatThrownBy(() -> adapter.textreportErstellen(textreportAnfrage()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport")
+	void ruft_ohne_textreport_modell_oder_schluessel_das_kimodell_nicht_auf() {
+		assertThatThrownBy(() -> textreportAdapter("", SCHLUESSEL).textreportErstellen(textreportAnfrage()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+		assertThatThrownBy(() -> textreportAdapter(TEXTREPORT_MODELL, " ").textreportErstellen(textreportAnfrage()))
+			.isInstanceOf(KiModellNichtErreichbarException.class)
+			.hasMessage("Das KI-Modell ist nicht erreichbar.");
+
+		assertThat(this.pfade).isEmpty();
 	}
 
 }
