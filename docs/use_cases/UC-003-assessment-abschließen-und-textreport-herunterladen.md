@@ -23,19 +23,19 @@
 1. Der Teilnehmer schließt sein Assessment ab.
 2. Das System berechnet je Handlungsfeld den Score aus den Stufen seiner Antworten.
 3. Das System lässt das KI-Modell den Textreport erstellen, der seine Leistung würdigt, seine Einstufung begründet und Hinweise auf seine nächsten Investitionen gibt.
-4. Das System speichert die Scores ohne Personenbezug und setzt das Assessment auf abgeschlossen.
-5. Das System zeigt dem Teilnehmer seine Auswertung mit dem Radar-Chart, den erreichten Scores je Handlungsfeld und dem Textreport.
+4. Das System speichert die Scores ohne Personenbezug, setzt das Assessment auf abgeschlossen und löscht die Antworten des Assessments.
+5. Das System zeigt dem Teilnehmer den Hinweis „Assessment abgeschlossen: Ihre Auswertung ist fertig. Radar-Chart, Scores und Textreport sehen nur Sie, und nur jetzt.“ und seine Auswertung mit dem Radar-Chart, den erreichten Scores je Handlungsfeld und dem Textreport, darunter den Hinweis „Der Textreport steht einmal zum Download bereit. Ihre Antworten sind bereits gelöscht, Ihre Scores bleiben ohne Personenbezug erhalten.“
 6. Der Teilnehmer lädt den Textreport herunter.
-7. Das System stellt den Textreport einmalig bereit und löscht danach die Antworten des Assessments.
+7. Das System stellt den Textreport einmalig als PDF-Dokument bereit.
 
 ## Alternativabläufe
 
 ### A1: KI-Modell liefert keinen Textreport
 
-**Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert keinen Textreport (Schritt 3)  
+**Auslöser:** Das KI-Modell ist nicht erreichbar, liefert nicht innerhalb von 10 Sekunden einen Textreport, liefert keinen Textreport oder einen, der eine Antwort des Teilnehmers wörtlich enthält (Schritt 3)  
 **Ablauf:**
 
-1. Das System weist den Teilnehmer darauf hin, dass der Textreport nicht erstellt werden konnte.
+1. Das System zeigt den Hinweis „Textreport nicht erstellt: Das KI-Modell hat keinen Textreport geliefert. Es wurde nichts gespeichert, Ihre Antworten bleiben erhalten. Sie können den Abschluss erneut anfordern.“
 2. Das System speichert keine Scores und lässt das Assessment laufend; die Antworten bleiben erhalten.
 3. Der Use Case wird bei Schritt 1 fortgesetzt.
 
@@ -45,15 +45,14 @@
 **Ablauf:**
 
 1. Das System bietet den Textreport nicht erneut an.
-2. Das System löscht die Antworten des Assessments spätestens 1 Stunde nach Erstellung des Textreports.
-3. Der Use Case endet.
+2. Der Use Case endet.
 
 ### A3: Textreport nicht mehr verfügbar
 
 **Auslöser:** Der Teilnehmer fordert den Textreport an, nachdem er heruntergeladen wurde oder verfallen ist (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist den Teilnehmer darauf hin, dass der Textreport nicht mehr zur Verfügung steht.
+1. Das System zeigt den Hinweis „Textreport nicht mehr verfügbar: Der Textreport wurde bereits heruntergeladen oder ist verfallen. Ihre Scores bleiben ohne Personenbezug gespeichert.“
 2. Der Use Case endet.
 
 ## Nachbedingungen
@@ -61,9 +60,9 @@
 ### Erfolgsfall
 
 - Je Handlungsfeld mit Fragen ist ein Score gespeichert, der MAG und Rolle des Teilnehmers zugeordnet ist und auf keine Einladung, kein Assessment und keine Person verweist.
-- Das Assessment ist abgeschlossen.
-- Hat der Teilnehmer den Textreport heruntergeladen, hat er ihn erhalten und alle Antworten des Assessments sind gelöscht.
-- Hat der Teilnehmer ihn nicht heruntergeladen (A2), hat er den Textreport nicht erhalten; die Scores sind gespeichert, das Assessment ist abgeschlossen und seine Antworten sind spätestens 1 Stunde nach Erstellung des Textreports gelöscht.
+- Das Assessment ist abgeschlossen und alle seine Antworten sind gelöscht.
+- Hat der Teilnehmer den Textreport heruntergeladen, hat er ihn als PDF-Dokument erhalten.
+- Hat der Teilnehmer ihn nicht heruntergeladen (A2), hat er den Textreport nicht erhalten; die Scores sind gespeichert und das Assessment ist abgeschlossen.
 
 ### Fehlerfall
 
@@ -84,7 +83,7 @@ Das System speichert je Score nur MAG, Rolle, Handlungsfeld, Fragenkatalog, Wert
 
 ### BR-003: Inhalt des Textreports
 
-Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Er enthält keine wörtlichen Antworttexte des Teilnehmers. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
+Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Er enthält keine wörtlichen Antworttexte des Teilnehmers: Das System prüft den Textreport und behandelt ihn als nicht erstellt (A1), wenn er eine Folge von mindestens acht aufeinanderfolgenden Wörtern einer Antwort enthält. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
 
 ### BR-004: Anonyme Vorlage an das KI-Modell
 
@@ -96,8 +95,8 @@ Radar-Chart, Scores und Textreport zeigt das System nur dem Teilnehmer, der das 
 
 ### BR-006: Einmaliger Download
 
-Der Textreport steht dem Teilnehmer einmal zum Download bereit. Nach dem Download, nach seinem Verfall und bei erneuter Anforderung steht er nicht mehr zur Verfügung.
+Der Textreport steht dem Teilnehmer einmal zum Download bereit und verfällt 1 Stunde nach seiner Erstellung. Nach dem Download, nach seinem Verfall und bei erneuter Anforderung steht er nicht mehr zur Verfügung.
 
 ### BR-007: Löschung der Antworten
 
-Die Antworten eines Assessments werden nach dem Download des Textreports gelöscht, spätestens 1 Stunde nach seiner Erstellung. Die Scores bleiben erhalten.
+Die Antworten eines Assessments werden beim Abschluss gelöscht, sobald Scores und Textreport vorliegen, noch vor dem Download. Die Scores bleiben erhalten.
