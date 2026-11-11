@@ -7,7 +7,7 @@
 **Primärer Akteur:** Schulungsverantwortliche  
 **Ziel:** Die Schulungsverantwortliche sieht die Radar-Charts aller MAGs je Rolle nebeneinander, damit sie den Schulungsbedarf anhand der Lücken priorisiert.  
 **Auslösendes Ereignis:** Die Schulungsverantwortliche fordert die Auswertung für die Schulungsplanung an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-011, NFR-002, NFR-005, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
