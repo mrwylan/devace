@@ -22,6 +22,8 @@ import info.wylan.devace.persistence.RolleOption;
 import info.wylan.devace.service.EmailSystemClient;
 import info.wylan.devace.service.EmailSystemClient.Einladungsmail;
 import info.wylan.devace.service.EmailSystemClientFake;
+import info.wylan.devace.service.KiModellClient;
+import info.wylan.devace.service.KiModellClientFake;
 import info.wylan.devace.usecase.UseCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +54,15 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 
 	private static final EmailSystemClientFake MAIL = new EmailSystemClientFake();
 
+	private static final KiModellClientFake KI = new KiModellClientFake();
+
+	@TestBean
+	KiModellClient kiModellClient;
+
+	static KiModellClient kiModellClient() {
+		return KI;
+	}
+
 	private static final String BETREFF = "Einladung zum devace-Assessment";
 
 	@TestBean
@@ -67,6 +78,7 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 	@BeforeEach
 	void zuruecksetzen() {
 		MAIL.reset();
+		KI.reset();
 	}
 
 	@AfterEach
@@ -301,11 +313,15 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 	void abbruch_bei_der_zusammenfassung_verwirft_die_angaben() {
 		navigate(EinladungErstellenUndVersendenView.class);
 		adressen("anna.beispiel@example.com");
+		gueltigkeit(7);
 		anfordern();
 
 		test(find(Button.class).withId("zusammenfassung-abbrechen").single()).click();
 
 		assertThat(find(Dialog.class).all().stream().noneMatch(Dialog::isOpened)).isTrue();
+		// A3: auch bei Schritt 7 sind die Angaben verworfen
+		assertThat(adressenFeld().getValue()).isEmpty();
+		assertThat(find(IntegerField.class).withId("einladung-gueltigkeit").single().getValue()).isEqualTo(30);
 		keineEinladungErstelltOderVersendet();
 	}
 
@@ -349,6 +365,32 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 		assertThat(this.jdbc.sql("select count(*) from einladung where erstellt_von_id = 9201 and status <> 'Versendet'")
 			.query(Long.class)
 			.single()).isZero();
+		// Fehlerfall: auch die gescheiterte Adresse steht in keiner Tabelle (BR-004)
+		for (String tabelle : this.jdbc.sql("select table_name from information_schema.tables where table_schema = 'public'")
+			.query(String.class)
+			.list()) {
+			assertThat(this.jdbc.sql("select count(*) from \"" + tabelle + "\" t where t::text like '%ben.muster@example.com%'")
+				.query(Long.class)
+				.single()).as("Tabelle " + tabelle).isZero();
+		}
+	}
+
+	// ---------------------------------------------------------------- NFR-001
+
+	@Test
+	@UseCase(id = "UC-001", businessRules = { "BR-004" }, requirements = { "NFR-001" })
+	void kein_kimodell_erhaelt_eine_einladung_oder_adresse() {
+		navigate(EinladungErstellenUndVersendenView.class);
+		adressen("anna.beispiel@example.com");
+		anfordern();
+
+		test(find(Button.class).withId("einladung-versenden").single()).click();
+
+		assertThat(ergebnis()).startsWith("1 Einladung versendet");
+		// BR-004, NFR-001: UC-001 stellt keine Anfrage an ein KI-Modell
+		assertThat(KI.anfragen()).isEmpty();
+		assertThat(KI.bewertungen()).isEmpty();
+		assertThat(KI.textreportAnfragen()).isEmpty();
 	}
 
 	// ---------------------------------------------------------------- BR-009

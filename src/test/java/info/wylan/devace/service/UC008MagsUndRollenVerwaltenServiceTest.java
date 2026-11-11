@@ -59,7 +59,8 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	@UseCase(id = "UC-008", businessRules = { "BR-004" })
 	void nicht_vorhandene_teamleitung_wird_beim_anlegen_abgewiesen() {
 		assertThatThrownBy(() -> this.service.anlegen(new MagEingabe("UC008S Drei", "UC008S Nord", UNBEKANNT)))
-			.isInstanceOf(TeamleitungNichtVorhandenException.class);
+			.isInstanceOf(TeamleitungNichtVorhandenException.class)
+			.hasMessage("Diese Teamleitung ist nicht vorhanden.");
 
 		assertThat(anzahl("UC008S Drei")).isZero();
 	}
@@ -69,7 +70,8 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 	void benutzer_ohne_funktion_teamleitung_wird_beim_anlegen_abgewiesen() {
 		assertThatThrownBy(
 				() -> this.service.anlegen(new MagEingabe("UC008S Vier", "UC008S Nord", BENUTZER_OHNE_TEAMLEITUNG)))
-			.isInstanceOf(TeamleitungNichtVorhandenException.class);
+			.isInstanceOf(TeamleitungNichtVorhandenException.class)
+			.hasMessage("Diese Teamleitung ist nicht vorhanden.");
 
 		assertThat(anzahl("UC008S Vier")).isZero();
 	}
@@ -81,7 +83,8 @@ class UC008MagsUndRollenVerwaltenServiceTest {
 		long id = this.jdbc.sql("select id from mag where scrum_team = 'UC008S Fuenf'").query(Long.class).single();
 
 		assertThatThrownBy(() -> this.service.aendern(id, new MagEingabe("UC008S Fuenf", "UC008S Nord", UNBEKANNT)))
-			.isInstanceOf(TeamleitungNichtVorhandenException.class);
+			.isInstanceOf(TeamleitungNichtVorhandenException.class)
+			.hasMessage("Diese Teamleitung ist nicht vorhanden.");
 
 		assertThat(teamleitungVon("UC008S Fuenf")).isEqualTo(VORHANDENE_TEAMLEITUNG);
 	}

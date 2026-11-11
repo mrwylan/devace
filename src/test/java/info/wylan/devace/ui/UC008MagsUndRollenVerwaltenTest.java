@@ -41,6 +41,9 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 	void aufraeumen() {
 		// die eine umbenannte Testdaten-Rolle zurücksetzen, dann nur löschen, was die Tests selbst angelegt haben
 		this.jdbc.sql("update rolle set name = 'UC008 Umbenennbar' where id = 9002").update();
+		this.jdbc.sql("update benutzer set berechtigung = 'Teamleitung' where id = 9002").update();
+		this.jdbc.sql("delete from score where mag_id in (select id from mag where scrum_team like 'UC008T%')").update();
+		this.jdbc.sql("delete from einladung where mag_id in (select id from mag where scrum_team like 'UC008T%')").update();
 		this.jdbc.sql("delete from mag where scrum_team like 'UC008T%' or linienteam like 'UC008T%'").update();
 		this.jdbc.sql("delete from rolle where name like 'UC008T%'").update();
 	}
@@ -175,6 +178,63 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 			.orElseThrow();
 		assertThat(zeile.name()).isEqualTo(PRAEFIX + " Neu");
 		assertThat(zeile.fragenkataloge()).hasSize(1);
+	}
+
+	@Test
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG und Rolle ändern", businessRules = { "BR-006" })
+	void einladungen_und_scores_bleiben_nach_einer_aenderung_zugeordnet() {
+		navigate(MagsUndRollenView.class);
+		legeMagAn(PRAEFIX + " Zeta", PRAEFIX + " Nord");
+		long magId = magZeile(PRAEFIX + " Zeta", PRAEFIX + " Nord").id();
+		// eine Einladung und ein Score für die MAG und die Rolle 9002
+		this.jdbc.sql("""
+				insert into einladung (referenz, mag_id, rolle_id, erstellt_von_id, status, erstellt_am, gueltigkeit_tage, laeuft_ab_am)
+				values (?, ?, 9002, 9001, 'Versendet', now(), 30, current_date + 29)
+				""").params(java.util.UUID.randomUUID().toString(), magId).update();
+		this.jdbc.sql("""
+				insert into score (mag_id, rolle_id, handlungsfeld_id, fragenkatalog_id, wert, erfasst_am)
+				values (?, 9002, (select id from handlungsfeld where nummer = 1), 9003, 3.5, current_date)
+				""").param(magId).update();
+
+		test(magAendernButton(PRAEFIX + " Zeta", PRAEFIX + " Nord")).click();
+		test(find(TextField.class).withId("mag-scrum-team").single()).setValue(PRAEFIX + " Zeta2");
+		test(find(Button.class).withId("mag-speichern").single()).click();
+		test(rolleAendernButton("UC008 Umbenennbar")).click();
+		test(find(TextField.class).withId("rolle-name").single()).setValue(PRAEFIX + " Rolle2");
+		test(find(Button.class).withId("rolle-speichern").single()).click();
+
+		// BR-006, Erfolgsfall: Einladung und Score bleiben zugeordnet und erscheinen mit den neuen Angaben
+		assertThat(this.jdbc.sql("""
+				select m.scrum_team || '|' || r.name from einladung e join mag m on m.id = e.mag_id
+				join rolle r on r.id = e.rolle_id where e.mag_id = ?
+				""").param(magId).query(String.class).list()).containsExactly(PRAEFIX + " Zeta2|" + PRAEFIX + " Rolle2");
+		assertThat(this.jdbc.sql("""
+				select m.scrum_team || '|' || r.name from score s join mag m on m.id = s.mag_id
+				join rolle r on r.id = s.rolle_id where s.mag_id = ?
+				""").param(magId).query(String.class).list()).containsExactly(PRAEFIX + " Zeta2|" + PRAEFIX + " Rolle2");
+	}
+
+	@Test
+	@UseCase(id = "UC-008", scenario = "Steps 3-8: MAG anlegen", businessRules = { "BR-004" })
+	void nicht_mehr_vorhandene_teamleitung_wird_am_feld_abgewiesen() {
+		navigate(MagsUndRollenView.class);
+		test(find(Button.class).withId("mag-anlegen").single()).click();
+		test(find(TextField.class).withId("mag-scrum-team").single()).setValue(PRAEFIX + " Eta");
+		test(find(TextField.class).withId("mag-linienteam").single()).setValue(PRAEFIX + " Süd");
+		test(find(ComboBox.class).withId("mag-teamleitung").single()).selectItem("uc008-teamleitung-b");
+		// während der Dialog offen ist, ist uc008-teamleitung-b keine Teamleitung mehr
+		this.jdbc.sql("update benutzer set berechtigung = 'Schulungsverantwortliche' where id = 9002").update();
+
+		test(find(Button.class).withId("mag-speichern").single()).click();
+
+		ComboBox<?> feld = find(ComboBox.class).withId("mag-teamleitung").single();
+		assertThat(feld.isInvalid()).isTrue();
+		assertThat(feld.getErrorMessage()).isEqualTo("Diese Teamleitung ist nicht vorhanden.");
+		assertThat(find(Dialog.class).exists()).isTrue();
+		assertThat(this.jdbc.sql("select count(*) from mag where scrum_team = ?")
+			.param(PRAEFIX + " Eta")
+			.query(Integer.class)
+			.single()).isZero();
 	}
 
 	// ---------------------------------------------------------------- A1
@@ -417,7 +477,52 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 		assertThat(find(MagsUndRollenView.class).exists()).isTrue();
 	}
 
+	@Test
+	@UseCase(id = "UC-008", businessRules = { "BR-007" }, requirements = { "NFR-005" })
+	void navigation_zeigt_den_eintrag_dem_administrator_aktiviert() {
+		navigate(MagsUndRollenView.class);
+
+		assertThat(navigationseintrag("MAGs und Rollen").isEnabled()).isTrue();
+	}
+
+	@Test
+	@WithMockUser(username = "uc008-teamleitung-a", roles = "TEAMLEITUNG")
+	@UseCase(id = "UC-008", businessRules = { "BR-007" }, requirements = { "NFR-005" })
+	void navigation_zeigt_den_eintrag_ohne_berechtigung_deaktiviert() {
+		navigate(EinladungErstellenUndVersendenView.class);
+
+		assertThat(navigationseintrag("MAGs und Rollen").isEnabled()).isFalse();
+	}
+
+	// ---------------------------------------------------------------- Startseite (OQ-073)
+
+	@Test
+	@UseCase(id = "UC-008", scenario = "Step 1: Verwaltung öffnen")
+	void startseite_fuehrt_den_administrator_zur_verwaltung() {
+		UI.getCurrent().navigate("");
+
+		assertThat(find(MagsUndRollenView.class).exists()).isTrue();
+	}
+
+	@Test
+	@WithMockUser(username = "uc008-teamleitung-a", roles = "TEAMLEITUNG")
+	@UseCase(id = "UC-008", scenario = "Step 1: Verwaltung öffnen", businessRules = { "BR-007" })
+	void startseite_fuehrt_die_teamleitung_nicht_zur_verwaltung() {
+		UI.getCurrent().navigate("");
+
+		assertThat(find(MagsUndRollenView.class).exists()).isFalse();
+		assertThat(find(EinladungErstellenUndVersendenView.class).exists()).isTrue();
+	}
+
 	// ---------------------------------------------------------------- Hilfsmethoden
+
+	private com.vaadin.flow.component.sidenav.SideNavItem navigationseintrag(String beschriftung) {
+		return find(com.vaadin.flow.component.sidenav.SideNavItem.class).all()
+			.stream()
+			.filter(eintrag -> beschriftung.equals(eintrag.getLabel()))
+			.findFirst()
+			.orElseThrow();
+	}
 
 	private void legeMagAn(String scrumTeam, String linienteam) {
 		test(find(Button.class).withId("mag-anlegen").single()).click();
