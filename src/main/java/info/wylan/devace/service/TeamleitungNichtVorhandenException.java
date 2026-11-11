@@ -7,7 +7,7 @@ package info.wylan.devace.service;
 public class TeamleitungNichtVorhandenException extends BusinessRuleException {
 
 	public TeamleitungNichtVorhandenException() {
-		super("Die Teamleitung ist nicht vorhanden.");
+		super("Diese Teamleitung ist nicht vorhanden.");
 	}
 
 }

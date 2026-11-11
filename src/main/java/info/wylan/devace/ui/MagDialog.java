@@ -18,6 +18,7 @@ import info.wylan.devace.service.MagBereitsVorhandenException;
 import info.wylan.devace.service.MagEingabe;
 import info.wylan.devace.service.MagService;
 import info.wylan.devace.service.NotFoundException;
+import info.wylan.devace.service.TeamleitungNichtVorhandenException;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -110,6 +111,11 @@ class MagDialog extends Dialog {
 		catch (MagBereitsVorhandenException ex) {
 			this.linienteam.setInvalid(true);
 			this.linienteam.setErrorMessage(ex.getMessage());
+		}
+		catch (TeamleitungNichtVorhandenException ex) {
+			// UC-008 BR-004: Eine nicht vorhandene Teamleitung wird am Feld abgewiesen.
+			this.teamleitung.setInvalid(true);
+			this.teamleitung.setErrorMessage(ex.getMessage());
 		}
 		catch (NotFoundException ex) {
 			Notification notification = Notification.show(ex.getMessage());

@@ -63,15 +63,6 @@ public class RolleRepository {
 	}
 
 	/**
-	 * UC-001 BR-003: hat die Rolle einen freigegebenen Fragenkatalog?
-	 */
-	public boolean hatFreigegebenenFragenkatalog(long rolleId) {
-		// UC-001 BR-003: Nur Rollen, für die ein freigegebener Fragenkatalog besteht.
-		return this.ctx.fetchExists(FRAGENKATALOG,
-				FRAGENKATALOG.ROLLE_ID.eq(rolleId).and(FRAGENKATALOG.STATUS.eq("Freigegeben")));
-	}
-
-	/**
 	 * Prüft, ob der Name einer anderen Rolle gehört. Beim Ändern wird die eigene Rolle über
 	 * {@code ausserId} ausgenommen.
 	 */
