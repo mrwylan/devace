@@ -39,3 +39,6 @@ devace:
     modelle:
       # Modell-ID je Aufgabe (OQ-034); leer, bis eine eingerichtet ist.
       fragenkatalog: ${DEVACE_KI_MODELL_FRAGENKATALOG:}
+      # Entscheidungsmodell Jev für die Bewertung der Antworten (UC-002, ADR-003); latest als Standard,
+      # eine konkrete Version über DEVACE_KI_MODELL_BEWERTUNG pinnen.
+      bewertung: ${DEVACE_KI_MODELL_BEWERTUNG:~typesafe/jev-latest}

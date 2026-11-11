@@ -38,6 +38,7 @@ committet, auch keine `.env`-Datei mit echten Werten.
 | `DEVACE_ADMIN_PASSWORD` | nein | Passwort des ersten Administrators |
 | `OPENROUTER_API_KEY` | für KI | Schlüssel für OpenRouter, das einzige Tor zu den KI-Modellen |
 | `DEVACE_KI_MODELL_FRAGENKATALOG` | für KI | Modell-ID für den KI-Entwurf des Fragenkatalogs, z. B. `anthropic/claude-haiku-5.5` |
+| `DEVACE_KI_MODELL_BEWERTUNG` | nein | Version des Entscheidungsmodells Jev für die Zuordnung der Antworten zu Stufen (UC-002, ADR-003), Standard `~typesafe/jev-latest`; zum Pinnen z. B. `typesafe/jev-1.14-20261014`. Ohne `OPENROUTER_API_KEY` gilt jede Antwort als Stufe 0 |
 | `DEVACE_MAIL_HOST` | für Einladungen | SMTP-Server für den Versand der Einladungen (UC-001); ohne ihn scheitert jeder Versand und die Einladung wird verworfen |
 | `DEVACE_MAIL_PORT` | nein | Port des SMTP-Servers, Standard `587` |
 | `DEVACE_MAIL_USER`, `DEVACE_MAIL_PASSWORD` | nein | Anmeldung am SMTP-Server |

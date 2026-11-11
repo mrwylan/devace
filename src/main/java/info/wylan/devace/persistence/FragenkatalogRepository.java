@@ -116,4 +116,19 @@ public class FragenkatalogRepository {
 		}
 	}
 
+	/**
+	 * UC-002 BR-003: die Fragen des Fragenkatalogs in seiner Reihenfolge, mit ihren Stufenvorgaben.
+	 */
+	public List<BeantwortbareFrage> findBeantwortbareFragen(long katalogId) {
+		return this.ctx
+			.select(FRAGE.ID, FRAGE.POSITION, FRAGE.TEXT,
+					multiset(select(STUFENVORGABE.BESCHREIBUNG).from(STUFENVORGABE)
+						.where(STUFENVORGABE.FRAGE_ID.eq(FRAGE.ID))
+						.orderBy(STUFENVORGABE.STUFE)).convertFrom(r -> r.map(rec -> rec.value1())))
+			.from(FRAGE)
+			.where(FRAGE.FRAGENKATALOG_ID.eq(katalogId))
+			.orderBy(FRAGE.POSITION)
+			.fetch(Records.mapping(BeantwortbareFrage::new));
+	}
+
 }

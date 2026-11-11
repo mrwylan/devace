@@ -23,13 +23,13 @@
 ## Hauptablauf
 
 1. Der Teilnehmer öffnet die Einladung aus der E-Mail.
-2. Das System zeigt den Starthinweis mit den eingesetzten KI-Modellen, den nicht zu erfassenden Angaben und dem Hinweis auf die Firmenweisungen zum Umgang mit KI.
+2. Das System zeigt den Starthinweis mit den eingesetzten KI-Modellen, den nicht zu erfassenden Angaben und dem Hinweis auf die Firmenweisungen zum Umgang mit KI. Es weist darauf hin, dass das KI-Modell weder die Einladung noch die E-Mail-Adresse erhält, nur die Frage und den Text der Antwort.
 3. Der Teilnehmer bestätigt den Starthinweis.
 4. Das System startet das Assessment und stellt die erste Frage des Fragenkatalogs seiner Rolle.
 5. Der Teilnehmer beantwortet die Frage in Freitext.
 6. Das System legt die Antwort dem KI-Modell vor, das sie nach dem Entscheidungsmodell einer Stufe zuordnet.
 7. Das System speichert Antwort und Stufe und stellt die nächste Frage. Die Schritte 5 bis 7 wiederholen sich, bis alle Fragen beantwortet sind.
-8. Das System meldet, dass alle Fragen beantwortet sind, und bietet den Abschluss des Assessments an.
+8. Das System meldet, dass alle Fragen beantwortet sind, und bietet den Abschluss des Assessments an, den UC-003 ausführt. Bis UC-003 umgesetzt ist, wird der Abschluss angezeigt, ist aber nicht ausführbar.
 
 ## Alternativabläufe
 
@@ -38,7 +38,7 @@
 **Auslöser:** Die Einladung ist unbekannt, bereits eingelöst oder abgelaufen, ohne dass ein laufendes Assessment besteht (Schritt 1)  
 **Ablauf:**
 
-1. Das System weist den Teilnehmer darauf hin, dass die Einladung bereits eingelöst wurde oder abgelaufen ist.
+1. Das System weist den Teilnehmer darauf hin, dass die Einladung bereits eingelöst wurde oder abgelaufen ist: „Einladung nicht nutzbar“ mit „Diese Einladung wurde bereits eingelöst oder ist abgelaufen.“
 2. Der Use Case endet.
 
 ### A2: Laufendes Assessment wiederaufnehmen
@@ -63,7 +63,7 @@
 **Auslöser:** Die Antwort ist leer oder überschreitet die zulässige Länge (Schritt 5)  
 **Ablauf:**
 
-1. Das System weist auf die fehlende oder zu lange Antwort hin.
+1. Das System weist auf die fehlende oder zu lange Antwort hin: „Bitte geben Sie eine Antwort ein.“ oder „Die Antwort ist zu lang: <Zahl der Zeichen> von höchstens 500 Zeichen.“
 2. Der Use Case wird bei Schritt 5 fortgesetzt.
 
 ### A5: Bewertung nicht möglich
@@ -88,7 +88,7 @@
 
 - Zur Einladung ist ein laufendes Assessment mit dem bestätigten Starthinweis gespeichert.
 - Zu jeder Frage des Fragenkatalogs ist eine Antwort mit zugeordneter Stufe gespeichert.
-- Der Teilnehmer kann das Assessment abschließen.
+- Der Teilnehmer kann das Assessment abschließen (UC-003).
 
 ### Fehlerfall
 

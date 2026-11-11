@@ -5,7 +5,7 @@ independent of how the team documents its architecture. The Layers table says wh
 each technical layer: `/use-case-implement` runs the Skill column bottom-up, `/use-case-test` runs the Test skill
 column from the integration layer up, and `/use-case-coverage` searches for the markers in the last table.
 
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-11
 
 ## Layers
 
@@ -13,11 +13,11 @@ column from the integration layer up, and `/use-case-coverage` searches for the 
 |-------------|------------------------------------------------------------------|--------------------|-------------------------|-------------------------------------------|
 | Migration   | Flyway, PostgreSQL                                               | `flyway-schema`    | –                       | `src/main/resources/db/migration`         |
 | Persistence | jOOQ (generated from the migrated schema)                        | `jooq-persistence` | `jooq-persistence-test` | `info.wylan.devace.persistence`           |
-| Client      | Spring AI via OpenRouter; e-mail dispatch                        | `spring-client`    | `spring-client-test`    | `info.wylan.devace.client`                |
+| Client      | OpenRouter: Spring AI for text models, `RestClient` for the decision model Jev (ADR-003); e-mail via SMTP | `spring-client`    | `spring-client-test`    | `info.wylan.devace.client.<system>`       |
 | Service     | Spring Boot services                                             | `spring-service`   | `spring-service-test`   | `info.wylan.devace.service`               |
 | API         | –                                                                | –                  | –                       | –                                         |
 | UI          | Vaadin 25 Flow, Aura theme, dark color scheme                    | `vaadin-flow-ui`   | `vaadin-flow-ui-test`   | `info.wylan.devace.ui`                    |
-| E2E         | Playwright for Java (Drama Finder)                               | –                  | `vaadin-e2e-test`       | `src/test/java/info/wylan/devace/e2e`     |
+| E2E         | Playwright for Java (Drama Finder)                               | –                  | `vaadin-e2e-test`       | `src/test/java/info/wylan/devace/ui` (`*IT`, next to the Browserless tests) |
 
 **UI theme:** Aura, always in the dark color scheme. The `AppShellConfigurator` of the application carries `@StyleSheet(Aura.STYLESHEET)` and `@ColorScheme(ColorScheme.Value.DARK)`, and the theme is loaded before any other stylesheet. Colors of the application's own styles are checked in the dark scheme.
 
@@ -45,8 +45,8 @@ alone, and a use case is tested in its integration layer. A project without an E
 
 | System        | Contract | Location            |
 |---------------|----------|---------------------|
-| KI-Modell     | –        | `info.wylan.devace.client` |
-| E-Mail-System | –        | `info.wylan.devace.client` |
+| KI-Modell     | –        | `info.wylan.devace.client.kimodell` |
+| E-Mail-System | –        | `info.wylan.devace.client.emailsystem` |
 
 The systems our system calls, by the name the use cases write on their `**Secondary Actors:**` line: the Client
 layer builds an adapter for each one from its contract (OpenAPI or AsyncAPI; `–` while there is none). A secondary
@@ -54,7 +54,7 @@ actor without a row is a person or a role. Without a Client layer the section is
 
 ## Module layout
 
-Flat single-module Maven project (`./mvnw`), Maven coordinates `info.wylan:devace` (groupId:artifactId), root package `info.wylan.devace`, one sub-package per layer: `ui`, `service`, `persistence`, `client`. Tests live under `src/test/java/info/wylan/devace`, E2E tests under `info.wylan.devace.e2e`.
+Flat single-module Maven project (`./mvnw`), Maven coordinates `info.wylan:devace` (groupId:artifactId), root package `info.wylan.devace`, one sub-package per layer: `ui`, `service`, `persistence`, `client`. Tests live under `src/test/java/info/wylan/devace` in the package of the layer they test; the E2E tests (`*IT`) sit in `info.wylan.devace.ui` next to the Browserless tests. Each external system has its own client package (`client.kimodell`, `client.emailsystem`).
 
 ## Commands
 

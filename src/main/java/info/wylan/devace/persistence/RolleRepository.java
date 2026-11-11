@@ -56,6 +56,13 @@ public class RolleRepository {
 	}
 
 	/**
+	 * UC-002 step 2: der Name der Rolle, falls es sie gibt.
+	 */
+	public java.util.Optional<String> findName(long rolleId) {
+		return this.ctx.select(ROLLE.NAME).from(ROLLE).where(ROLLE.ID.eq(rolleId)).fetchOptional(ROLLE.NAME);
+	}
+
+	/**
 	 * UC-001 BR-003: hat die Rolle einen freigegebenen Fragenkatalog?
 	 */
 	public boolean hatFreigegebenenFragenkatalog(long rolleId) {

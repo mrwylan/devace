@@ -2,6 +2,7 @@ package info.wylan.devace.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 import info.wylan.devace.service.KiModellClient.EntwurfAnfrage;
 import info.wylan.devace.service.KiModellClient.HandlungsfeldAnfrage;
@@ -46,6 +47,43 @@ public class KiModellClientFake implements KiModellClient {
 		return fragen;
 	}
 
+	private final List<BewertungAnfrage> bewertungen = new ArrayList<>();
+
+	private RuntimeException naechsterBewertungsfehler;
+
+	private OptionalInt naechsteStufe;
+
+	@Override
+	public OptionalInt antwortBewerten(BewertungAnfrage anfrage) {
+		this.bewertungen.add(anfrage);
+		if (this.naechsterBewertungsfehler != null) {
+			RuntimeException fehler = this.naechsterBewertungsfehler;
+			this.naechsterBewertungsfehler = null;
+			throw fehler;
+		}
+		if (this.naechsteStufe != null) {
+			OptionalInt stufe = this.naechsteStufe;
+			this.naechsteStufe = null;
+			return stufe;
+		}
+		return OptionalInt.of(3);
+	}
+
+	/** UC-002 A5: das KI-Modell ist bei der nächsten Bewertung nicht erreichbar. */
+	public void failNextBewertung() {
+		this.naechsterBewertungsfehler = new KiModellNichtErreichbarException(new IllegalStateException("Test"));
+	}
+
+	/** UC-002 BR-006: die nächste Bewertung liefert diese Stufe, leer heißt keine Zuordnung. */
+	public void bewertetNaechsteMit(OptionalInt stufe) {
+		this.naechsteStufe = stufe;
+	}
+
+	/** UC-002 BR-007: die Anfragen der Bewertung. */
+	public List<BewertungAnfrage> bewertungen() {
+		return this.bewertungen;
+	}
+
 	/** A2: das KI-Modell ist nicht erreichbar. */
 	public void failNext() {
 		this.naechsterFehler = new KiModellNichtErreichbarException(new IllegalStateException("stubbed"));
@@ -64,6 +102,9 @@ public class KiModellClientFake implements KiModellClient {
 		this.anfragen.clear();
 		this.naechsterFehler = null;
 		this.naechsteAntwort = null;
+		this.bewertungen.clear();
+		this.naechsterBewertungsfehler = null;
+		this.naechsteStufe = null;
 	}
 
 }
