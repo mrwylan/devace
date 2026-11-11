@@ -7,7 +7,7 @@
 **Primärer Akteur:** Teamleitung  
 **Ziel:** Die Teamleitung sieht das Radar-Chart ihrer MAG je Rolle, damit sie Stärken und Lücken auf einen Blick erkennt und Entwicklungsgespräche an Handlungsfeldern ausrichtet.  
 **Auslösendes Ereignis:** Die Teamleitung fordert die Auswertung ihrer MAG an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-010, NFR-002, NFR-005, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
