@@ -26,7 +26,7 @@
 4. Das System speichert die Scores ohne Personenbezug, setzt das Assessment auf abgeschlossen und löscht die Antworten des Assessments.
 5. Das System zeigt dem Teilnehmer den Hinweis „Assessment abgeschlossen: Ihre Auswertung ist fertig. Radar-Chart, Scores und Textreport sehen nur Sie, und nur jetzt.“ und seine Auswertung mit dem Radar-Chart, den erreichten Scores je Handlungsfeld und dem Textreport, darunter den Hinweis „Der Textreport steht einmal zum Download bereit. Ihre Antworten sind bereits gelöscht, Ihre Scores bleiben ohne Personenbezug erhalten.“
 6. Der Teilnehmer lädt den Textreport herunter.
-7. Das System stellt den Textreport einmalig als PDF-Dokument bereit.
+7. Das System stellt den Textreport einmalig als PDF-Dokument bereit; es enthält die Rolle, das Erstellungsdatum, die Scores je Handlungsfeld und den Textreport.
 
 ## Alternativabläufe
 

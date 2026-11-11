@@ -37,7 +37,7 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | NFR-004 | Löschung abgebrochener Assessments | Antworten eines nicht abgeschlossenen Assessments werden spätestens 7 Tage nach der letzten Eingabe gelöscht. | Security | High | Open |
 | NFR-005 | Zugriffsschutz Auswertung | 100 % der Aufrufe von Radar-Charts, Einladungen, Fragenkatalog und Entscheidungsmodell ohne Anmeldung und passende Berechtigung werden abgewiesen. | Security | High | Open |
 | NFR-006 | Antwortzeit Dialog | 95 % der Antworten des Systems auf eine Eingabe des Teilnehmers (inklusive Stufenzuordnung) erscheinen innerhalb von 10 Sekunden. | Performance | Medium | Open |
-| NFR-007 | Antwortzeit Radar-Chart | 95 % der Radar-Charts sind innerhalb von 3 Sekunden nach Aufruf vollständig dargestellt. | Performance | Medium | Open |
+| NFR-007 | Antwortzeit Radar-Chart | 95 % der Radar-Charts sind innerhalb von 3 Sekunden nach Aufruf vollständig dargestellt; beim Abschluss eines Assessments zählt die Zeit ab dem Erscheinen der Auswertung. | Performance | Medium | Open |
 | NFR-008 | Gleichzeitige Assessments | Das System unterstützt 50 gleichzeitige Assessments ohne Überschreitung der Grenzwerte aus NFR-006. | Scalability | Medium | Open |
 | NFR-009 | Faire Bewertung | Bei Ausführung des Testfall-Katalogs ordnet die KI mindestens 90 % der Testfälle die erwartete Stufe zu; Ergebnis und Abweichungen sind dokumentiert. | Maintainability | High | Open |
 | NFR-010 | Sprache und Zugänglichkeit | Alle Oberflächen, Fragen und Hinweise sind in deutscher Sprache und erfüllen WCAG 2.1 AA. | Usability | Medium | Open |
