@@ -20,7 +20,7 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | FR-011 | Radar-Charts für Schulungsplanung ansehen | Als Schulungsverantwortliche möchte ich nach der Anmeldung die Radar-Charts aller MAGs ansehen (nur Radar-Charts, keine Einladungen), damit ich den Schulungsbedarf anhand der Lücken priorisieren kann. | Medium | Open |
 | FR-012 | Fragenkatalog mit KI erstellen | Als Administrator möchte ich mit KI-Unterstützung einen Fragenkatalog je Rolle erstellen, der die Handlungsfelder gezielt prüft, damit das Assessment die Kompetenzen mit Alltagsrelevanz abdeckt. | High | Open |
 | FR-013 | Entscheidungsmodell pflegen | Als Administrator möchte ich zu jeder Frage festlegen, welcher Stufe welche Antwort entspricht, damit die KI die Antworten fair zuordnen kann. | High | Open |
-| FR-014 | Fragenkatalog freigeben | Als Administrator möchte ich einen Fragenkatalog samt Entscheidungsmodell prüfen und freigeben, damit nur geprüfte Fragen in Assessments verwendet werden. | High | Open |
+| FR-014 | Fragenkatalog freigeben | Als Administrator möchte ich einen Fragenkatalog samt Entscheidungsmodell prüfen und freigeben, damit nur geprüfte Fragen in Assessments verwendet werden. | High | Verified |
 | FR-015 | MAGs und Rollen verwalten | Als Administrator möchte ich MAGs mit ihrer Teamleitung und Rollen anlegen und ändern, damit Einladungen und Radar-Charts der Organisation entsprechen. | Medium | Verified |
 | FR-016 | KI-Bewertung mit Testfällen absichern | Als Administrator möchte ich Testfälle ausführen und deren Ergebnisse einsehen, damit Fehler der KI-Bewertung eingegrenzt und die Vorgaben verfeinert werden können. | High | Open |
 | FR-017 | Zuordnung der Kompetenzmatrix dokumentieren | Als Administrator möchte ich festhalten, welche Spalten der Kompetenzmatrix welchem Handlungsfeld zugeordnet sind, damit die Verdichtung nachvollziehbar ist. | Medium | Open |
@@ -51,6 +51,6 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | C-003 | Aufbewahrung der Scores | Scores je Handlungsfeld werden fünf Jahre aufbewahrt. | Business | | High | In Progress |
 | C-004 | Programmlaufzeit | Das Programm läuft bis 2030; der Erfolg ist anhand der Scores über fünf Jahre nachzuweisen. | Schedule | | High | Open |
 | C-005 | Skala 0 bis 5 | Antworten werden auf der Skala 0 bis 5 mit den Stufenbeschreibungen der Vision bewertet. | Business | | High | In Progress |
-| C-006 | Umfang nach Alltagsrelevanz | Der Fragenkatalog nimmt Technologien und Grundlagen nach Relevanz im Alltag der Teams auf, nicht nach Eintrag in der Kompetenzmatrix. | Business | | Medium | Open |
+| C-006 | Umfang nach Alltagsrelevanz | Der Fragenkatalog nimmt Technologien und Grundlagen nach Relevanz im Alltag der Teams auf, nicht nach Eintrag in der Kompetenzmatrix. | Business | | Medium | In Progress |
 | C-007 | Kompetenzmatrix bleibt Quelle | Die Kompetenzmatrix bleibt die fachliche Quelle und wird von devace nicht gepflegt. | Business | | Medium | Open |
 | C-008 | Keine Anbindung an HR-Systeme | devace wird nicht an HR-Systeme angebunden und verwaltet weder Zertifikate noch Schulungsbuchungen. | Business | | Medium | Open |
