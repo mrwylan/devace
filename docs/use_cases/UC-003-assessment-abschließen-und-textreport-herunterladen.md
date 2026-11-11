@@ -36,7 +36,7 @@
 **Ablauf:**
 
 1. Das System weist den Teilnehmer darauf hin, dass der Textreport nicht erstellt werden konnte.
-2. Das System speichert keine Scores und lässt das Assessment laufend.
+2. Das System speichert keine Scores und lässt das Assessment laufend; die Antworten bleiben erhalten.
 3. Der Use Case wird bei Schritt 1 fortgesetzt.
 
 ### A2: Teilnehmer lädt den Textreport nicht herunter
@@ -76,7 +76,7 @@
 
 ### BR-001: Score je Handlungsfeld
 
-Der Score eines Handlungsfelds ist die Summe der Stufen aller Antworten dieses Handlungsfelds geteilt durch die Anzahl seiner Fragen. Er liegt zwischen 0 und 5 und hat höchstens zwei Nachkommastellen. Ein Handlungsfeld ohne Frage hat keinen Score.
+Der Score eines Handlungsfelds ist die Summe der Stufen aller Antworten dieses Handlungsfelds geteilt durch die Anzahl seiner Fragen. Er liegt zwischen 0 und 5 und wird kaufmännisch auf eine Nachkommastelle gerundet, gespeichert und immer mit einer Nachkommastelle ausgegeben. Die Skala des Radar-Charts zeigt nur die Ganzzahlen an. Ein Handlungsfeld ohne Frage hat keinen Score.
 
 ### BR-002: Scores ohne Personenbezug
 
@@ -84,7 +84,7 @@ Das System speichert je Score nur MAG, Rolle, Handlungsfeld, Fragenkatalog, Wert
 
 ### BR-003: Inhalt des Textreports
 
-Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
+Der Textreport ist in deutscher Sprache. Er würdigt je Handlungsfeld die Leistung des Teilnehmers, begründet die Einstufung und gibt Hinweise auf seine nächsten Investitionen. Er enthält keine wörtlichen Antworttexte des Teilnehmers. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
 
 ### BR-004: Anonyme Vorlage an das KI-Modell
 
