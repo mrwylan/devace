@@ -55,6 +55,9 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 	/** UC-003 BR-006: Der Textreport steht einmal zum Download bereit. */
 	private boolean textreportHeruntergeladen;
 
+	/** UC-003 A3: Zahl der Anforderungen des Textreports in dieser Auswertung. */
+	private int textreportAnforderungen;
+
 	private final Div inhalt = new Div();
 
 	private String referenz = "";
@@ -238,6 +241,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 	 */
 	private void zeigeAuswertung(Auswertung auswertung) {
 		this.textreportHeruntergeladen = false;
+		this.textreportAnforderungen = 0;
 		Div fertig = meldung("Assessment abgeschlossen",
 				"Ihre Auswertung ist fertig. Radar-Chart, Scores und Textreport sehen nur Sie, und nur jetzt.", "erfolg",
 				"assessment-abgeschlossen");
@@ -286,6 +290,13 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		Anchor download = new Anchor((DownloadEvent event) -> herunterladen(event, auswertung), "");
 		download.setId("textreport-herunterladen");
 		download.add(herunterladen);
+		// UC-003 A3: der Klick erreicht auch den Server, damit der Hinweis ohne Push im Browser erscheint
+		download.getElement().addEventListener("click", (event) -> {
+			this.textreportAnforderungen++;
+			if (this.textreportAnforderungen > 1 || auswertung.verfallen(LocalDateTime.now(this.clock))) {
+				zeigeTextreportNichtVerfuegbar(auswertung.rolle());
+			}
+		});
 		Paragraph hinweis = new Paragraph("Der Textreport steht einmal zum Download bereit. Ihre Antworten sind bereits "
 				+ "gelöscht, Ihre Scores bleiben ohne Personenbezug erhalten.");
 		hinweis.addClassName("devace-fussnote");

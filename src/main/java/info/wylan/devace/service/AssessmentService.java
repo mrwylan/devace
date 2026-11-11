@@ -52,11 +52,14 @@ public class AssessmentService {
 
 	static final Duration AUFBEWAHRUNG = Duration.ofDays(7);
 
-	/** UC-003 BR-006, BR-007: Der Textreport verfällt 1 Stunde nach seiner Erstellung. */
+	/** UC-003 BR-006: Der Textreport verfällt 1 Stunde nach seiner Erstellung. */
 	public static final Duration VERFALL_TEXTREPORT = Duration.ofHours(1);
 
 	/** UC-003 BR-002: Die Scores werden fünf Jahre aufbewahrt. */
 	static final int AUFBEWAHRUNG_SCORES_JAHRE = 5;
+
+	/** UC-003 BR-003: Ab so vielen aufeinanderfolgenden Wörtern gilt eine Antwort als wörtlich (OQ-072). */
+	static final int WOERTLICH_AB_WOERTERN = 8;
 
 	private final EinladungRepository einladungRepository;
 
@@ -233,6 +236,10 @@ public class AssessmentService {
 			// UC-003 A1: keine Scores, das Assessment bleibt laufend, die Antworten bleiben erhalten
 			throw new TextreportNichtErstelltException();
 		}
+		// UC-003 BR-003: ein Textreport mit wörtlicher Antwort gilt als nicht erstellt (A1)
+		if (enthaeltWoertlicheAntwort(textreport, antworten)) {
+			throw new TextreportNichtErstelltException();
+		}
 		LocalDateTime jetzt = LocalDateTime.now(this.clock);
 		this.transaktion.executeWithoutResult((status) -> {
 			for (FeldScore feld : scores) {
@@ -255,6 +262,35 @@ public class AssessmentService {
 	public int loescheAlteScores() {
 		return this.scoreRepository
 			.loescheErfasstVor(LocalDate.now(this.clock).minusYears(AUFBEWAHRUNG_SCORES_JAHRE));
+	}
+
+	/**
+	 * UC-003 BR-003: Enthält der Textreport eine Folge von mindestens acht aufeinanderfolgenden Wörtern einer
+	 * Antwort? Verglichen wird ohne Groß- und Kleinschreibung und ohne Satzzeichen.
+	 */
+	static boolean enthaeltWoertlicheAntwort(Textreport textreport, List<BewerteteAntwort> antworten) {
+		StringBuilder text = new StringBuilder(textreport.ueberblick());
+		for (KiModellClient.Abschnitt abschnitt : textreport.abschnitte()) {
+			text.append(' ').append(abschnitt.handlungsfeld()).append(' ').append(abschnitt.wuerdigung()).append(' ')
+				.append(abschnitt.naechsterSchritt());
+		}
+		String reportWoerter = " " + String.join(" ", woerter(text.toString())) + " ";
+		for (BewerteteAntwort antwort : antworten) {
+			List<String> woerter = woerter(antwort.antwort());
+			for (int i = 0; i + WOERTLICH_AB_WOERTERN <= woerter.size(); i++) {
+				String folge = " " + String.join(" ", woerter.subList(i, i + WOERTLICH_AB_WOERTERN)) + " ";
+				if (reportWoerter.contains(folge)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static List<String> woerter(String text) {
+		return java.util.Arrays.stream(text.toLowerCase(java.util.Locale.ROOT).split("[^\\p{L}\\p{N}]+"))
+			.filter((wort) -> !wort.isEmpty())
+			.toList();
 	}
 
 	/**
