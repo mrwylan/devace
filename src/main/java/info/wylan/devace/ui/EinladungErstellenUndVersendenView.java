@@ -29,6 +29,8 @@ import info.wylan.devace.service.EinladungService.Ergebnis;
 import info.wylan.devace.service.EinladungService.Zusammenfassung;
 import info.wylan.devace.service.EinladungsangabenUngueltigException;
 import info.wylan.devace.service.KeineRolleMitFreigabeException;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import jakarta.annotation.security.RolesAllowed;
 
 /**
@@ -38,7 +40,7 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Einladungen erstellen und versenden")
 // UC-001 BR-009: Nur die angemeldete Teamleitung erstellt Einladungen.
 @RolesAllowed("TEAMLEITUNG")
-public class EinladungErstellenUndVersendenView extends VerticalLayout {
+public class EinladungErstellenUndVersendenView extends VerticalLayout implements BeforeEnterObserver {
 
 	private static final int VORSCHLAG_GUELTIGKEIT = 30;
 
@@ -59,6 +61,11 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout {
 		setWidthFull();
 		add(this.inhalt);
 		this.inhalt.setWidthFull();
+	}
+
+	/** UC-001 steps 1–2: Bei jedem Öffnen zeigt die Ansicht die aktuell vorhandenen MAGs und Rollen. */
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
 		zeigeFormular();
 	}
 
@@ -166,7 +173,11 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout {
 				+ zusammenfassung.rolle().name() + " erstellt und per E-Mail versendet. Gültigkeit: "
 				+ zusammenfassung.gueltigkeitTage() + (zusammenfassung.gueltigkeitTage() == 1 ? " Tag." : " Tage.");
 		dialog.add(new Paragraph(text));
-		Button abbrechen = new Button("Abbrechen", (event) -> dialog.close());
+		// UC-001 A3: Abbruch bei Schritt 7 verwirft die Angaben wie bei Schritt 5.
+		Button abbrechen = new Button("Abbrechen", (event) -> {
+			dialog.close();
+			zeigeFormular();
+		});
 		abbrechen.setId("zusammenfassung-abbrechen");
 		Button versenden = new Button("Versenden", (event) -> {
 			dialog.close();

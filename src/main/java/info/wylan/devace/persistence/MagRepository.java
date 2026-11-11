@@ -52,14 +52,6 @@ public class MagRepository {
 	}
 
 	/**
-	 * UC-001 BR-002: gehört die MAG zur Teamleitung?
-	 */
-	public boolean gehoertZurTeamleitung(long magId, long teamleitungId) {
-		// UC-001 BR-002: Nur MAGs, die der Teamleitung zugeordnet sind.
-		return this.ctx.fetchExists(MAG, MAG.ID.eq(magId).and(MAG.TEAMLEITUNG_ID.eq(teamleitungId)));
-	}
-
-	/**
 	 * Prüft, ob die Kombination aus Scrum Team und Linienteam einer anderen MAG gehört. Beim
 	 * Ändern wird die eigene MAG über {@code ausserId} ausgenommen.
 	 */

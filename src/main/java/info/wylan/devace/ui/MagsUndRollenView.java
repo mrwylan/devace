@@ -14,7 +14,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import info.wylan.devace.persistence.MagListItem;
 import info.wylan.devace.persistence.RolleListItem;
 import info.wylan.devace.service.MagService;
@@ -25,7 +24,6 @@ import jakarta.annotation.security.RolesAllowed;
  * UC-008 MAGs und Rollen verwalten.
  */
 @Route(value = "mags-und-rollen", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 @PageTitle("MAGs und Rollen verwalten")
 // UC-008 BR-007: Nur der angemeldete Administrator verwaltet MAGs und Rollen.
 @RolesAllowed("ADMINISTRATOR")
