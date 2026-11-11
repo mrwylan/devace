@@ -182,7 +182,7 @@ Score eines Handlungsfelds aus einem abgeschlossenen Assessment, fünf Jahre auf
 | rolle_id | Rolle des Teilnehmers | Long | 19 | Not Null, Foreign Key (ROLLE.id) |
 | handlungsfeld_id | Bewertetes Handlungsfeld | Long | 19 | Not Null, Foreign Key (HANDLUNGSFELD.id) |
 | fragenkatalog_id | Fragenkatalog, auf dem der Score beruht | Long | 19 | Not Null, Foreign Key (FRAGENKATALOG.id) |
-| wert | Summe der Stufen geteilt durch Anzahl der Fragen | Decimal | 10,2 | Not Null, Min: 0, Max: 5 |
+| wert | Summe der Stufen geteilt durch Anzahl der Fragen, kaufmännisch auf eine Nachkommastelle gerundet | Decimal | 10,1 | Not Null, Min: 0, Max: 5 |
 | erfasst_am | Datum der Erfassung | Date | - | Not Null |
 
 ## Supportive
