@@ -774,3 +774,43 @@ Bei einer MAG mit einem einzigen Teilnehmer zeigt das Radar-Chart dessen Scores.
 **Assumed:** Das Handlungsfeld erscheint ohne Wert (nicht als 0), mit der Achse im Chart.
 
 Ein Handlungsfeld ohne Frage hat nach UC-003 BR-001 keinen Score. Die Anforderung sagt nicht, wie das Radar-Chart ihn zeigt. Lesarten: (a) ohne Wert; (b) als 0; (c) Handlungsfeld entfällt im Chart.
+
+## OQ-060: Hängt die Freigabe eines Fragenkatalogs an der Trefferquote der Testfälle?
+
+**Element:** UC-009 BR-006
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nein: Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
+
+NFR-009 verlangt, dass die KI mindestens 90 % der Testfälle die erwartete Stufe zuordnet. Offen ist, ob die Freigabe daran gebunden ist. Lesarten: (a) keine Kopplung; (b) die Freigabe verlangt einen bestandenen Testlauf des Entwurfs.
+
+## OQ-061: Welche Fragenkataloge sind für die Testfälle prüfbar?
+
+**Element:** UC-009 BR-002
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge nicht.
+
+FR-016 nennt nicht, welche Fragenkataloge geprüft werden. Zur Verfeinerung der Vorgaben dient der Entwurf, zur Absicherung die freigegebene Version. Lesarten: (a) Entwurf und freigegebene Version; (b) nur der Entwurf; (c) alle drei Status.
+
+## OQ-062: Wird bei der Eindeutigkeit einer Matrix-Spalte die Schreibweise unterschieden?
+
+**Element:** UC-010 BR-002
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Nein: Groß- und Kleinschreibung und umgebende Leerzeichen zählen nicht, wie bei MAG und Rolle (UC-008).
+
+Ohne Regel entstünden „Docker“ und „docker“ als zwei Spalten mit getrennten Zuordnungen.
+
+## OQ-063: Ab wann gilt eine neue Version des Starthinweises, und darf sie rückwirkend beginnen?
+
+**Element:** UC-011 BR-004
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Es gilt die Version mit dem jüngsten Beginn der Gültigkeit, der nicht in der Zukunft liegt; der Beginn liegt nicht in der Vergangenheit.
+
+Das Entity-Modell führt `gueltig_ab` als Datum. Offen ist, ob ein Beginn in der Vergangenheit zulässig ist. Lesarten: (a) nicht in der Vergangenheit; (b) auch rückwirkend, dann gälte die neue Version sofort.
