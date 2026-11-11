@@ -29,7 +29,7 @@
 5. Der Teilnehmer beantwortet die Frage in Freitext.
 6. Das System legt die Antwort dem KI-Modell vor, das sie nach dem Entscheidungsmodell einer Stufe zuordnet.
 7. Das System speichert Antwort und Stufe und stellt die nächste Frage. Die Schritte 5 bis 7 wiederholen sich, bis alle Fragen beantwortet sind.
-8. Das System meldet, dass alle Fragen beantwortet sind, und bietet den Abschluss des Assessments an, den UC-003 ausführt. Bis UC-003 umgesetzt ist, wird der Abschluss angezeigt, ist aber nicht ausführbar.
+8. Das System meldet, dass alle Fragen beantwortet sind, und bietet den Abschluss des Assessments an, den UC-003 ausführt.
 
 ## Alternativabläufe
 
