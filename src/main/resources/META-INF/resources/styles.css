@@ -80,3 +80,54 @@
   color: #1a1a1a;
   background: #fff;
 }
+
+/* Teilnehmeransicht (UC-002): ohne Navigation, schmale Spalte wie im Mockup. */
+.devace-kopf {
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+}
+
+.devace-assessment {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 34rem;
+  margin: 1rem auto;
+  padding: 0 1rem;
+}
+
+.devace-assessment-zeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.devace-dialog-eintrag {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-top: 0.75rem;
+}
+
+.devace-dialog-marke {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.devace-dialog-eintrag > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.devace-dialog-eintrag > div > span:first-child {
+  font-size: 0.875rem;
+}

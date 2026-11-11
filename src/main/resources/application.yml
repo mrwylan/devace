@@ -39,3 +39,5 @@ devace:
     modelle:
       # Modell-ID je Aufgabe (OQ-034); leer, bis eine eingerichtet ist.
       fragenkatalog: ${DEVACE_KI_MODELL_FRAGENKATALOG:}
+      # Modell-ID für die Bewertung der Antworten (UC-002); leer, bis eine eingerichtet ist.
+      bewertung: ${DEVACE_KI_MODELL_BEWERTUNG:}
