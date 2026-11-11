@@ -201,8 +201,15 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 		test(download()).download(pdf);
 
-		// OQ-070: der Textreport ist ein PDF
+		// Schritt 7: ein PDF-Dokument mit Rolle, Erstellungsdatum, Scores je Handlungsfeld und Textreport
 		assertThat(new String(pdf.toByteArray(), 0, 5, java.nio.charset.StandardCharsets.US_ASCII)).isEqualTo("%PDF-");
+		assertThat(pdfText(pdf.toByteArray())).contains("UC003 Entwicklung")
+			.contains(LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+			.contains(FELD_1 + ": 3.3")
+			.contains(FELD_2 + ": 2.0")
+			.contains("Überblick des KI-Modells.")
+			.contains("Würdigung " + FELD_1 + ".")
+			.contains("Nächster Schritt " + FELD_2 + ".");
 		// BR-007: nach dem Download sind alle Antworten des Assessments gelöscht, die Scores bleiben
 		assertThat(antworten(referenz)).isZero();
 		assertThat(bewertungen(referenz)).isZero();
@@ -301,7 +308,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		assertThat(find(Div.class).withId("assessment-nicht-nutzbar").single().getElement().getTextRecursively())
 			.contains(NICHT_NUTZBAR);
 		assertThat(find(Anchor.class).withId("textreport-herunterladen").exists()).isFalse();
-		// A2 Schritt 2: die Antworten sind spätestens 1 Stunde nach Erstellung des Textreports gelöscht
+		// BR-007, NFR-003: die Antworten sind mit dem Abschluss gelöscht
 		assertThat(antworten(referenz)).isZero();
 		// Erfolgsfall A2: Scores gespeichert, Assessment abgeschlossen
 		assertThat(this.jdbc.sql("select count(*) from score where mag_id = 9401").query(Long.class).single()).isEqualTo(2L);
@@ -397,6 +404,22 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		}
 		assertThat(find(Div.class).withId("assessment-fertig").exists()).isTrue();
 		return referenz;
+	}
+
+	/** Der Text aller Seiten eines PDF-Dokuments, Zeilenumbrüche als Leerzeichen. */
+	private static String pdfText(byte[] pdf) throws java.io.IOException {
+		org.openpdf.text.pdf.PdfReader leser = new org.openpdf.text.pdf.PdfReader(pdf);
+		try {
+			org.openpdf.text.pdf.parser.PdfTextExtractor extraktor = new org.openpdf.text.pdf.parser.PdfTextExtractor(leser);
+			StringBuilder text = new StringBuilder();
+			for (int seite = 1; seite <= leser.getNumberOfPages(); seite++) {
+				text.append(extraktor.getTextFromPage(seite)).append(' ');
+			}
+			return text.toString().replaceAll("\\s+", " ");
+		}
+		finally {
+			leser.close();
+		}
 	}
 
 	private Anchor download() {

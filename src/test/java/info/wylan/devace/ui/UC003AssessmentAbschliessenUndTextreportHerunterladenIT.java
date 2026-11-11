@@ -103,9 +103,12 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenIT extends AbstractBa
 
 			// Schritt 5: Auswertung mit Radar-Chart, Scores mit einer Nachkommastelle und Textreport
 			PlaywrightAssertions.assertThat(page.locator(".devace-seitentitel").getByText("Ihre Auswertung")).isVisible();
+			// NFR-007: das Radar-Chart ist spätestens 3 s nach dem Erscheinen der Auswertung vollständig dargestellt
 			PlaywrightAssertions.assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.IMG,
 					new com.microsoft.playwright.Page.GetByRoleOptions().setName("Radar-Chart der Scores je Handlungsfeld")))
-				.isVisible();
+				.isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(3_000));
+			PlaywrightAssertions.assertThat(page.locator("svg.devace-radar-svg circle.devace-radar-punkt"))
+				.hasCount(2, new com.microsoft.playwright.assertions.LocatorAssertions.HasCountOptions().setTimeout(3_000));
 			PlaywrightAssertions.assertThat(page.locator("#auswertung-scores")).containsText("3.3");
 			PlaywrightAssertions.assertThat(page.locator("#auswertung-scores")).containsText("2.0");
 			PlaywrightAssertions.assertThat(page.locator("#textreport-ueberblick")).hasText("Überblick des KI-Modells.");
