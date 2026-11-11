@@ -7,7 +7,7 @@
 **Primärer Akteur:** Administrator  
 **Ziel:** Der Administrator pflegt den Starthinweis, damit Teilnehmer vor jedem Assessment den aktuellen Hinweis zu den eingesetzten KI-Modellen, den nicht zu erfassenden Angaben und den Firmenweisungen zum Umgang mit KI lesen.  
 **Auslösendes Ereignis:** Der Administrator fordert die Pflege des Starthinweises an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-019, FR-004, NFR-005, NFR-010, C-001](../requirements.md)  
 **Schichten:** UI  

@@ -7,7 +7,7 @@
 **Primärer Akteur:** Administrator  
 **Ziel:** Der Administrator hält fest, welche Spalten der Kompetenzmatrix welchem Handlungsfeld zugeordnet sind, damit die Verdichtung der Matrix zu Handlungsfeldern nachvollziehbar ist.  
 **Auslösendes Ereignis:** Der Administrator fordert die Dokumentation der Zuordnung an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-017, NFR-005, NFR-010, C-007, C-008](../requirements.md)  
 **Schichten:** UI  

@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Der Administrator führt Testfälle aus und sieht deren Ergebnisse, damit er Fehler der KI-Bewertung eingrenzt und die Vorgaben des Entscheidungsmodells verfeinert.  
 **Auslösendes Ereignis:** Der Administrator fordert die Absicherung der KI-Bewertung an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-016, NFR-001, NFR-005, NFR-009, NFR-010, C-005](../requirements.md)  
 **Schichten:** UI  

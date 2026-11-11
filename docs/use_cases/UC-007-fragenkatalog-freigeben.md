@@ -7,7 +7,7 @@
 **Primärer Akteur:** Administrator  
 **Ziel:** Der Administrator prüft den Entwurf eines Fragenkatalogs samt Entscheidungsmodell und gibt ihn frei, damit nur geprüfte Fragen in Assessments verwendet werden.  
 **Auslösendes Ereignis:** Der Administrator fordert die Freigabe eines Fragenkatalogs an.  
-**Status:** Entwurf  
+**Status:** Genehmigt  
 
 **Anforderungen:** [FR-014, NFR-005, NFR-010, C-006](../requirements.md)  
 **Schichten:** UI  
