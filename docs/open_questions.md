@@ -814,3 +814,13 @@ Ohne Regel entstünden „Docker“ und „docker“ als zwei Spalten mit getren
 **Assumed:** Es gilt die Version mit dem jüngsten Beginn der Gültigkeit, der nicht in der Zukunft liegt; der Beginn liegt nicht in der Vergangenheit.
 
 Das Entity-Modell führt `gueltig_ab` als Datum. Offen ist, ob ein Beginn in der Vergangenheit zulässig ist. Lesarten: (a) nicht in der Vergangenheit; (b) auch rückwirkend, dann gälte die neue Version sofort.
+
+## OQ-064: Gehen Testfälle mit, wenn eine neue Version aus der freigegebenen Version beginnt?
+
+**Element:** UC-009 BR-010
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Ja: Die Testfälle werden mit den übernommenen Fragen in die neue Version übernommen; entfernt der Administrator eine Frage, entfernt das System ihre Testfälle mit.
+
+Ein Testfall gehört zu einer Frage (UC-009 BR-001). UC-006 Schritt 3 erlaubt, die freigegebene Version als neue Version zu beginnen; dabei entstehen neue Fragen. Ohne Regel hätte jede neue Version zunächst keine Testfälle. Lesarten: (a) Testfälle werden übernommen; (b) sie bleiben bei der alten Version, und der Administrator legt sie neu an. UC-006 beschreibt die Übernahme der Fragen, nicht die der Testfälle und müsste ergänzt werden.

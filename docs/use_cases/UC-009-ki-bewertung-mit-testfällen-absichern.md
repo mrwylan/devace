@@ -117,6 +117,10 @@ Die Anfrage an das KI-Modell enthält nur die Frage, das Entscheidungsmodell und
 
 Die Ausführung der Testfälle ändert weder Fragen noch Entscheidungsmodell. Die Verfeinerung der Vorgaben erfolgt im Entwurf nach UC-006.
 
-### BR-010: Nur für Administratoren
+### BR-010: Testfälle folgen ihrer Frage
+
+Beginnt der Administrator nach UC-006 eine neue Version aus der freigegebenen Version einer Rolle, übernimmt das System deren Testfälle zu den übernommenen Fragen in die neue Version. Entfernt der Administrator in UC-006 eine Frage aus dem Entwurf, entfernt das System ihre Testfälle mit.
+
+### BR-011: Nur für Administratoren
 
 Nur der angemeldete Administrator pflegt und führt Testfälle aus. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen. Die Navigation zeigt Einträge, für die der Administrator keine passende Berechtigung hat, deaktiviert.
