@@ -183,13 +183,14 @@ Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Ze
 **Element:** Entity: ANTWORT.text
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** 500 Zeichen.
 
 Die Vision nennt keine Grenze.
 
 **Answer:** Bestätigt: 500 Zeichen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** Entity: ANTWORT.text
 
 ## OQ-015: Welche Rollen darf die Teamleitung für eine Einladung wählen?
 
@@ -890,3 +891,54 @@ Alle UC-002-Mockups zeigen unten links „devace · Kompetenz-Assessment · Ziel
 **Answer:** Nein, die Fußzeilenlinks gehören nicht zu UC-002; die Ansicht baut sie nicht.
 **Answered by:** Jakob Albrecht, 2026-11-11
 **Resolved in:** UC-002
+
+## OQ-069: Welchen Wortlaut haben die Hinweise der Auswertung, von A1 und von A3?
+
+**Element:** UC-003
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Resolved
+
+Die Spezifikation sagt nur, das System weise darauf hin. Das Mockup zeigt die Texte der Auswertung, von A1 („Textreport nicht erstellt“) und von A3 („Textreport nicht mehr verfügbar“).
+
+**Answer:** Der Wortlaut des Mockups gilt. Der Hinweis unter dem Download nennt wegen OQ-071 die sofortige Löschung der Antworten statt „spätestens 1 Stunde“.
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-003 step 5, UC-003 A1, UC-003 A3
+
+
+## OQ-070: In welchem Format lädt der Teilnehmer den Textreport herunter?
+
+**Element:** UC-003 step 7
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Resolved
+
+Schritt 6 und 7 nennen den Download, aber kein Format. Lesarten: Textdatei, Markdown, PDF.
+
+**Answer:** PDF.
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-003 step 7, UC-003 Erfolgsfall
+
+
+## OQ-071: Wann werden die Antworten nach dem Abschluss gelöscht?
+
+**Element:** UC-003 BR-007
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Resolved
+
+BR-007 löscht die Antworten nach dem Download, spätestens 1 Stunde nach Erstellung des Textreports. Dafür braucht das System den Zeitpunkt des Abschlusses; ASSESSMENT hat kein Attribut dafür. Lesarten: (a) Attribut abgeschlossen_am und Löschlauf; (b) sofort beim Abschluss löschen.
+
+**Answer:** Sofort beim Abschluss: Sobald Textreport und Scores vorliegen, werden die Antworten gelöscht, noch vor dem Download. Schritt 7, BR-007 und der Erfolgsfall sind entsprechend anzupassen.
+**Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-003 step 4, UC-003 step 7, UC-003 A2, UC-003 BR-007, UC-003 Erfolgsfall
+
+## OQ-072: Ab wann gilt eine Antwort im Textreport als wörtlich wiedergegeben?
+
+**Element:** UC-003 BR-003
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Ab einer Folge von mindestens acht aufeinanderfolgenden Wörtern einer Antwort; dann gilt der Textreport als nicht erstellt (A1).
+
+BR-003 verlangt jetzt, dass das System den Textreport auf wörtliche Antworttexte prüft. Eine kurze Antwort („Ja.“) steht fast immer irgendwo im Text; eine Grenze braucht es, damit die Prüfung nicht jeden Textreport verwirft. Lesarten: eine feste Zahl Wörter, ein Anteil an der Antwort, nur vollständige Antworten.

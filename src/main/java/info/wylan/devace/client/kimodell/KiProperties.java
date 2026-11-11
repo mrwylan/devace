@@ -11,14 +11,18 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 record KiProperties(String baseUrl, String apiKey, Modelle modelle) {
 
 	/** Modell-ID je Aufgabe; leer, solange keines eingerichtet ist. */
-	record Modelle(String fragenkatalog, String bewertung) {
+	record Modelle(String fragenkatalog, String bewertung, String textreport) {
 
 		@ConstructorBinding
 		Modelle {
 		}
 
+		Modelle(String fragenkatalog, String bewertung) {
+			this(fragenkatalog, bewertung, "");
+		}
+
 		Modelle(String fragenkatalog) {
-			this(fragenkatalog, "");
+			this(fragenkatalog, "", "");
 		}
 
 	}

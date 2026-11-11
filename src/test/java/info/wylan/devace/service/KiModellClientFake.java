@@ -2,6 +2,7 @@ package info.wylan.devace.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import info.wylan.devace.service.KiModellClient.EntwurfAnfrage;
@@ -84,6 +85,57 @@ public class KiModellClientFake implements KiModellClient {
 		return this.bewertungen;
 	}
 
+	private final List<TextreportAnfrage> textreportAnfragen = new ArrayList<>();
+
+	private RuntimeException naechsterTextreportFehler;
+
+	private boolean naechsterTextreportLeer;
+
+	private Textreport naechsterTextreport;
+
+	@Override
+	public Optional<Textreport> textreportErstellen(TextreportAnfrage anfrage) {
+		this.textreportAnfragen.add(anfrage);
+		if (this.naechsterTextreportFehler != null) {
+			RuntimeException fehler = this.naechsterTextreportFehler;
+			this.naechsterTextreportFehler = null;
+			throw fehler;
+		}
+		if (this.naechsterTextreportLeer) {
+			this.naechsterTextreportLeer = false;
+			return Optional.empty();
+		}
+		if (this.naechsterTextreport != null) {
+			Textreport textreport = this.naechsterTextreport;
+			this.naechsterTextreport = null;
+			return Optional.of(textreport);
+		}
+		return Optional.of(new Textreport("Überblick des KI-Modells.", anfrage.handlungsfelder()
+			.stream()
+			.map(feld -> new Abschnitt(feld.name(), "Würdigung " + feld.name() + ".", "Nächster Schritt " + feld.name() + "."))
+			.toList()));
+	}
+
+	/** UC-003 A1: das KI-Modell ist beim nächsten Textreport nicht erreichbar. */
+	public void failNextTextreport() {
+		this.naechsterTextreportFehler = new KiModellNichtErreichbarException(new IllegalStateException("Test"));
+	}
+
+	/** UC-003 A1: das KI-Modell liefert beim nächsten Mal keinen verwertbaren Textreport. */
+	public void liefertNaechstenTextreportNicht() {
+		this.naechsterTextreportLeer = true;
+	}
+
+	/** UC-003 BR-003: der nächste Textreport hat diesen Inhalt. */
+	public void liefertNaechstenTextreport(Textreport textreport) {
+		this.naechsterTextreport = textreport;
+	}
+
+	/** UC-003 BR-004: die Anfragen für den Textreport. */
+	public List<TextreportAnfrage> textreportAnfragen() {
+		return this.textreportAnfragen;
+	}
+
 	/** A2: das KI-Modell ist nicht erreichbar. */
 	public void failNext() {
 		this.naechsterFehler = new KiModellNichtErreichbarException(new IllegalStateException("stubbed"));
@@ -105,6 +157,10 @@ public class KiModellClientFake implements KiModellClient {
 		this.bewertungen.clear();
 		this.naechsterBewertungsfehler = null;
 		this.naechsteStufe = null;
+		this.textreportAnfragen.clear();
+		this.naechsterTextreportFehler = null;
+		this.naechsterTextreportLeer = false;
+		this.naechsterTextreport = null;
 	}
 
 }

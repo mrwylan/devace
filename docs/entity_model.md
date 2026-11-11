@@ -125,7 +125,7 @@ Eintrag des Entscheidungsmodells: Beschreibung der Antwort, die einer Stufe eine
 
 ### ASSESSMENT
 
-Ein Durchlauf eines Teilnehmers; wird zusammen mit den Antworten gelöscht und trägt keinen Personenbezug.
+Ein Durchlauf eines Teilnehmers ohne Personenbezug; ein abgeschlossenes Assessment bleibt ohne Antworten bestehen, ein liegengebliebenes laufendes wird mit seinen Antworten gelöscht.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
@@ -146,7 +146,7 @@ Ein Durchlauf eines Teilnehmers; wird zusammen mit den Antworten gelöscht und t
 
 ### ANTWORT
 
-Freitext eines Teilnehmers zu einer Frage; wird nach dem Textreport gelöscht.
+Freitext eines Teilnehmers zu einer Frage; wird beim Abschluss des Assessments gelöscht, sobald der Textreport vorliegt.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|

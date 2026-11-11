@@ -1,25 +1,38 @@
 package info.wylan.devace.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import info.wylan.devace.persistence.AssessmentRepository;
 import info.wylan.devace.persistence.BeantwortbareFrage;
+import info.wylan.devace.persistence.BewerteteAntwort;
 import info.wylan.devace.persistence.EinladungRepository;
 import info.wylan.devace.persistence.EinladungZustand;
 import info.wylan.devace.persistence.Fragenkatalog;
 import info.wylan.devace.persistence.FragenkatalogRepository;
+import info.wylan.devace.persistence.Handlungsfeld;
+import info.wylan.devace.persistence.HandlungsfeldRepository;
 import info.wylan.devace.persistence.LaufendesAssessment;
 import info.wylan.devace.persistence.RolleRepository;
+import info.wylan.devace.persistence.ScoreRepository;
 import info.wylan.devace.persistence.Starthinweis;
 import info.wylan.devace.persistence.StarthinweisRepository;
 import info.wylan.devace.persistence.Verlauf;
+import info.wylan.devace.service.KiModellClient.BewerteteFrage;
 import info.wylan.devace.service.KiModellClient.BewertungAnfrage;
+import info.wylan.devace.service.KiModellClient.HandlungsfeldAuswertung;
+import info.wylan.devace.service.KiModellClient.Textreport;
+import info.wylan.devace.service.KiModellClient.TextreportAnfrage;
 import org.jspecify.annotations.Nullable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -28,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * Assessment durchführen (UC-002). Der Teilnehmer meldet sich nicht an: Die zufällige Referenz seiner Einladung ist
+ * Assessment durchführen (UC-002) und abschließen (UC-003). Der Teilnehmer meldet sich nicht an: Die zufällige Referenz seiner Einladung ist
  * sein Zugang; die Einladung ist die einzige Verbindung zu seiner MAG und Rolle.
  */
 @Service
@@ -38,6 +51,15 @@ public class AssessmentService {
 	static final int HOECHSTZAHL_ZEICHEN = 500;
 
 	static final Duration AUFBEWAHRUNG = Duration.ofDays(7);
+
+	/** UC-003 BR-006: Der Textreport verfällt 1 Stunde nach seiner Erstellung. */
+	public static final Duration VERFALL_TEXTREPORT = Duration.ofHours(1);
+
+	/** UC-003 BR-002: Die Scores werden fünf Jahre aufbewahrt. */
+	static final int AUFBEWAHRUNG_SCORES_JAHRE = 5;
+
+	/** UC-003 BR-003: Ab so vielen aufeinanderfolgenden Wörtern gilt eine Antwort als wörtlich (OQ-072). */
+	static final int WOERTLICH_AB_WOERTERN = 8;
 
 	private final EinladungRepository einladungRepository;
 
@@ -49,6 +71,10 @@ public class AssessmentService {
 
 	private final RolleRepository rolleRepository;
 
+	private final HandlungsfeldRepository handlungsfeldRepository;
+
+	private final ScoreRepository scoreRepository;
+
 	private final KiModellClient kiModell;
 
 	private final TransactionTemplate transaktion;
@@ -57,12 +83,15 @@ public class AssessmentService {
 
 	public AssessmentService(EinladungRepository einladungRepository, AssessmentRepository assessmentRepository,
 			FragenkatalogRepository fragenkatalogRepository, StarthinweisRepository starthinweisRepository,
-			RolleRepository rolleRepository, KiModellClient kiModell, TransactionTemplate transaktion, Clock clock) {
+			RolleRepository rolleRepository, HandlungsfeldRepository handlungsfeldRepository,
+			ScoreRepository scoreRepository, KiModellClient kiModell, TransactionTemplate transaktion, Clock clock) {
 		this.einladungRepository = einladungRepository;
 		this.assessmentRepository = assessmentRepository;
 		this.fragenkatalogRepository = fragenkatalogRepository;
 		this.starthinweisRepository = starthinweisRepository;
 		this.rolleRepository = rolleRepository;
+		this.handlungsfeldRepository = handlungsfeldRepository;
+		this.scoreRepository = scoreRepository;
 		this.kiModell = kiModell;
 		this.transaktion = transaktion;
 		this.clock = clock;
@@ -114,7 +143,7 @@ public class AssessmentService {
 				katalog.id(), hinweis.id(), LocalDateTime.now(this.clock));
 		// UC-002 BR-001: Mit dem Start gilt die Einladung als eingelöst.
 		this.einladungRepository.markiereEingeloest(einladung.id());
-		return dialog(new LaufendesAssessment(id, einladung.rolleId(), katalog.id()));
+		return dialog(new LaufendesAssessment(id, einladung.magId(), einladung.rolleId(), katalog.id()));
 	}
 
 	/**
@@ -160,6 +189,121 @@ public class AssessmentService {
 	@Transactional
 	public int loescheLiegengebliebene() {
 		return this.assessmentRepository.loescheLaufendeSeit(grenze());
+	}
+
+	/**
+	 * UC-003 steps 1–4: berechnet die Scores, lässt den Textreport erstellen, speichert die Scores ohne
+	 * Personenbezug, setzt das Assessment auf abgeschlossen und löscht seine Antworten; A1 wenn kein Textreport
+	 * entsteht, dann bleibt alles, wie es war. Der Aufruf des KI-Modells hält keine Datenbanktransaktion offen.
+	 */
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	public Auswertung abschliessen(String referenz) {
+		EinladungZustand einladung = this.einladungRepository.findByReferenz(referenz)
+			.orElseThrow(EinladungNichtNutzbarException::new);
+		LaufendesAssessment assessment = this.assessmentRepository.findLaufend(einladung.id(), grenze())
+			.orElseThrow(EinladungNichtNutzbarException::new);
+		List<BeantwortbareFrage> fragen = this.fragenkatalogRepository
+			.findBeantwortbareFragen(assessment.fragenkatalogId());
+		List<BewerteteAntwort> antworten = this.assessmentRepository.bewerteteAntworten(assessment.id());
+		if (antworten.size() < fragen.size()) {
+			throw new IllegalStateException("Das Assessment ist noch nicht vollständig beantwortet");
+		}
+		String rolle = rollenName(assessment.rolleId());
+		List<Handlungsfeld> felder = this.handlungsfeldRepository.findAll();
+		Map<Long, List<BewerteteAntwort>> jeFeld = new LinkedHashMap<>();
+		for (BewerteteAntwort antwort : antworten) {
+			jeFeld.computeIfAbsent(antwort.handlungsfeldId(), (id) -> new ArrayList<>()).add(antwort);
+		}
+		List<FeldScore> scores = new ArrayList<>();
+		List<HandlungsfeldAuswertung> auswertungen = new ArrayList<>();
+		for (Handlungsfeld feld : felder) {
+			List<BewerteteAntwort> feldAntworten = jeFeld.getOrDefault(feld.id(), List.of());
+			BigDecimal score = score(feldAntworten);
+			scores.add(new FeldScore(feld.id(), feld.name(), score));
+			if (score != null) {
+				auswertungen.add(new HandlungsfeldAuswertung(feld.name(), score, feldAntworten.stream()
+					.map((a) -> new BewerteteFrage(a.frage(), a.antwort(), a.stufe()))
+					.toList()));
+			}
+		}
+		Textreport textreport;
+		try {
+			// UC-003 BR-004: nur Rolle, Handlungsfelder, Fragen mit Antworten und Stufen sowie die Scores
+			textreport = this.kiModell.textreportErstellen(new TextreportAnfrage(rolle, auswertungen))
+				.orElseThrow(TextreportNichtErstelltException::new);
+		}
+		catch (KiModellNichtErreichbarException ex) {
+			// UC-003 A1: keine Scores, das Assessment bleibt laufend, die Antworten bleiben erhalten
+			throw new TextreportNichtErstelltException();
+		}
+		// UC-003 BR-003: ein Textreport mit wörtlicher Antwort gilt als nicht erstellt (A1)
+		if (enthaeltWoertlicheAntwort(textreport, antworten)) {
+			throw new TextreportNichtErstelltException();
+		}
+		LocalDateTime jetzt = LocalDateTime.now(this.clock);
+		this.transaktion.executeWithoutResult((status) -> {
+			for (FeldScore feld : scores) {
+				if (feld.score() != null) {
+					// UC-003 BR-002: nur MAG, Rolle, Handlungsfeld, Fragenkatalog, Wert und Datum
+					this.scoreRepository.insert(assessment.magId(), assessment.rolleId(), feld.handlungsfeldId(),
+							assessment.fragenkatalogId(), feld.score(), jetzt.toLocalDate());
+				}
+			}
+			// UC-003 BR-007: Das Assessment ist abgeschlossen, seine Antworten werden gelöscht.
+			this.assessmentRepository.abschliessen(assessment.id());
+		});
+		return new Auswertung(rolle, scores, textreport, jetzt);
+	}
+
+	/**
+	 * UC-003 BR-002: löscht Scores, die vor mehr als fünf Jahren erfasst wurden, und liefert ihre Zahl.
+	 */
+	@Transactional
+	public int loescheAlteScores() {
+		return this.scoreRepository
+			.loescheErfasstVor(LocalDate.now(this.clock).minusYears(AUFBEWAHRUNG_SCORES_JAHRE));
+	}
+
+	/**
+	 * UC-003 BR-003: Enthält der Textreport eine Folge von mindestens acht aufeinanderfolgenden Wörtern einer
+	 * Antwort? Verglichen wird ohne Groß- und Kleinschreibung und ohne Satzzeichen.
+	 */
+	static boolean enthaeltWoertlicheAntwort(Textreport textreport, List<BewerteteAntwort> antworten) {
+		StringBuilder text = new StringBuilder(textreport.ueberblick());
+		for (KiModellClient.Abschnitt abschnitt : textreport.abschnitte()) {
+			text.append(' ').append(abschnitt.handlungsfeld()).append(' ').append(abschnitt.wuerdigung()).append(' ')
+				.append(abschnitt.naechsterSchritt());
+		}
+		String reportWoerter = " " + String.join(" ", woerter(text.toString())) + " ";
+		for (BewerteteAntwort antwort : antworten) {
+			List<String> woerter = woerter(antwort.antwort());
+			for (int i = 0; i + WOERTLICH_AB_WOERTERN <= woerter.size(); i++) {
+				String folge = " " + String.join(" ", woerter.subList(i, i + WOERTLICH_AB_WOERTERN)) + " ";
+				if (reportWoerter.contains(folge)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static List<String> woerter(String text) {
+		return java.util.Arrays.stream(text.toLowerCase(java.util.Locale.ROOT).split("[^\\p{L}\\p{N}]+"))
+			.filter((wort) -> !wort.isEmpty())
+			.toList();
+	}
+
+	/**
+	 * UC-003 BR-001: Summe der Stufen geteilt durch die Zahl der Fragen, kaufmännisch auf eine Nachkommastelle
+	 * gerundet; ein Handlungsfeld ohne Frage hat keinen Score.
+	 */
+	static @Nullable BigDecimal score(List<BewerteteAntwort> antworten) {
+		if (antworten.isEmpty()) {
+			return null;
+		}
+		int summe = antworten.stream().mapToInt(BewerteteAntwort::stufe).sum();
+		// UC-003 BR-001: Summe der Stufen durch Zahl der Fragen, auf eine Nachkommastelle
+		return BigDecimal.valueOf(summe).divide(BigDecimal.valueOf(antworten.size()), 1, RoundingMode.HALF_UP);
 	}
 
 	/** UC-002 BR-009: Vor dieser Zeit liegt die letzte Eingabe eines Assessments, das nicht mehr läuft. */
@@ -211,6 +355,23 @@ public class AssessmentService {
 		// UC-002 BR-001: Bis zum Ablaufdatum (24 Uhr des letzten Tages) und nur, solange sie nicht eingelöst ist.
 		return EinladungRepository.VERSENDET.equals(einladung.status())
 				&& !LocalDate.now(this.clock).isAfter(einladung.laeuftAbAm());
+	}
+
+	/** UC-003 step 5: der Score eines Handlungsfelds; {@code score} ist leer, wenn das Handlungsfeld keine Frage hat. */
+	public record FeldScore(long handlungsfeldId, String name, @Nullable BigDecimal score) {
+	}
+
+	/**
+	 * UC-003 step 5: die Auswertung zum Abschluss. Sie wird nicht gespeichert (BR-005); der Textreport verfällt eine
+	 * Stunde nach {@code erstelltAm}.
+	 */
+	public record Auswertung(String rolle, List<FeldScore> scores, Textreport textreport, LocalDateTime erstelltAm) {
+
+		/** UC-003 A3: Ist der Textreport zum angegebenen Zeitpunkt verfallen? */
+		public boolean verfallen(LocalDateTime jetzt) {
+			return jetzt.isAfter(this.erstelltAm.plus(VERFALL_TEXTREPORT));
+		}
+
 	}
 
 	/** Was der Teilnehmer beim Öffnen der Einladung sieht. */

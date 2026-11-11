@@ -98,11 +98,11 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 		assertThat(text()).contains("Frage 2 von 2").contains(FRAGE_2);
 		antworten("Wir planen in jedem Sprint Zeit für Aufräumarbeiten ein.");
 
-		// Schritt 8: alle Fragen beantwortet, der Abschluss wird angeboten (bis UC-003 deaktiviert, OQ-066)
+		// Schritt 8: alle Fragen beantwortet, der Abschluss (UC-003) wird angeboten und ist ausführbar
 		assertThat(find(Div.class).withId("assessment-fertig").single().getElement().getTextRecursively())
 			.contains("Alle Fragen beantwortet")
 			.contains("Sie haben alle 2 Fragen beantwortet.");
-		assertThat(button("assessment-abschliessen").isEnabled()).isFalse();
+		assertThat(button("assessment-abschliessen").isEnabled()).isTrue();
 
 		// Nachbedingungen: ein laufendes Assessment mit dem bestätigten Starthinweis, je Frage Antwort und Stufe
 		assertThat(this.jdbc.sql("""

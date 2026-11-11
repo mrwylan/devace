@@ -1,9 +1,17 @@
 package info.wylan.devace.ui;
 
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
@@ -16,16 +24,22 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.server.streams.DownloadEvent;
 import info.wylan.devace.persistence.Starthinweis;
 import info.wylan.devace.persistence.Verlauf;
 import info.wylan.devace.service.AntwortUngueltigException;
 import info.wylan.devace.service.AssessmentService;
+import info.wylan.devace.service.AssessmentService.Auswertung;
 import info.wylan.devace.service.AssessmentService.Dialog;
 import info.wylan.devace.service.AssessmentService.Einstieg;
+import info.wylan.devace.service.AssessmentService.FeldScore;
 import info.wylan.devace.service.EinladungNichtNutzbarException;
+import info.wylan.devace.service.KiModellClient.Abschnitt;
+import info.wylan.devace.service.TextreportNichtErstelltException;
 
 /**
- * UC-002 Assessment durchführen. Der Teilnehmer meldet sich nicht an; die Referenz seiner Einladung steht in der
+ * UC-002 Assessment durchführen und UC-003 Assessment abschließen und Textreport herunterladen. Der Teilnehmer meldet
+ * sich nicht an; die Referenz seiner Einladung steht in der
  * Adresse.
  */
 @Route("assessment")
@@ -36,12 +50,24 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 
 	private final AssessmentService service;
 
+	private final Clock clock;
+
+	/** UC-003 BR-006: Der Textreport steht einmal zum Download bereit. */
+	private boolean textreportHeruntergeladen;
+
+	/** UC-003 A3: Zahl der Anforderungen des Textreports in dieser Auswertung. */
+	private int textreportAnforderungen;
+
 	private final Div inhalt = new Div();
 
 	private String referenz = "";
 
-	public AssessmentView(AssessmentService service) {
+	/** Die Rolle der Einladung, für die Kopfzeilen von UC-003. */
+	private String rolle = "";
+
+	public AssessmentView(AssessmentService service, Clock clock) {
 		this.service = service;
+		this.clock = clock;
 		Div kopf = new Div(new Span("devace · Kompetenz-Assessment"));
 		kopf.addClassName("devace-kopf");
 		this.inhalt.addClassName("devace-assessment");
@@ -108,6 +134,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 
 	/** UC-002 steps 4–8: der Dialog mit der nächsten Frage oder die Meldung, dass alle beantwortet sind. */
 	private void zeigeDialog(Dialog dialog) {
+		this.rolle = dialog.rolle();
 		int beantwortet = dialog.verlauf().size();
 		ProgressBar fortschritt = new ProgressBar(0, Math.max(dialog.anzahl(), 1), beantwortet);
 		fortschritt.setId("assessment-fortschritt");
@@ -117,8 +144,9 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 			Button abschliessen = new Button("Assessment abschließen");
 			abschliessen.addThemeVariants(ButtonVariant.PRIMARY);
 			abschliessen.setId("assessment-abschliessen");
-			// UC-003 schließt das Assessment ab; bis es umgesetzt ist, bleibt die Aktion sichtbar, aber deaktiviert.
-			abschliessen.setEnabled(false);
+			// UC-003 step 1: Der Teilnehmer schließt sein Assessment ab.
+			abschliessen.setDisableOnClick(true);
+			abschliessen.addClickListener((event) -> abschliessen());
 			setzeInhalt(kopfzeile(stand, dialog.rolle()), fortschritt,
 					meldung("Alle Fragen beantwortet", "Sie haben alle " + dialog.anzahl()
 							+ " Fragen beantwortet. Schließen Sie das Assessment ab, um Ihren Textreport zu erhalten.",
@@ -173,6 +201,176 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		aktion.setJustifyContentMode(com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END);
 		karte.add(antwort, aktion, fussnote);
 		setzeInhalt(kopfzeile(stand, dialog.rolle()), fortschritt, karte);
+	}
+
+	/** UC-003 steps 1–5; A1 wenn kein Textreport entsteht. */
+	private void abschliessen() {
+		try {
+			zeigeAuswertung(this.service.abschliessen(this.referenz));
+		}
+		catch (TextreportNichtErstelltException ex) {
+			zeigeTextreportNichtErstellt(ex);
+		}
+		catch (EinladungNichtNutzbarException ex) {
+			zeigeNichtNutzbar();
+		}
+	}
+
+	/** UC-003 A1: Hinweis, nichts gespeichert, der Abschluss lässt sich erneut anfordern. */
+	private void zeigeTextreportNichtErstellt(TextreportNichtErstelltException ex) {
+		Button erneut = new Button("Abschluss erneut anfordern", (event) -> abschliessen());
+		erneut.addThemeVariants(ButtonVariant.PRIMARY);
+		erneut.setId("assessment-abschluss-erneut");
+		erneut.setDisableOnClick(true);
+		setzeInhalt(titelzeile("Assessment abschließen", rolle()),
+				meldung(TextreportNichtErstelltException.TITEL, ex.getMessage(), "fehler", "textreport-nicht-erstellt"),
+				erneut);
+	}
+
+	/** UC-003 A3: Der Textreport wurde bereits heruntergeladen oder ist verfallen. */
+	private void zeigeTextreportNichtVerfuegbar(String rolle) {
+		setzeInhalt(titelzeile("Assessment abschließen", rolle),
+				meldung("Textreport nicht mehr verfügbar",
+						"Der Textreport wurde bereits heruntergeladen oder ist verfallen. Ihre Scores bleiben ohne Personenbezug gespeichert.",
+						"warnung", "textreport-nicht-verfuegbar"));
+	}
+
+	/**
+	 * UC-003 steps 5–7: die Auswertung mit Radar-Chart, Scores und Textreport; sie wird nicht gespeichert (BR-005) und
+	 * steht nur in dieser Ansicht zur Verfügung.
+	 */
+	private void zeigeAuswertung(Auswertung auswertung) {
+		this.textreportHeruntergeladen = false;
+		this.textreportAnforderungen = 0;
+		Div fertig = meldung("Assessment abgeschlossen",
+				"Ihre Auswertung ist fertig. Radar-Chart, Scores und Textreport sehen nur Sie, und nur jetzt.", "erfolg",
+				"assessment-abgeschlossen");
+
+		H3 chartTitel = new H3("Radar-Chart und Scores");
+		Paragraph chartText = new Paragraph(
+				"Ihre Scores je Handlungsfeld auf der Skala 0 bis 5: Summe der Stufen geteilt durch die Zahl der Fragen.");
+		chartText.addClassName("devace-untertitel");
+		Div scores = new Div();
+		scores.addClassName("devace-score-liste");
+		scores.setId("auswertung-scores");
+		for (FeldScore score : auswertung.scores()) {
+			Span name = new Span(score.name());
+			Span wert = new Span((score.score() != null) ? format(score.score()) : "–");
+			wert.addClassName("devace-score-wert");
+			scores.add(new Div(name, wert));
+		}
+		Paragraph ohneFrage = new Paragraph("Handlungsfelder ohne Frage haben keinen Score.");
+		ohneFrage.addClassName("devace-fussnote");
+		Div diagramm = new Div(new Html(RadarChart.svg(auswertung.scores())), new Div(scores, ohneFrage));
+		diagramm.addClassName("devace-radar");
+		Div chartKarte = new Div(chartTitel, chartText, diagramm);
+		chartKarte.addClassName("devace-karte");
+
+		H3 reportTitel = new H3("Textreport");
+		Paragraph reportText = new Paragraph(
+				"Vom KI-Modell erstellt: Er würdigt Ihre Leistung, begründet Ihre Einstufung und zeigt, wo Sie als Nächstes investieren.");
+		reportText.addClassName("devace-untertitel");
+		Paragraph ueberblick = new Paragraph(auswertung.textreport().ueberblick());
+		ueberblick.setId("textreport-ueberblick");
+		Div abschnitte = new Div();
+		abschnitte.addClassName("devace-auswertung-felder");
+		for (Abschnitt abschnitt : auswertung.textreport().abschnitte()) {
+			abschnitte.add(abschnitt(abschnitt, auswertung.scores()));
+		}
+		// UC-003 BR-003: Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.
+		Paragraph keineBeurteilung = new Paragraph(
+				"Das sind Vorschläge zur Weiterentwicklung. Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.");
+		keineBeurteilung.addClassName("devace-fussnote");
+		Div reportKarte = new Div(reportTitel, reportText, ueberblick, abschnitte, keineBeurteilung);
+		reportKarte.addClassName("devace-karte");
+
+		// UC-003 steps 6–7, BR-006: einmaliger Download; danach oder nach dem Verfall gilt A3
+		Button herunterladen = new Button("Textreport herunterladen");
+		herunterladen.addThemeVariants(ButtonVariant.PRIMARY);
+		Anchor download = new Anchor((DownloadEvent event) -> herunterladen(event, auswertung), "");
+		download.setId("textreport-herunterladen");
+		download.add(herunterladen);
+		// UC-003 A3: der Klick erreicht auch den Server, damit der Hinweis ohne Push im Browser erscheint
+		download.getElement().addEventListener("click", (event) -> {
+			this.textreportAnforderungen++;
+			if (this.textreportAnforderungen > 1 || auswertung.verfallen(LocalDateTime.now(this.clock))) {
+				zeigeTextreportNichtVerfuegbar(auswertung.rolle());
+			}
+		});
+		Paragraph hinweis = new Paragraph("Der Textreport steht einmal zum Download bereit. Ihre Antworten sind bereits "
+				+ "gelöscht, Ihre Scores bleiben ohne Personenbezug erhalten.");
+		hinweis.addClassName("devace-fussnote");
+
+		setzeInhalt(titelzeile("Ihre Auswertung", auswertung.rolle()), fertig, chartKarte, reportKarte, download,
+				hinweis);
+	}
+
+	private void herunterladen(DownloadEvent event, Auswertung auswertung) {
+		boolean verfuegbar;
+		synchronized (this) {
+			// UC-003 BR-006: nach dem Download und nach dem Verfall steht der Textreport nicht mehr zur Verfügung
+			verfuegbar = !this.textreportHeruntergeladen && !auswertung.verfallen(LocalDateTime.now(this.clock));
+			this.textreportHeruntergeladen = true;
+		}
+		if (!verfuegbar) {
+			event.getResponse().setStatus(410);
+			event.getUI().access(() -> zeigeTextreportNichtVerfuegbar(auswertung.rolle()));
+			return;
+		}
+		byte[] pdf = TextreportPdf.erstellen(auswertung);
+		event.setFileName("devace-textreport.pdf");
+		event.setContentType("application/pdf");
+		event.setContentLength(pdf.length);
+		try (OutputStream ausgabe = event.getOutputStream()) {
+			ausgabe.write(pdf);
+		}
+		catch (java.io.IOException ex) {
+			throw new java.io.UncheckedIOException(ex);
+		}
+	}
+
+	private static Div abschnitt(Abschnitt abschnitt, List<FeldScore> scores) {
+		String wert = scores.stream()
+			.filter((s) -> s.name().equals(abschnitt.handlungsfeld()) && s.score() != null)
+			.map((s) -> format(s.score()))
+			.findFirst()
+			.orElse("");
+		Span titel = new Span(abschnitt.handlungsfeld());
+		titel.getStyle().set("font-weight", "600");
+		Span score = new Span(wert);
+		score.addClassName("devace-score-wert");
+		Div kopf = new Div(titel, score);
+		kopf.addClassName("devace-assessment-zeile");
+		Paragraph text = new Paragraph(abschnitt.wuerdigung());
+		text.addClassName("devace-untertitel");
+		Div karte = new Div(kopf, text);
+		if (!abschnitt.naechsterSchritt().isBlank()) {
+			Paragraph schritt = new Paragraph("Nächster Schritt: " + abschnitt.naechsterSchritt());
+			schritt.addClassName("devace-naechster-schritt");
+			karte.add(schritt);
+		}
+		karte.addClassName("devace-auswertung-feld");
+		return karte;
+	}
+
+	/** UC-003 BR-001: Der Score wird immer mit einer Nachkommastelle ausgegeben. */
+	static String format(BigDecimal score) {
+		return String.format(Sprache.LOCALE, "%.1f", score);
+	}
+
+	private String rolle() {
+		return this.rolle;
+	}
+
+	private static Div titelzeile(String titel, String rolle) {
+		Span text = new Span(titel);
+		text.addClassName("devace-seitentitel");
+		Span badge = new Span("Rolle: " + rolle);
+		badge.addClassName("devace-badge");
+		badge.getElement().setAttribute("theme", "neutral");
+		Div zeile = new Div(text, badge);
+		zeile.addClassName("devace-assessment-titel");
+		return zeile;
 	}
 
 	private static Div kopfzeile(String text, String rolle) {

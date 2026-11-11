@@ -23,6 +23,7 @@
         <!-- One explicit version, shared by the BOM and the Vaadin Maven plugin. -->
         <vaadin.version>25.3.4</vaadin.version>
         <spring-ai.version>2.0.2</spring-ai.version>
+        <openpdf.version>3.0.5</openpdf.version>
         <!-- PostgreSQL major version of production, shared by tests and code generation. -->
         <postgres.image>postgres:17-alpine</postgres.image>
         <!-- Coverage measurement only (CLAUDE.md §3: coverage is uploaded by the pipeline), no minimum threshold. -->
@@ -74,6 +75,12 @@
             <!-- e-mail dispatch of the invitations (UC-001); part of Spring Boot, version managed by the parent -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <!-- UC-003: Textreport als PDF (Entscheidung des Nutzers, 2026-11-11) -->
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>${openpdf.version}</version>
         </dependency>
         <dependency>
             <!-- model access only through Spring AI; OpenRouter is the gateway (the API is OpenAI-compatible) -->

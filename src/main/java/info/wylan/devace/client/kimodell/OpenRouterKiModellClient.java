@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
@@ -26,7 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Das KI-Modell über OpenRouter: Spring AI für den Fragenkatalog (UC-006 step 6), Jev für die Bewertung (UC-002 step 6,
+ * Das KI-Modell über OpenRouter: Spring AI für den Fragenkatalog (UC-006 step 6) und den Textreport (UC-003 step 3), Jev für die Bewertung (UC-002 step 6,
  * ADR-004).
  */
 @Component
@@ -78,6 +80,71 @@ class OpenRouterKiModellClient implements KiModellClient {
 			log.warn("KI-Modell lieferte keinen Entwurf: {}", ex.getClass().getSimpleName());
 			throw new KiModellNichtErreichbarException(ex);
 		}
+	}
+
+	private final Resource textreportVorlage = new ClassPathResource("prompts/textreport.st");
+
+	/** UC-003 A1: Zeitlimit für den Textreport (NFR-006). */
+	static final Duration ZEITLIMIT_TEXTREPORT = Duration.ofSeconds(10);
+
+	/**
+	 * UC-003 step 3 — Anfrage nur mit Rolle, Handlungsfeldern, Scores, Fragen, Antworten und Stufen (BR-004).
+	 */
+	@Override
+	public Optional<Textreport> textreportErstellen(TextreportAnfrage anfrage) {
+		String modell = this.properties.modelle().textreport();
+		if (isBlank(modell) || isBlank(this.properties.apiKey())) {
+			// UC-003 A1: ohne eingerichtetes Modell oder Schlüssel gibt es keinen Textreport
+			throw new KiModellNichtErreichbarException(
+					new IllegalStateException("KI-Modell oder OPENROUTER_API_KEY nicht eingerichtet"));
+		}
+		try {
+			OpenAiChatModel chatModel = OpenAiChatModel.builder()
+				.options(OpenAiChatOptions.builder()
+					.baseUrl(this.properties.baseUrl())
+					.apiKey(this.properties.apiKey())
+					.model(modell)
+					// UC-003 A1, NFR-006: ohne Textreport innerhalb von 10 s gilt A1, ohne Wiederholung
+					.timeout(ZEITLIMIT_TEXTREPORT)
+					.maxRetries(0)
+					.build())
+				.build();
+			StringBuilder felder = new StringBuilder();
+			for (HandlungsfeldAuswertung feld : anfrage.handlungsfelder()) {
+				felder.append("- ").append(feld.name()).append(": Score ").append(feld.score()).append('\n');
+				for (BewerteteFrage frage : feld.fragen()) {
+					felder.append("  - Frage: ").append(frage.frage()).append(" | Antwort: ").append(frage.antwort())
+						.append(" | Stufe: ").append(frage.stufe()).append('\n');
+				}
+			}
+			String prompt = new PromptTemplate(this.textreportVorlage)
+				.render(Map.of("rolle", anfrage.rolle(), "handlungsfelder", felder.toString()));
+			BeanOutputConverter<KiTextreportAntwort> konverter = new BeanOutputConverter<>(KiTextreportAntwort.class);
+			String text = chatModel.call(new Prompt(prompt + "\n\n" + konverter.getFormat()))
+				.getResult()
+				.getOutput()
+				.getText();
+			return textreport(konverter.convert(text));
+		}
+		catch (RuntimeException ex) {
+			// UC-003 A1: nicht erreichbar oder nicht lesbar; der Text des Anbieters wird nicht weitergereicht
+			log.warn("KI-Modell lieferte keinen Textreport: {}", ex.getClass().getSimpleName());
+			throw new KiModellNichtErreichbarException(ex);
+		}
+	}
+
+	private static Optional<Textreport> textreport(KiTextreportAntwort antwort) {
+		if (antwort == null || isBlank(antwort.ueberblick()) || antwort.abschnitte() == null) {
+			return Optional.empty();
+		}
+		List<Abschnitt> abschnitte = new ArrayList<>();
+		for (KiTextreportAntwort.Abschnitt abschnitt : antwort.abschnitte()) {
+			if (abschnitt != null && !isBlank(abschnitt.handlungsfeld()) && !isBlank(abschnitt.wuerdigung())) {
+				abschnitte.add(new Abschnitt(abschnitt.handlungsfeld(), abschnitt.wuerdigung(),
+						(abschnitt.naechsterSchritt() != null) ? abschnitt.naechsterSchritt() : ""));
+			}
+		}
+		return abschnitte.isEmpty() ? Optional.empty() : Optional.of(new Textreport(antwort.ueberblick(), abschnitte));
 	}
 
 	/** Schlüssel der einen Frage an Jev; er geht nicht ans Modell. */

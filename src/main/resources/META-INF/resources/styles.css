@@ -131,3 +131,79 @@
 .devace-dialog-eintrag > div > span:first-child {
   font-size: 0.875rem;
 }
+
+/* Auswertung zum Abschluss (UC-003). */
+.devace-assessment-titel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.devace-radar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.devace-radar-svg {
+  width: 100%;
+  max-width: 22rem;
+  height: auto;
+}
+
+.devace-radar-ring,
+.devace-radar-achse {
+  fill: none;
+  stroke: color-mix(in srgb, currentColor 25%, transparent);
+  stroke-width: 1;
+}
+
+.devace-radar-flaeche {
+  fill: color-mix(in srgb, #22c3e6 35%, transparent);
+  stroke: #22c3e6;
+  stroke-width: 2;
+}
+
+.devace-radar-punkt {
+  fill: #22c3e6;
+}
+
+.devace-radar-text {
+  fill: currentColor;
+  font-size: 10px;
+}
+
+.devace-score-liste > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+}
+
+.devace-score-wert {
+  font-weight: 600;
+  color: #22c3e6;
+}
+
+.devace-auswertung-felder {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.devace-auswertung-feld {
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.devace-auswertung-feld > p {
+  margin: 0.5rem 0 0;
+}
+
+.devace-naechster-schritt {
+  color: #22c3e6;
+}
