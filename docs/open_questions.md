@@ -253,13 +253,14 @@ UC-002 setzt voraus, dass ein Starthinweis hinterlegt ist. Kein Use Case im Diag
 **Element:** UC-002 A2
 **Raised by:** /use-case-spec, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
 
 Die Vision verlangt den Hinweis vor jedem Assessment. Bei der Wiederaufnahme läuft dasselbe Assessment weiter.
 
 **Answer:** Bestätigt: Nein, der bereits bestätigte Starthinweis gilt für das laufende Assessment.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-002 A2
 
 ## OQ-021: Verfällt eine Einladung, mit der noch kein Assessment gestartet wurde?
 
