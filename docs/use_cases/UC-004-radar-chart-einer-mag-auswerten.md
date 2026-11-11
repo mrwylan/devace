@@ -20,7 +20,7 @@
 ## Hauptablauf
 
 1. Die Teamleitung öffnet die Auswertung.
-2. Das System zeigt die MAGs der Teamleitung zur Auswahl an, bei der gewählten MAG die Rollen, zu denen Scores vorliegen.
+2. Das System zeigt die MAGs der Teamleitung, zu denen Scores vorliegen, zur Auswahl an, bei der gewählten MAG die Rollen, zu denen Scores vorliegen.
 3. Die Teamleitung wählt eine MAG und eine Rolle.
 4. Das System zeigt das Radar-Chart der MAG und Rolle mit dem Wert je Handlungsfeld.
 
@@ -68,9 +68,9 @@ Die Teamleitung wertet nur MAGs aus, die ihr zugeordnet sind.
 
 Das System erstellt das Radar-Chart auch für kleine MAGs. Es verlangt keine Mindestzahl an Scores.
 
-### BR-004: Nur Rollen mit Scores
+### BR-004: Nur MAGs und Rollen mit Scores
 
-Zur Auswahl stehen nur Rollen, zu denen die gewählte MAG mindestens einen Score hat.
+Zur Auswahl stehen nur MAGs der Teamleitung, zu denen mindestens ein Score vorliegt, und nur Rollen, zu denen die gewählte MAG mindestens einen Score hat.
 
 ### BR-005: Nur Mittelwerte
 
