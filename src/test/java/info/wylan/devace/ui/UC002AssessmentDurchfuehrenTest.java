@@ -380,6 +380,15 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 		assertThat(antwortFeld().getAriaLabel()).contains("Ihre Antwort");
 	}
 
+	@Test
+	@UseCase(id = "UC-002", scenario = "Main Success Scenario", requirements = { "NFR-010" })
+	void oberflaeche_formatiert_nach_de_ch() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		navigate(AssessmentView.class, referenz);
+
+		assertThat(com.vaadin.flow.component.UI.getCurrent().getLocale()).isEqualTo(java.util.Locale.forLanguageTag("de-CH"));
+	}
+
 	// ---------------------------------------------------------------- Hilfen
 
 	/** Legt eine Einladung an; das Ablaufdatum folgt aus Erstellung und Gültigkeit (UC-001 BR-008). */

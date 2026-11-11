@@ -345,4 +345,21 @@ class KiModellClientTest {
 		assertThat(this.pfade).hasSize(1);
 	}
 
+	@Test
+	@UseCase(id = "UC-002", scenario = "A5: Bewertung nicht möglich", requirements = { "NFR-006" })
+	void haelt_mit_wiederholungen_das_gesamtbudget_von_10_sekunden_ein() {
+		// jeder Versuch antwortet erst nach 2,8 s mit 429: drei volle Versuche plus Wartezeiten lägen über 10 s
+		this.verzoegerung = 2_800;
+		this.status = 429;
+		this.antwortKoerper = "{\"error\":{\"message\":\"zu viele\",\"code\":429}}";
+		long start = System.nanoTime();
+
+		assertThatThrownBy(() -> bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung()))
+			.isInstanceOf(KiModellNichtErreichbarException.class);
+
+		long dauerMs = (System.nanoTime() - start) / 1_000_000;
+		assertThat(dauerMs).isLessThanOrEqualTo(10_500L);
+		assertThat(this.pfade).hasSizeBetween(1, 3);
+	}
+
 }

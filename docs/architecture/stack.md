@@ -13,7 +13,7 @@ column from the integration layer up, and `/use-case-coverage` searches for the 
 |-------------|------------------------------------------------------------------|--------------------|-------------------------|-------------------------------------------|
 | Migration   | Flyway, PostgreSQL                                               | `flyway-schema`    | –                       | `src/main/resources/db/migration`         |
 | Persistence | jOOQ (generated from the migrated schema)                        | `jooq-persistence` | `jooq-persistence-test` | `info.wylan.devace.persistence`           |
-| Client      | OpenRouter: Spring AI for text models, `RestClient` for the decision model Jev (ADR-003); e-mail via SMTP | `spring-client`    | `spring-client-test`    | `info.wylan.devace.client.<system>`       |
+| Client      | OpenRouter: Spring AI for text models, `RestClient` for the decision model Jev (ADR-004); e-mail via SMTP | `spring-client`    | `spring-client-test`    | `info.wylan.devace.client.<system>`       |
 | Service     | Spring Boot services                                             | `spring-service`   | `spring-service-test`   | `info.wylan.devace.service`               |
 | API         | –                                                                | –                  | –                       | –                                         |
 | UI          | Vaadin 25 Flow, Aura theme, dark color scheme                    | `vaadin-flow-ui`   | `vaadin-flow-ui-test`   | `info.wylan.devace.ui`                    |

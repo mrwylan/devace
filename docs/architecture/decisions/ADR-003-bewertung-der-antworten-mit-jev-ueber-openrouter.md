@@ -1,8 +1,9 @@
 # ADR-003: Die Antworten ordnet das Entscheidungsmodell Jev über OpenRouter einer Stufe zu
 
-**Status:** Accepted  
+**Status:** Superseded  
 **Date:** 2026-11-11  
-**Requirements:** NFR-009, NFR-006, NFR-001, C-005, C-001, FR-006, FR-016
+**Requirements:** NFR-009, NFR-006, NFR-001, C-005, C-001, FR-006, FR-016  
+**Superseded by:** ADR-004
 
 ## Context
 
