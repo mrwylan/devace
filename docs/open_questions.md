@@ -948,21 +948,24 @@ BR-003 verlangt jetzt, dass das System den Textreport auf wörtliche Antworttext
 **Element:** UC-008 step 1
 **Raised by:** /use-case-coverage, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Die Verwaltung von MAGs und Rollen war über einen Routen-Alias die Startseite. Eine Teamleitung landete nach der Anmeldung auf einer Seite, die sie abweist (BR-007). Kein Use Case nennt eine Startseite. Lesarten: je nach Berechtigung weiterleiten; Einladungen für alle; Verwaltung bleibt Startseite.
 
 **Answer:** Je nach Berechtigung: Der Administrator landet bei MAGs und Rollen, die Teamleitung bei den Einladungen; für andere Berechtigungen gibt es noch keine Ansicht.
 **Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-008 step 1, UC-008 BR-008
+
 
 ## OQ-074: Zeigt die Rollen-Übersicht die Fragenkataloge einer Rolle?
 
 **Element:** UC-008 step 2
 **Raised by:** /use-case-coverage, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Die Rollen-Übersicht hat eine Spalte „Fragenkataloge“ mit Version und Status. Schritt 2 nennt nur „die vorhandenen Rollen“. Lesarten: Spalte bleibt und Schritt 2 nennt sie; Spalte fällt weg.
 
 **Answer:** Die Spalte bleibt; Schritt 2 nennt für jede Rolle ihre Fragenkataloge mit Version und Status.
 **Answered by:** Jakob Albrecht, 2026-11-11
+**Resolved in:** UC-008 step 2

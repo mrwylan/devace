@@ -7,7 +7,7 @@
 **Primärer Akteur:** Administrator  
 **Ziel:** Der Administrator hält MAGs und Rollen aktuell, damit Einladungen, Fragenkataloge und Radar-Charts der Organisation entsprechen.  
 **Auslösendes Ereignis:** Der Administrator fordert die Verwaltung von MAGs und Rollen an.  
-**Status:** Genehmigt  
+**Status:** Getestet  
 
 **Anforderungen:** [FR-015, NFR-005, NFR-010](../requirements.md)  
 **Schichten:** UI  
@@ -19,8 +19,8 @@
 
 ## Hauptablauf
 
-1. Der Administrator öffnet die Verwaltung von MAGs und Rollen.
-2. Das System zeigt die vorhandenen MAGs mit Scrum Team, Linienteam und Teamleitung sowie die vorhandenen Rollen an. Es bietet die vorhandenen Teamleitungen zur Zuordnung an.
+1. Der Administrator öffnet die Verwaltung von MAGs und Rollen; nach der Anmeldung führt ihn die Startseite direkt dorthin (BR-008).
+2. Das System zeigt die vorhandenen MAGs mit Scrum Team, Linienteam und Teamleitung sowie die vorhandenen Rollen mit ihren Fragenkatalogen (Version und Status) an. Es bietet die vorhandenen Teamleitungen zur Zuordnung an.
 3. Der Administrator wählt, ob er eine MAG oder eine Rolle anlegt oder einen vorhandenen Eintrag ändert.
 4. Der Administrator gibt die Angaben ein: bei einer MAG Scrum Team, Linienteam und optional eine Teamleitung, bei einer Rolle den Namen.
 5. Der Administrator bestätigt die Angaben.
@@ -98,3 +98,7 @@ Der Use Case legt MAGs und Rollen an und ändert sie. Er löscht sie nicht.
 ### BR-007: Nur für Administratoren
 
 Nur der angemeldete Administrator verwaltet MAGs und Rollen. Aufrufe ohne Anmeldung und passende Berechtigung werden abgewiesen. Die Navigation zeigt Einträge, für die der Administrator keine passende Berechtigung hat, deaktiviert.
+
+### BR-008: Startseite nach der Anmeldung
+
+Nach der Anmeldung führt die Startseite den Administrator zur Verwaltung von MAGs und Rollen und eine Teamleitung zu den Einladungen (UC-001). Für andere Berechtigungen zeigt sie den Hinweis „Für Ihre Berechtigung gibt es noch keine Ansicht.“
