@@ -969,3 +969,42 @@ Die Rollen-Übersicht hat eine Spalte „Fragenkataloge“ mit Version und Statu
 **Answer:** Die Spalte bleibt; Schritt 2 nennt für jede Rolle ihre Fragenkataloge mit Version und Status.
 **Answered by:** Jakob Albrecht, 2026-11-11
 **Resolved in:** UC-008 step 2
+
+
+## OQ-075: Welchen Wortlaut hat der Hinweis, dass kein Entwurf zur Freigabe vorliegt?
+
+**Element:** UC-007 A1
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Answered
+
+A1 nennt den Inhalt des Hinweises, aber keinen Wortlaut. Lesarten: „Es liegt kein Entwurf zur Freigabe vor.“; ein anderer Text.
+
+**Answer:** „Es liegt kein Entwurf zur Freigabe vor.“
+**Answered by:** Jakob Albrecht, 2026-11-11
+
+
+## OQ-076: Welchen Wortlaut hat der Hinweis auf einen unvollständigen Entwurf?
+
+**Element:** UC-007 A2
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Answered
+
+A2 nennt den Inhalt des Hinweises (Handlungsfelder ohne Frage, Fragen mit unvollständigem Entscheidungsmodell), aber keinen Wortlaut. Lesarten: Titel mit zwei Aufzählungen; ein Satz je Befund.
+
+**Answer:** Titel „Der Entwurf ist unvollständig und wird nicht freigegeben.“, darunter „Handlungsfelder ohne Frage: …“ mit den Namen und „Fragen mit unvollständigem Entscheidungsmodell: Frage 3, …“ mit den Nummern der Fragen.
+**Answered by:** Jakob Albrecht, 2026-11-11
+
+
+## OQ-077: Welchen Wortlaut hat die Bestätigung der Freigabe?
+
+**Element:** UC-007 step 9
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Answered
+
+Schritt 9 nennt die Bestätigung, aber keinen Wortlaut. Lesarten: „Fragenkatalog freigegeben.“; ein Text mit Rolle und Version.
+
+**Answer:** „Fragenkatalog freigegeben.“
+**Answered by:** Jakob Albrecht, 2026-11-11

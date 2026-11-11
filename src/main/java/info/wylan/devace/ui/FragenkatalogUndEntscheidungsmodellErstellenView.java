@@ -61,7 +61,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 	private static final int VORSCHLAG_ANZAHL = 3;
 
 	/** Bezeichnung der Stufen 0 bis 5 (Glossar: Stufe). */
-	private static final List<String> STUFEN = List.of("Nie gehört", "Schon mal gehört", "Grundverständnis",
+	static final List<String> STUFEN =List.of("Nie gehört", "Schon mal gehört", "Grundverständnis",
 			"Sicherer Umgang", "Fortgeschrittene Expertise", "Expert:in / Lehrniveau");
 
 	private final FragenkatalogService service;

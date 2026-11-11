@@ -1,5 +1,6 @@
 package info.wylan.devace.service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,7 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import info.wylan.devace.persistence.BenutzerKonto;
+import info.wylan.devace.persistence.BenutzerRepository;
+import info.wylan.devace.persistence.Fragenkatalog;
 import info.wylan.devace.persistence.FragenkatalogRepository;
+import info.wylan.devace.persistence.FreigabeKandidat;
 import info.wylan.devace.persistence.Handlungsfeld;
 import info.wylan.devace.persistence.HandlungsfeldRepository;
 import info.wylan.devace.persistence.KatalogFrage;
@@ -17,14 +22,16 @@ import info.wylan.devace.persistence.RolleListItem;
 import info.wylan.devace.persistence.RolleRepository;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Erstellung von Fragenkatalog und Entscheidungsmodell (UC-006).
+ * Erstellung von Fragenkatalog und Entscheidungsmodell (UC-006) und Freigabe des Fragenkatalogs (UC-007).
  */
 // UC-006 BR-009: Nur der angemeldete Administrator erstellt Fragenkataloge und Entscheidungsmodelle.
+// UC-007 BR-007: Nur der angemeldete Administrator gibt Fragenkataloge frei.
 @PreAuthorize("hasRole('ADMINISTRATOR')")
 @Service
 @Validated
@@ -43,12 +50,19 @@ public class FragenkatalogService {
 
 	private final KiModellClient kiModell;
 
+	private final BenutzerRepository benutzerRepository;
+
+	private final Clock clock;
+
 	public FragenkatalogService(RolleRepository rolleRepository, HandlungsfeldRepository handlungsfeldRepository,
-			FragenkatalogRepository katalogRepository, KiModellClient kiModell) {
+			FragenkatalogRepository katalogRepository, KiModellClient kiModell, BenutzerRepository benutzerRepository,
+			Clock clock) {
 		this.rolleRepository = rolleRepository;
 		this.handlungsfeldRepository = handlungsfeldRepository;
 		this.katalogRepository = katalogRepository;
 		this.kiModell = kiModell;
+		this.benutzerRepository = benutzerRepository;
+		this.clock = clock;
 	}
 
 	/**
@@ -218,6 +232,89 @@ public class FragenkatalogService {
 		}
 		if (!fehler.isEmpty()) {
 			throw new EntwurfUngueltigException(fehler);
+		}
+	}
+
+	// ---------------------------------------------------------------- UC-007 Fragenkatalog freigeben
+
+	/**
+	 * UC-007 step 2: die Rollen mit einem Entwurf; A1, wenn es keine gibt.
+	 */
+	public List<FreigabeKandidat> rollenMitEntwurf() {
+		List<FreigabeKandidat> kandidaten = this.katalogRepository.findRollenMitEntwurf();
+		if (kandidaten.isEmpty()) {
+			throw new KeinEntwurfZurFreigabeException();
+		}
+		return kandidaten;
+	}
+
+	/**
+	 * UC-007 step 4: der Entwurf der Rolle mit Fragen und Entscheidungsmodell zur Prüfung; A1, wenn die Rolle
+	 * keinen Entwurf (mehr) hat.
+	 */
+	public Fragenkatalog entwurfZurPruefung(long rolleId) {
+		pruefeRolle(rolleId);
+		return this.katalogRepository.findEntwurf(rolleId).orElseThrow(KeinEntwurfZurFreigabeException::new);
+	}
+
+	/**
+	 * UC-007 step 6: prüft die Vollständigkeit des Entwurfs und liefert die Zusammenfassung; A2, wenn er
+	 * unvollständig ist.
+	 */
+	public FreigabeZusammenfassung freigabePruefen(long rolleId) {
+		Fragenkatalog entwurf = entwurfZurPruefung(rolleId);
+		List<Handlungsfeld> felder = this.handlungsfelder();
+		pruefeVollstaendigkeit(entwurf, felder);
+		Map<Long, Integer> anzahl = zaehleJeHandlungsfeld(entwurf.fragen());
+		List<FreigabeZusammenfassung.HandlungsfeldAnzahl> jeFeld = felder.stream()
+			.map(f -> new FreigabeZusammenfassung.HandlungsfeldAnzahl(f.name(), anzahl.getOrDefault(f.id(), 0)))
+			.toList();
+		return new FreigabeZusammenfassung(rolleId, rolleName(rolleId), entwurf.version(), jeFeld);
+	}
+
+	/**
+	 * UC-007 steps 7–8: gibt den bestätigten Entwurf frei und archiviert die bisher freigegebene Version der Rolle;
+	 * A1, wenn der Entwurf dieser Version nicht mehr vorliegt, A2, wenn er unvollständig ist.
+	 */
+	@Transactional
+	public void freigeben(long rolleId, int version) {
+		Fragenkatalog entwurf = entwurfZurPruefung(rolleId);
+		if (entwurf.version() != version) {
+			throw new KeinEntwurfZurFreigabeException();
+		}
+		pruefeVollstaendigkeit(entwurf, this.handlungsfelder());
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		BenutzerKonto administrator = this.benutzerRepository.findByBenutzername(name)
+			.orElseThrow(() -> new IllegalStateException("Angemeldeter Benutzer ohne Konto"));
+		// UC-007 BR-002: Je Rolle ist höchstens eine Version freigegeben; die bisherige wird archiviert.
+		this.katalogRepository.archiviereFreigegebene(rolleId);
+		// UC-007 BR-004: Die Freigabe ändert nur Status, Zeitpunkt und Administrator, nicht den Inhalt.
+		// UC-007 BR-005: Zeitpunkt der Freigabe und Administrator werden festgehalten.
+		boolean freigegeben = this.katalogRepository.freigeben(entwurf.id(), LocalDateTime.now(this.clock),
+				administrator.id());
+		// UC-007 BR-003: Nur ein Entwurf wird freigegeben.
+		if (!freigegeben) {
+			throw new KeinEntwurfZurFreigabeException();
+		}
+	}
+
+	// UC-007 BR-001: Jedes Handlungsfeld hat eine Frage, jede Frage eine Vorgabe je Stufe 0 bis 5.
+	private static void pruefeVollstaendigkeit(Fragenkatalog entwurf, List<Handlungsfeld> felder) {
+		Map<Long, Integer> anzahl = zaehleJeHandlungsfeld(entwurf.fragen());
+		List<String> ohneFrage = felder.stream()
+			.filter(f -> anzahl.getOrDefault(f.id(), 0) == 0)
+			.map(Handlungsfeld::name)
+			.toList();
+		List<Integer> unvollstaendig = new ArrayList<>();
+		for (int i = 0; i < entwurf.fragen().size(); i++) {
+			List<String> vorgaben = entwurf.fragen().get(i).vorgaben();
+			long belegt = vorgaben.stream().filter(v -> v != null && !v.isBlank()).count();
+			if (vorgaben.size() != STUFEN || belegt != STUFEN) {
+				unvollstaendig.add(i + 1);
+			}
+		}
+		if (!ohneFrage.isEmpty() || !unvollstaendig.isEmpty()) {
+			throw new EntwurfUnvollstaendigException(ohneFrage, unvollstaendig);
 		}
 	}
 
