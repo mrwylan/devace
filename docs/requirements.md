@@ -17,14 +17,15 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | FR-008 | Textreport herunterladen | Als Teilnehmer möchte ich nach Abschluss des Assessments einen Textreport einmalig herunterladen, damit ich meine Ergebnisse selbst verwalten kann. | High | Open |
 | FR-009 | Antworten löschen | Als Teilnehmer möchte ich, dass meine einzelnen Antworten nach Erstellung des Textreports gelöscht werden, damit von meinem Assessment nur die Scores bleiben. | High | Open |
 | FR-010 | Radar-Chart je MAG und Rolle ansehen | Als Teamleitung möchte ich nach der Anmeldung das Radar-Chart meiner MAG je Rolle ansehen, auch für kleine MAGs, damit ich Entwicklungsgespräche an Handlungsfeldern ausrichten kann. | High | Open |
-| FR-011 | Radar-Charts für Schulungsplanung ansehen | Als Schulungsverantwortliche möchte ich nach der Anmeldung die Radar-Charts aller MAGs ansehen, damit ich den Schulungsbedarf anhand der Lücken priorisieren kann. | Medium | Open |
+| FR-011 | Radar-Charts für Schulungsplanung ansehen | Als Schulungsverantwortliche möchte ich nach der Anmeldung die Radar-Charts aller MAGs ansehen (nur Radar-Charts, keine Einladungen), damit ich den Schulungsbedarf anhand der Lücken priorisieren kann. | Medium | Open |
 | FR-012 | Fragenkatalog mit KI erstellen | Als Administrator möchte ich mit KI-Unterstützung einen Fragenkatalog je Rolle erstellen, der die Handlungsfelder gezielt prüft, damit das Assessment die Kompetenzen mit Alltagsrelevanz abdeckt. | High | Open |
 | FR-013 | Entscheidungsmodell pflegen | Als Administrator möchte ich zu jeder Frage festlegen, welcher Stufe welche Antwort entspricht, damit die KI die Antworten fair zuordnen kann. | High | Open |
 | FR-014 | Fragenkatalog freigeben | Als Administrator möchte ich einen Fragenkatalog samt Entscheidungsmodell prüfen und freigeben, damit nur geprüfte Fragen in Assessments verwendet werden. | High | Open |
-| FR-015 | MAGs und Rollen verwalten | Als Administrator möchte ich MAGs und Rollen anlegen und ändern, damit Einladungen und Radar-Charts der Organisation entsprechen. | Medium | Open |
+| FR-015 | MAGs und Rollen verwalten | Als Administrator möchte ich MAGs mit ihrer Teamleitung und Rollen anlegen und ändern, damit Einladungen und Radar-Charts der Organisation entsprechen. | Medium | Open |
 | FR-016 | KI-Bewertung mit Testfällen absichern | Als Administrator möchte ich Testfälle ausführen und deren Ergebnisse einsehen, damit Fehler der KI-Bewertung eingegrenzt und die Vorgaben verfeinert werden können. | High | Open |
 | FR-017 | Zuordnung der Kompetenzmatrix dokumentieren | Als Administrator möchte ich festhalten, welche Spalten der Kompetenzmatrix welchem Handlungsfeld zugeordnet sind, damit die Verdichtung nachvollziehbar ist. | Medium | Open |
 | FR-018 | Persönliche Auswertung ansehen | Als Teilnehmer möchte ich beim Abschluss meines Assessments mein Radar-Chart, meine Scores je Handlungsfeld und einen Textreport sehen, der meine Leistung würdigt, meine Einstufung begründet und Hinweise auf meine nächsten Investitionen gibt, damit ich meine Kompetenz einordnen und meine Weiterentwicklung gezielt planen kann. | High | Open |
+| FR-019 | Starthinweis pflegen | Als Administrator möchte ich den Starthinweis pflegen (eingesetzte KI-Modelle, nicht zu erfassende Angaben, Geltung der Firmenweisungen zum Umgang mit KI), damit Teilnehmer vor jedem Assessment den aktuellen Hinweis lesen. | Medium | Open |
 
 ## Nicht-funktionale Anforderungen
 
