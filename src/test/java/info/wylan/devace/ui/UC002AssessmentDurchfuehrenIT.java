@@ -100,7 +100,7 @@ class UC002AssessmentDurchfuehrenIT extends AbstractBasePlaywrightIT {
 			antworten("Wir planen in jedem Sprint Zeit für Aufräumarbeiten ein.");
 
 			PlaywrightAssertions.assertThat(page.getByText("Alle Fragen beantwortet")).isVisible();
-			PlaywrightAssertions.assertThat(page.locator("#assessment-abschliessen")).isDisabled();
+			PlaywrightAssertions.assertThat(page.locator("#assessment-abschliessen")).isEnabled();
 			assertThat(jdbc.sql("""
 					select count(*) from bewertung b join antwort an on an.id = b.antwort_id
 					join assessment a on a.id = an.assessment_id join einladung e on e.id = a.einladung_id
