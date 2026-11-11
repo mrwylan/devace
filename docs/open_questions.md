@@ -183,13 +183,14 @@ Die Vision löscht nur die Antworten. Ein bleibender Assessment-Datensatz mit Ze
 **Element:** Entity: ANTWORT.text
 **Raised by:** /entity-model, 2026-11-07
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** 500 Zeichen.
 
 Die Vision nennt keine Grenze.
 
 **Answer:** Bestätigt: 500 Zeichen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** Entity: ANTWORT.text
 
 ## OQ-015: Welche Rollen darf die Teamleitung für eine Einladung wählen?
 
