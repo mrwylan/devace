@@ -7,7 +7,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
- * UC-002 BR-009: Laufende Assessments ohne Eingabe seit 7 Tagen werden mit ihren Antworten gelöscht (NFR-004).
+ * UC-002 BR-009: Laufende Assessments ohne Eingabe seit 7 Tagen werden mit ihren Antworten gelöscht (NFR-004);
+ * UC-003 BR-002: Scores werden nach fünf Jahren gelöscht (C-003).
  */
 @Configuration(proxyBeanMethods = false)
 @EnableScheduling
@@ -27,6 +28,15 @@ class AssessmentAufbewahrung {
 		int geloescht = this.service.loescheLiegengebliebene();
 		if (geloescht > 0) {
 			log.info("{} liegengebliebene Assessments gelöscht", geloescht);
+		}
+	}
+
+	// UC-003 BR-002: einmal täglich; Scores bleiben fünf Jahre erhalten.
+	@Scheduled(cron = "0 30 3 * * *")
+	void loescheAlteScores() {
+		int geloescht = this.service.loescheAlteScores();
+		if (geloescht > 0) {
+			log.info("{} Scores nach fünf Jahren gelöscht", geloescht);
 		}
 	}
 

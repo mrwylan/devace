@@ -890,3 +890,39 @@ Alle UC-002-Mockups zeigen unten links „devace · Kompetenz-Assessment · Ziel
 **Answer:** Nein, die Fußzeilenlinks gehören nicht zu UC-002; die Ansicht baut sie nicht.
 **Answered by:** Jakob Albrecht, 2026-11-11
 **Resolved in:** UC-002
+
+## OQ-069: Welchen Wortlaut haben die Hinweise der Auswertung, von A1 und von A3?
+
+**Element:** UC-003
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Answered
+
+Die Spezifikation sagt nur, das System weise darauf hin. Das Mockup zeigt die Texte der Auswertung, von A1 („Textreport nicht erstellt“) und von A3 („Textreport nicht mehr verfügbar“).
+
+**Answer:** Der Wortlaut des Mockups gilt. Der Hinweis unter dem Download nennt wegen OQ-071 die sofortige Löschung der Antworten statt „spätestens 1 Stunde“.
+**Answered by:** Jakob Albrecht, 2026-11-11
+
+## OQ-070: In welchem Format lädt der Teilnehmer den Textreport herunter?
+
+**Element:** UC-003 step 7
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Answered
+
+Schritt 6 und 7 nennen den Download, aber kein Format. Lesarten: Textdatei, Markdown, PDF.
+
+**Answer:** PDF.
+**Answered by:** Jakob Albrecht, 2026-11-11
+
+## OQ-071: Wann werden die Antworten nach dem Abschluss gelöscht?
+
+**Element:** UC-003 BR-007
+**Raised by:** /use-case-implement, 2026-11-11
+**Blocking:** No
+**Status:** Answered
+
+BR-007 löscht die Antworten nach dem Download, spätestens 1 Stunde nach Erstellung des Textreports. Dafür braucht das System den Zeitpunkt des Abschlusses; ASSESSMENT hat kein Attribut dafür. Lesarten: (a) Attribut abgeschlossen_am und Löschlauf; (b) sofort beim Abschluss löschen.
+
+**Answer:** Sofort beim Abschluss: Sobald Textreport und Scores vorliegen, werden die Antworten gelöscht, noch vor dem Download. Schritt 7, BR-007 und der Erfolgsfall sind entsprechend anzupassen.
+**Answered by:** Jakob Albrecht, 2026-11-11

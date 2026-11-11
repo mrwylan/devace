@@ -12,6 +12,7 @@ import static info.wylan.devace.persistence.db.Tables.ANTWORT;
 import static info.wylan.devace.persistence.db.Tables.ASSESSMENT;
 import static info.wylan.devace.persistence.db.Tables.BEWERTUNG;
 import static info.wylan.devace.persistence.db.Tables.FRAGE;
+import static info.wylan.devace.persistence.db.Tables.HANDLUNGSFELD;
 
 /**
  * Assessments mit ihren Antworten und Stufen (UC-002). Keine Tabelle trägt eine E-Mail-Adresse oder einen Namen.
@@ -20,6 +21,8 @@ import static info.wylan.devace.persistence.db.Tables.FRAGE;
 public class AssessmentRepository {
 
 	public static final String LAUFEND = "Laufend";
+
+	public static final String ABGESCHLOSSEN = "Abgeschlossen";
 
 	private final DSLContext ctx;
 
@@ -32,7 +35,7 @@ public class AssessmentRepository {
 	 * Grenze liegt.
 	 */
 	public Optional<LaufendesAssessment> findLaufend(long einladungId, LocalDateTime grenze) {
-		return this.ctx.select(ASSESSMENT.ID, ASSESSMENT.ROLLE_ID, ASSESSMENT.FRAGENKATALOG_ID)
+		return this.ctx.select(ASSESSMENT.ID, ASSESSMENT.MAG_ID, ASSESSMENT.ROLLE_ID, ASSESSMENT.FRAGENKATALOG_ID)
 			.from(ASSESSMENT)
 			.where(ASSESSMENT.EINLADUNG_ID.eq(einladungId))
 			.and(ASSESSMENT.STATUS.eq(LAUFEND))
@@ -117,6 +120,33 @@ public class AssessmentRepository {
 			// UC-002 BR-009: Nach 7 Tagen ohne Eingabe wird das Assessment mit seinen Antworten gelöscht.
 			.and(ASSESSMENT.LETZTE_EINGABE_AM.lt(grenze))
 			.execute();
+	}
+
+	/**
+	 * UC-003 step 2: die Antworten mit ihrer Stufe und dem Handlungsfeld ihrer Frage, in der Reihenfolge des
+	 * Fragenkatalogs.
+	 */
+	public List<BewerteteAntwort> bewerteteAntworten(long assessmentId) {
+		return this.ctx.select(FRAGE.HANDLUNGSFELD_ID, FRAGE.TEXT, ANTWORT.TEXT, BEWERTUNG.STUFE)
+			.from(ANTWORT)
+			.join(FRAGE)
+			.on(FRAGE.ID.eq(ANTWORT.FRAGE_ID))
+			.join(BEWERTUNG)
+			.on(BEWERTUNG.ANTWORT_ID.eq(ANTWORT.ID))
+			.join(HANDLUNGSFELD)
+			.on(HANDLUNGSFELD.ID.eq(FRAGE.HANDLUNGSFELD_ID))
+			.where(ANTWORT.ASSESSMENT_ID.eq(assessmentId))
+			.orderBy(FRAGE.POSITION)
+			.fetch(Records.mapping(BewerteteAntwort::new));
+	}
+
+	/**
+	 * UC-003 step 4 und 7: setzt das Assessment auf abgeschlossen und löscht seine Antworten mit ihren Stufen.
+	 */
+	public void abschliessen(long assessmentId) {
+		this.ctx.update(ASSESSMENT).set(ASSESSMENT.STATUS, ABGESCHLOSSEN).where(ASSESSMENT.ID.eq(assessmentId)).execute();
+		// UC-003 BR-007: Die Antworten werden gelöscht, die Scores bleiben erhalten.
+		this.ctx.deleteFrom(ANTWORT).where(ANTWORT.ASSESSMENT_ID.eq(assessmentId)).execute();
 	}
 
 }
