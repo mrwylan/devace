@@ -16,9 +16,9 @@ rectangle "devace" {
     ' FR-007, FR-008, FR-009
     usecase "UC-003\nAssessment abschließen und\nTextreport herunterladen" as UC003 #PaleTurquoise
     ' FR-010
-    usecase "UC-004\nRadar-Chart einer MAG auswerten" as UC004
+    usecase "UC-004\nRadar-Chart einer MAG auswerten" as UC004 #PaleTurquoise
     ' FR-011
-    usecase "UC-005\nRadar-Charts für die\nSchulungsplanung auswerten" as UC005
+    usecase "UC-005\nRadar-Charts für die\nSchulungsplanung auswerten" as UC005 #PaleTurquoise
     ' FR-012, FR-013
     usecase "UC-006\nFragenkatalog und\nEntscheidungsmodell erstellen" as UC006 #PaleTurquoise
     ' FR-014
