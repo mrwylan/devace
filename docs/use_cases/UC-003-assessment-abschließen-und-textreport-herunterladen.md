@@ -8,7 +8,7 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Der Teilnehmer schließt sein Assessment ab, sieht seine Auswertung mit Radar-Chart, Scores und Textreport und lädt den Textreport einmalig herunter, damit er seine Ergebnisse selbst verwaltet und von seinem Assessment nur die Scores bleiben.  
 **Auslösendes Ereignis:** Der Teilnehmer fordert den Abschluss seines Assessments an.  
-**Status:** Genehmigt  
+**Status:** Getestet  
 
 **Anforderungen:** [FR-007, FR-008, FR-009, FR-018, NFR-001, NFR-002, NFR-003, NFR-006, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
