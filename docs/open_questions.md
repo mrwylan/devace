@@ -741,3 +741,23 @@ BR-008 lässt die Einladung bis 24:00 Uhr des letzten Gültigkeitstags gelten. U
 **Assumed:** Der Tag der Erstellung zählt als erster Tag: Eine Einladung mit einem Tag Gültigkeit gilt bis 24 Uhr des Erstellungstags; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
 
 BR-008 lässt die Gültigkeit mit der Erstellung beginnen und bis 24 Uhr des letzten Tages gelten, nennt aber nicht, ob der Erstellungstag mitzählt. Lesart (b): Der Erstellungstag zählt nicht, das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage.
+
+## OQ-058: Gilt für das Radar-Chart einer kleinen MAG wirklich keine Mindestzahl an Scores?
+
+**Element:** UC-004 BR-003
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Keine Mindestzahl: Das Radar-Chart entsteht auch aus dem Score eines einzigen Assessments (Vision: „auch für kleine MAGs“).
+
+Bei einer MAG mit einem einzigen Teilnehmer zeigt das Radar-Chart dessen Scores. Die Teamleitung kann sie damit der einen Person zuordnen, obwohl der Score keinen Verweis auf eine Person trägt (NFR-002). Lesarten: (a) keine Mindestzahl, wie die Vision sagt; (b) eine Mindestzahl, darunter kein Chart.
+
+## OQ-059: Wie erscheint ein Handlungsfeld ohne Score im Radar-Chart?
+
+**Element:** UC-004 BR-006
+**Raised by:** /use-case-spec, 2026-11-11
+**Blocking:** No
+**Status:** Open
+**Assumed:** Das Handlungsfeld erscheint ohne Wert (nicht als 0), mit der Achse im Chart.
+
+Ein Handlungsfeld ohne Frage hat nach UC-003 BR-001 keinen Score. Die Anforderung sagt nicht, wie das Radar-Chart ihn zeigt. Lesarten: (a) ohne Wert; (b) als 0; (c) Handlungsfeld entfällt im Chart.
