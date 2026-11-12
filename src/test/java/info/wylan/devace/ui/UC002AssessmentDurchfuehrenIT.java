@@ -2,6 +2,7 @@ package info.wylan.devace.ui;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import info.wylan.devace.TestcontainersConfiguration;
@@ -85,6 +86,10 @@ class UC002AssessmentDurchfuehrenIT extends AbstractBasePlaywrightIT {
 		@DisplayName("Steps 1-8: Starthinweis bestätigen und alle Fragen beantworten")
 		void starthinweis_bestaetigen_und_fragen_beantworten() {
 			PlaywrightAssertions.assertThat(page.getByText("UC002 Jev (Bewertung)")).isVisible();
+			// Schritt 2: der Hinweis, dass das KI-Modell weder Einladung noch E-Mail-Adresse erhält
+			PlaywrightAssertions.assertThat(page.getByText(Pattern.compile(
+					"KI-Modell erhält weder (die|Ihre) Einladung noch (die|Ihre) E-Mail-Adresse, nur die Frage und den Text (der|Ihrer) Antwort")))
+				.isVisible();
 			// NFR-010: die Seite meldet ihre Sprache (WCAG 3.1.1)
 			PlaywrightAssertions.assertThat(page.locator("html")).hasAttribute("lang", "de-CH");
 			PlaywrightAssertions.assertThat(page.locator("#assessment-starten")).isDisabled();
