@@ -2,7 +2,9 @@ package info.wylan.devace.persistence;
 
 import static info.wylan.devace.persistence.db.Tables.FRAGE;
 import static info.wylan.devace.persistence.db.Tables.FRAGENKATALOG;
+import static info.wylan.devace.persistence.db.Tables.ROLLE;
 import static info.wylan.devace.persistence.db.Tables.STUFENVORGABE;
+import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 
@@ -21,6 +23,8 @@ public class FragenkatalogRepository {
 	public static final String ENTWURF = "Entwurf";
 
 	public static final String FREIGEGEBEN = "Freigegeben";
+
+	public static final String ARCHIVIERT = "Archiviert";
 
 	private final DSLContext ctx;
 
@@ -114,6 +118,56 @@ public class FragenkatalogRepository {
 					.execute();
 			}
 		}
+	}
+
+	/**
+	 * UC-007 step 2: die Rollen mit einem Entwurf, nach Name geordnet, mit der bisher freigegebenen Version.
+	 */
+	public List<FreigabeKandidat> findRollenMitEntwurf() {
+		info.wylan.devace.persistence.db.tables.Fragenkatalog freigegeben = FRAGENKATALOG.as("freigegeben");
+		return this.ctx
+			.select(ROLLE.ID, ROLLE.NAME, FRAGENKATALOG.VERSION,
+					field(select(freigegeben.VERSION).from(freigegeben)
+						.where(freigegeben.ROLLE_ID.eq(ROLLE.ID))
+						.and(freigegeben.STATUS.eq(FREIGEGEBEN))))
+			.from(FRAGENKATALOG)
+			.join(ROLLE)
+			.on(ROLLE.ID.eq(FRAGENKATALOG.ROLLE_ID))
+			// UC-007 BR-003: Nur ein Entwurf wird freigegeben.
+			.where(FRAGENKATALOG.STATUS.eq(ENTWURF))
+			.orderBy(ROLLE.NAME)
+			.fetch(Records.mapping(FreigabeKandidat::new));
+	}
+
+	/**
+	 * UC-007 step 8: archiviert die freigegebene Version der Rolle, falls es eine gibt. Freigabezeitpunkt und
+	 * Administrator der archivierten Version bleiben erhalten.
+	 */
+	public void archiviereFreigegebene(long rolleId) {
+		// UC-007 BR-006: Nur der Status ändert sich; Assessments behalten ihren Fragenkatalog.
+		this.ctx.update(FRAGENKATALOG)
+			.set(FRAGENKATALOG.STATUS, ARCHIVIERT)
+			.where(FRAGENKATALOG.ROLLE_ID.eq(rolleId))
+			// UC-007 BR-002: Mit der Freigabe wird die bisher freigegebene Version archiviert.
+			.and(FRAGENKATALOG.STATUS.eq(FREIGEGEBEN))
+			.execute();
+	}
+
+	/**
+	 * UC-007 step 8: gibt den Entwurf mit der id frei und hält Zeitpunkt und Administrator fest; {@code false},
+	 * wenn der Katalog kein Entwurf (mehr) ist. Eine zweite freigegebene Version der Rolle führt zu einer
+	 * {@code DuplicateKeyException}.
+	 */
+	public boolean freigeben(long katalogId, LocalDateTime freigegebenAm, long freigegebenVonId) {
+		return this.ctx.update(FRAGENKATALOG)
+			.set(FRAGENKATALOG.STATUS, FREIGEGEBEN)
+			// UC-007 BR-005: Zeitpunkt und Administrator der Freigabe werden festgehalten.
+			.set(FRAGENKATALOG.FREIGEGEBEN_AM, freigegebenAm)
+			.set(FRAGENKATALOG.FREIGEGEBEN_VON_ID, freigegebenVonId)
+			.where(FRAGENKATALOG.ID.eq(katalogId))
+			// UC-007 BR-003: Freigegebene und archivierte Fragenkataloge bleiben unverändert.
+			.and(FRAGENKATALOG.STATUS.eq(ENTWURF))
+			.execute() == 1;
 	}
 
 	/**

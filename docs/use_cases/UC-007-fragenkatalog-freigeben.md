@@ -7,7 +7,7 @@
 **Primärer Akteur:** Administrator  
 **Ziel:** Der Administrator prüft den Entwurf eines Fragenkatalogs samt Entscheidungsmodell und gibt ihn frei, damit nur geprüfte Fragen in Assessments verwendet werden.  
 **Auslösendes Ereignis:** Der Administrator fordert die Freigabe eines Fragenkatalogs an.  
-**Status:** Genehmigt  
+**Status:** Getestet  
 
 **Anforderungen:** [FR-014, NFR-005, NFR-010, C-006](../requirements.md)  
 **Schichten:** UI  
@@ -27,24 +27,25 @@
 6. Das System prüft die Vollständigkeit des Entwurfs und zeigt eine Zusammenfassung mit der Rolle, der Version und der Zahl der Fragen je Handlungsfeld.
 7. Der Administrator bestätigt die Freigabe.
 8. Das System gibt den Entwurf frei und archiviert die bisher freigegebene Version der Rolle.
-9. Das System bestätigt dem Administrator die Freigabe.
+9. Das System bestätigt dem Administrator die Freigabe mit „Fragenkatalog freigegeben.“
 
 ## Alternativabläufe
 
 ### A1: Kein Entwurf vorhanden
 
-**Auslöser:** Es gibt keine Rolle mit einem Entwurf (Schritt 2)  
+**Auslöser:** Es gibt keine Rolle mit einem Entwurf (Schritt 2), oder der Entwurf der gewählten Rolle liegt bei der Freigabe nicht mehr in der zusammengefassten Version vor (Schritt 8)  
 **Ablauf:**
 
-1. Das System weist den Administrator darauf hin, dass kein Entwurf zur Freigabe vorliegt.
-2. Der Use Case endet.
+1. Das System weist den Administrator mit „Es liegt kein Entwurf zur Freigabe vor.“ darauf hin, dass kein Entwurf zur Freigabe vorliegt.
+2. Das System gibt keinen Entwurf frei.
+3. Der Use Case endet.
 
 ### A2: Entwurf unvollständig
 
 **Auslöser:** Der Entwurf ist nicht vollständig (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist den Administrator auf die Handlungsfelder ohne Frage und auf die Fragen mit unvollständigem Entscheidungsmodell hin.
+1. Das System weist den Administrator mit „Der Entwurf ist unvollständig und wird nicht freigegeben.“ auf die Handlungsfelder ohne Frage („Handlungsfelder ohne Frage: …“ mit ihren Namen) und auf die Fragen mit unvollständigem Entscheidungsmodell („Fragen mit unvollständigem Entscheidungsmodell: Frage …“ mit ihren Nummern) hin.
 2. Das System gibt den Entwurf nicht frei.
 3. Der Use Case endet.
 

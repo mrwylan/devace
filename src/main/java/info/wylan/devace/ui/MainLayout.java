@@ -47,10 +47,13 @@ public class MainLayout extends AppLayout {
 		SideNavItem mags = new SideNavItem("MAGs und Rollen", MagsUndRollenView.class, VaadinIcon.USER.create());
 		SideNavItem katalog = new SideNavItem("Fragenkatalog",
 				FragenkatalogUndEntscheidungsmodellErstellenView.class, VaadinIcon.LIST_OL.create());
-		// UC-006 BR-009, UC-008 BR-007: Einträge ohne passende Berechtigung erscheinen deaktiviert.
+		SideNavItem freigabe = new SideNavItem("Freigabe", FragenkatalogFreigebenView.class,
+				VaadinIcon.CHECK_SQUARE_O.create());
+		// UC-006 BR-009, UC-007 BR-007, UC-008 BR-007: Einträge ohne Berechtigung erscheinen deaktiviert.
 		mags.setEnabled(administrator);
 		katalog.setEnabled(administrator);
-		administration.addItem(katalog, mags);
+		freigabe.setEnabled(administrator);
+		administration.addItem(katalog, freigabe, mags);
 
 		addToNavbar(new DrawerToggle(), title, abmelden);
 		addToDrawer(einladungen, administration);
