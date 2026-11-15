@@ -108,7 +108,8 @@ public class RadarChartEinerMagAuswertenView extends VerticalLayout implements B
 		liste.addClassName("devace-score-liste");
 		liste.setId("auswertung-werte");
 		for (FeldScore wert : werte) {
-			// UC-004 BR-005, BR-006: nur der Mittelwert; ohne Score kein Wert
+			// UC-004 BR-005: Je Handlungsfeld nur der Mittelwert, kein einzelner Score.
+			// UC-004 BR-006: Ein Handlungsfeld ohne Score zeigt keinen Wert.
 			Span name = new Span(wert.name());
 			Span zahl = new Span((wert.score() != null) ? AssessmentView.format(wert.score()) : "–");
 			zahl.addClassName("devace-score-wert");

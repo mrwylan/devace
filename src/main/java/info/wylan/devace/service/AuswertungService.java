@@ -42,7 +42,8 @@ public class AuswertungService {
 	/**
 	 * UC-004 step 2: die MAGs der Teamleitung, zu denen Scores vorliegen; leer bei A1.
 	 */
-	// UC-004 BR-002, BR-004: nur eigene MAGs, und nur solche mit mindestens einem Score
+	// UC-004 BR-002: Die Teamleitung wertet nur MAGs aus, die ihr zugeordnet sind.
+	// UC-004 BR-004: Zur Auswahl stehen nur MAGs mit mindestens einem Score.
 	public List<MagListItem> mags() {
 		return this.scoreRepository.magsMitScores(aktuelleTeamleitung().id());
 	}
@@ -61,7 +62,8 @@ public class AuswertungService {
 	 */
 	public List<FeldScore> radarChart(long magId, long rolleId) {
 		pruefeEigeneMag(magId);
-		// UC-004 BR-001, BR-003: Mittelwert je Handlungsfeld, ohne Mindestzahl an Scores
+		// UC-004 BR-001: Mittelwert aller Scores je Handlungsfeld, unabhängig vom Fragenkatalog.
+		// UC-004 BR-003: Keine Mindestzahl an Scores, auch für kleine MAGs.
 		Map<Long, BigDecimal> mittelwerte = this.scoreRepository.mittelwerte(magId, rolleId);
 		// UC-004 BR-006: Ein Handlungsfeld ohne Score zeigt keinen Wert.
 		return this.handlungsfeldRepository.findAll()
