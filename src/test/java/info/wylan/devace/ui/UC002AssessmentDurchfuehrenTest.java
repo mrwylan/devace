@@ -96,6 +96,9 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 			.contains("UC002 Jev (Bewertung)")
 			.contains("UC002 Nennen Sie keine Namen von Personen und keine Kundenprojekte. Es gelten die Firmenweisungen zum Umgang mit KI.")
 			.contains("Rolle: UC002 Entwicklung");
+		// Schritt 2, BR-007: Hinweis, dass das KI-Modell weder Einladung noch E-Mail-Adresse erhält
+		assertThat(text()).containsPattern("KI-Modell erhält weder (die|Ihre) Einladung noch (die|Ihre) E-Mail-Adresse, "
+				+ "nur die Frage und den Text (der|Ihrer) Antwort");
 		// BR-002: ohne Bestätigung lässt sich das Assessment nicht starten
 		assertThat(button("assessment-starten").isEnabled()).isFalse();
 
