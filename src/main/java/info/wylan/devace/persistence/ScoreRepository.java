@@ -96,4 +96,30 @@ public class ScoreRepository {
 			.fetchMap(SCORE.HANDLUNGSFELD_ID, mittelwert);
 	}
 
+	/**
+	 * UC-005 step 2: alle Rollen, zu denen mindestens ein Score vorliegt.
+	 */
+	public List<RolleOption> rollenMitScores() {
+		return this.ctx.select(ROLLE.ID, ROLLE.NAME)
+			.from(ROLLE)
+			// UC-005 BR-004: Zur Auswahl stehen nur Rollen mit mindestens einem Score.
+			.whereExists(DSL.selectOne().from(SCORE).where(SCORE.ROLLE_ID.eq(ROLLE.ID)))
+			.orderBy(DSL.lower(ROLLE.NAME))
+			.fetch(Records.mapping(RolleOption::new));
+	}
+
+	/**
+	 * UC-005 step 4: alle MAGs, zu denen Scores der Rolle vorliegen, unabhängig von ihrer Teamleitung.
+	 */
+	public List<MagListItem> magsMitScoresDerRolle(long rolleId) {
+		return this.ctx.select(MAG.ID, MAG.SCRUM_TEAM, MAG.LINIENTEAM, MAG.TEAMLEITUNG_ID, BENUTZER.BENUTZERNAME)
+			.from(MAG)
+			.leftJoin(BENUTZER)
+			.on(BENUTZER.ID.eq(MAG.TEAMLEITUNG_ID))
+			// UC-005 BR-004: Nur MAGs, zu denen Scores der gewählten Rolle vorliegen.
+			.whereExists(DSL.selectOne().from(SCORE).where(SCORE.MAG_ID.eq(MAG.ID)).and(SCORE.ROLLE_ID.eq(rolleId)))
+			.orderBy(DSL.lower(MAG.SCRUM_TEAM), DSL.lower(MAG.LINIENTEAM))
+			.fetch(Records.mapping(MagListItem::new));
+	}
+
 }
