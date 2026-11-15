@@ -488,10 +488,10 @@ class KiModellClientTest {
 	}
 
 	@Test
-	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport", requirements = { "NFR-006" })
-	void meldet_nicht_erreichbar_ohne_textreport_innerhalb_von_10_sekunden() {
-		// der Dienst antwortet erst nach 12 s
-		this.verzoegerung = 12_000;
+	@UseCase(id = "UC-003", scenario = "A1: KI-Modell liefert keinen Textreport", requirements = { "NFR-011" })
+	void meldet_nicht_erreichbar_ohne_textreport_innerhalb_von_45_sekunden() {
+		// der Dienst antwortet erst nach 47 s
+		this.verzoegerung = 47_000;
 		this.antwortKoerper = chatAntwort("{\"ueberblick\":\"zu spät\",\"abschnitte\":[]}");
 		long start = System.nanoTime();
 
@@ -500,9 +500,25 @@ class KiModellClientTest {
 			.hasMessage("Das KI-Modell ist nicht erreichbar.");
 
 		long dauerMs = (System.nanoTime() - start) / 1_000_000;
-		assertThat(dauerMs).isBetween(9_500L, 11_000L);
+		assertThat(dauerMs).isBetween(44_500L, 46_000L);
 		// ohne Wiederholung
 		assertThat(this.pfade).hasSize(1);
+	}
+
+	@Test
+	@UseCase(id = "UC-003", scenario = "Main Success Scenario", requirements = { "NFR-011" })
+	void nimmt_einen_textreport_nach_20_sekunden_noch_an() {
+		// so lange braucht ein Textreport heute mit dem eingesetzten Modell; vor NFR-011 galt das als A1
+		this.verzoegerung = 20_000;
+		this.antwortKoerper = chatAntwort("""
+				{"ueberblick":"Sie zeigen solide Grundlagen.",
+				 "abschnitte":[{"handlungsfeld":"Architektur & Engineering","wuerdigung":"Sie begründen nachvollziehbar.",
+				  "naechsterSchritt":"Halten Sie Entscheidungen in ADRs fest."}]}""");
+
+		Optional<Textreport> textreport = textreportAdapter(TEXTREPORT_MODELL, SCHLUESSEL)
+			.textreportErstellen(textreportAnfrage());
+
+		assertThat(textreport).map(Textreport::ueberblick).contains("Sie zeigen solide Grundlagen.");
 	}
 
 	@Test
