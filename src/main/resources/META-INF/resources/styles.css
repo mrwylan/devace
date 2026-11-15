@@ -207,3 +207,36 @@
 .devace-naechster-schritt {
   color: #22c3e6;
 }
+
+/* NFR-012, ADR-005: Wartehinweis, solange das System auf das KI-Modell wartet */
+.devace-wartehinweis {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vaadin-accent-color, #4c8dff) 14%, transparent);
+  font-weight: 500;
+}
+
+.devace-warte-kreis {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 3px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor;
+  animation: devace-warten 0.9s linear infinite;
+}
+
+@keyframes devace-warten {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .devace-warte-kreis {
+    animation-duration: 2.5s;
+  }
+}

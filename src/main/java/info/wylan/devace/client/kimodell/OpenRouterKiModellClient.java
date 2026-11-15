@@ -84,8 +84,8 @@ class OpenRouterKiModellClient implements KiModellClient {
 
 	private final Resource textreportVorlage = new ClassPathResource("prompts/textreport.st");
 
-	/** UC-003 A1: Zeitlimit für den Textreport (NFR-006). */
-	static final Duration ZEITLIMIT_TEXTREPORT = Duration.ofSeconds(10);
+	/** UC-003 A1: Zeitlimit für den Textreport (NFR-011). */
+	static final Duration ZEITLIMIT_TEXTREPORT = Duration.ofSeconds(45);
 
 	/**
 	 * UC-003 step 3 — Anfrage nur mit Rolle, Handlungsfeldern, Scores, Fragen, Antworten und Stufen (BR-004).
@@ -104,7 +104,7 @@ class OpenRouterKiModellClient implements KiModellClient {
 					.baseUrl(this.properties.baseUrl())
 					.apiKey(this.properties.apiKey())
 					.model(modell)
-					// UC-003 A1, NFR-006: ohne Textreport innerhalb von 10 s gilt A1, ohne Wiederholung
+					// UC-003 A1, NFR-011: ohne Textreport innerhalb von 45 s gilt A1, ohne Wiederholung
 					.timeout(ZEITLIMIT_TEXTREPORT)
 					.maxRetries(0)
 					.build())
