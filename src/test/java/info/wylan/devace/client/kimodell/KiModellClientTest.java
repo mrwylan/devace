@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.sun.net.httpserver.HttpServer;
+import info.wylan.devace.service.KiModellClient;
 import info.wylan.devace.service.KiModellClient.Abschnitt;
 import info.wylan.devace.service.KiModellClient.BewerteteFrage;
 import info.wylan.devace.service.KiModellClient.BewertungAnfrage;
@@ -251,6 +252,24 @@ class KiModellClientTest {
 		this.antwortKoerper = jevAntwort("{\"5\":0.01,\"2\":0.1,\"4\":0.2,\"0\":0,\"3\":0.69,\"1\":0}");
 
 		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).antwortBewerten(bewertung())).isEqualTo(OptionalInt.of(3));
+	}
+
+	@Test
+	@UseCase(id = "UC-009", scenario = "Main Success Scenario", businessRules = { "BR-004" })
+	void bewertung_nennt_das_modell_das_jev_meldet() {
+		this.antwortKoerper = jevAntwort("{\"4\":0.9,\"3\":0.1}");
+
+		// Schritt 8, OQ-084: die tatsächlich verwendete Version, nicht der Alias der Konfiguration
+		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).bewerten(bewertung()))
+			.contains(new KiModellClient.Bewertung(4, "typesafe/jev-test-1"));
+	}
+
+	@Test
+	@UseCase(id = "UC-009", scenario = "A4: KI-Modell liefert keine Stufe")
+	void bewertung_ohne_zuordnung_liefert_kein_ergebnis() {
+		this.antwortKoerper = "{\"model\":\"typesafe/jev-test-1\",\"answers\":{}}";
+
+		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).bewerten(bewertung())).isEmpty();
 	}
 
 	@Test
