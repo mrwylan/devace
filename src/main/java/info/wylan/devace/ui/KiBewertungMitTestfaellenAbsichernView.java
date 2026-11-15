@@ -59,6 +59,9 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 
 	private @Nullable PruefbarerKatalog gewaehlt;
 
+	/** Während die Übersicht ihre Zeilen erneuert, baut die erneute Auswahl das Detail nicht neu auf. */
+	private boolean uebersichtWirdErneuert;
+
 	public KiBewertungMitTestfaellenAbsichernView(TestfallService service, KiWarten kiWarten) {
 		this.service = service;
 		this.kiWarten = kiWarten;
@@ -74,6 +77,9 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		this.kataloge.setAllRowsVisible(true);
 		// UC-009 step 3: Der Administrator wählt einen Fragenkatalog.
 		this.kataloge.asSingleSelect().addValueChangeListener((event) -> {
+			if (this.uebersichtWirdErneuert) {
+				return;
+			}
 			this.gewaehlt = event.getValue();
 			zeigeDetail();
 		});
@@ -312,15 +318,25 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		zeigeDetail();
 	}
 
+	/**
+	 * UC-009 step 2: die Übersicht mit der aktuellen Zahl der Testfälle und dem jüngsten Testlauf. Die Auswahl bleibt
+	 * stehen, ohne das Detail neu aufzubauen, damit das Ergebnis eines Testlaufs sichtbar bleibt (Schritt 9).
+	 */
 	private void aktualisiereUebersicht() {
 		PruefbarerKatalog vorher = this.gewaehlt;
 		List<PruefbarerKatalog> pruefbar = this.service.pruefbareKataloge();
-		this.kataloge.setItems(pruefbar);
-		if (vorher != null) {
-			pruefbar.stream().filter((k) -> k.id() == vorher.id()).findFirst().ifPresent((k) -> {
-				this.gewaehlt = k;
-				this.kataloge.asSingleSelect().setValue(k);
-			});
+		this.uebersichtWirdErneuert = true;
+		try {
+			this.kataloge.setItems(pruefbar);
+			if (vorher != null) {
+				pruefbar.stream().filter((k) -> k.id() == vorher.id()).findFirst().ifPresent((k) -> {
+					this.gewaehlt = k;
+					this.kataloge.asSingleSelect().setValue(k);
+				});
+			}
+		}
+		finally {
+			this.uebersichtWirdErneuert = false;
 		}
 	}
 
