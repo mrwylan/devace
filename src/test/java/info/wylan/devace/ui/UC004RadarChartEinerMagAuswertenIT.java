@@ -63,6 +63,12 @@ class UC004RadarChartEinerMagAuswertenIT extends AbstractBasePlaywrightIT {
 		@Test
 		@DisplayName("Steps 1-4: MAG und Rolle wählen und das Radar-Chart sehen")
 		void radar_chart_der_mag_und_rolle() {
+			// Schritt 3: ohne Wahl kein Radar-Chart; die Teamleitung wählt MAG und Rolle
+			PlaywrightAssertions.assertThat(page.locator("#auswertung-mag")).isVisible();
+			PlaywrightAssertions.assertThat(radarChart()).hasCount(0);
+			waehle("#auswertung-mag", "UC004 Alpha · UC004 Nord");
+			waehle("#auswertung-rolle", "UC004 Entwicklung");
+
 			// NFR-007: das Radar-Chart ist spätestens 3 s nach dem Aufruf vollständig dargestellt
 			PlaywrightAssertions.assertThat(radarChart()).isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(3_000));
 			// BR-006: Handlungsfeld 4 ohne Score hat keinen Punkt: fünf Punkte bei sechs Achsen
@@ -83,10 +89,11 @@ class UC004RadarChartEinerMagAuswertenIT extends AbstractBasePlaywrightIT {
 		@Test
 		@DisplayName("Andere Rolle zeigt das Radar-Chart zur neuen Auswahl")
 		void andere_rolle() {
+			waehle("#auswertung-mag", "UC004 Alpha · UC004 Nord");
+			waehle("#auswertung-rolle", "UC004 Entwicklung");
 			PlaywrightAssertions.assertThat(radarChart()).isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(3_000));
 
-			page.locator("#auswertung-rolle").click();
-			page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("UC004 Test")).click();
+			waehle("#auswertung-rolle", "UC004 Test");
 
 			// BR-003: auch der Score eines einzigen Assessments ergibt ein Radar-Chart, hier mit einem Punkt
 			PlaywrightAssertions.assertThat(page.locator("svg.devace-radar-svg circle.devace-radar-punkt"))
@@ -94,6 +101,13 @@ class UC004RadarChartEinerMagAuswertenIT extends AbstractBasePlaywrightIT {
 			PlaywrightAssertions.assertThat(page.locator("#auswertung-werte")).containsText("1.0");
 		}
 
+	}
+
+	private void waehle(String feld, String eintrag) {
+		// die Rolle ist erst nach der Wahl der MAG bedienbar; warten, bis der Server das Feld freigegeben hat
+		PlaywrightAssertions.assertThat(page.locator(feld)).not().hasAttribute("disabled", "");
+		page.locator(feld).click();
+		page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName(eintrag)).click();
 	}
 
 	private com.microsoft.playwright.Locator radarChart() {

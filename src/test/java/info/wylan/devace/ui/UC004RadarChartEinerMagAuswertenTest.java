@@ -59,12 +59,21 @@ class UC004RadarChartEinerMagAuswertenTest extends SpringBrowserlessTest {
 		long scoresVorher = scores();
 		navigate(RadarChartEinerMagAuswertenView.class);
 
-		// Schritt 2, BR-002, BR-004: nur eigene MAGs mit Scores, bei der gewählten MAG nur Rollen mit Scores
-		assertThat(mags()).containsExactly("UC004 Alpha · UC004 Nord");
+		// Schritt 2, BR-002, BR-004: nur eigene MAGs mit Scores (nicht 9602 ohne Scores, nicht die fremde 9604)
+		assertThat(mags()).containsExactly("UC004 Alpha · UC004 Nord", "UC004 Delta · UC004 Nord");
+		// Schritt 3: die Teamleitung wählt selbst; vor der Wahl ist nichts gewählt und kein Radar-Chart zu sehen
+		assertThat(magAuswahl().getValue()).isNull();
+		assertThat(rolleAuswahl().getValue()).isNull();
+		assertThat(find(Html.class).all()).isEmpty();
+
+		// Schritt 2: bei der gewählten MAG nur Rollen mit Scores (nicht 9603)
+		waehleMag("UC004 Alpha · UC004 Nord");
 		assertThat(rollen()).containsExactly("UC004 Entwicklung", "UC004 Test");
+		assertThat(rolleAuswahl().getValue()).isNull();
+		assertThat(find(Html.class).all()).isEmpty();
 
 		// Schritt 3 und 4: MAG und Rolle gewählt, das Radar-Chart mit dem Wert je Handlungsfeld
-		waehle("UC004 Alpha · UC004 Nord", "UC004 Entwicklung");
+		waehleRolle("UC004 Entwicklung");
 		// BR-001: Mittelwert aller Scores, auch aus einer anderen Version des Fragenkatalogs, kaufmännisch gerundet
 		assertThat(werte()).contains(FELD_1 + "3.2", FELD_2 + "2.3", FELD_3 + "4.5");
 		assertThat(werte()).contains(handlungsfeldName(5) + "1.0", handlungsfeldName(6) + "5.0").hasSize(6);
@@ -124,6 +133,7 @@ class UC004RadarChartEinerMagAuswertenTest extends SpringBrowserlessTest {
 	@WithMockUser(username = "uc004-ohne-scores", roles = "TEAMLEITUNG")
 	@UseCase(id = "UC-004", scenario = "A1: Keine Scores vorhanden", businessRules = { "BR-004" })
 	void ohne_scores_ist_noch_keine_auswertung_moeglich() {
+		long scoresVorher = scores();
 		navigate(RadarChartEinerMagAuswertenView.class);
 
 		assertThat(find(Div.class).withId("auswertung-keine-scores").single().getElement().getTextRecursively())
@@ -131,6 +141,8 @@ class UC004RadarChartEinerMagAuswertenTest extends SpringBrowserlessTest {
 		// der Use Case endet: keine Auswahl und kein Radar-Chart
 		assertThat(find(Select.class).all()).isEmpty();
 		assertThat(find(Html.class).all()).isEmpty();
+		// Fehlerfall: Es werden keine Daten geändert.
+		assertThat(scores()).isEqualTo(scoresVorher);
 	}
 
 	// ---------------------------------------------------------------- A2
@@ -149,14 +161,35 @@ class UC004RadarChartEinerMagAuswertenTest extends SpringBrowserlessTest {
 		assertThat(anzahl(find(Html.class).single().getElement().getOuterHTML(), "devace-radar-punkt")).isEqualTo(1);
 	}
 
+	@Test
+	@UseCase(id = "UC-004", scenario = "A2: Teamleitung wechselt MAG oder Rolle", businessRules = { "BR-001" })
+	void wechsel_der_mag_zeigt_das_radar_chart_der_neuen_mag() {
+		navigate(RadarChartEinerMagAuswertenView.class);
+		waehle("UC004 Alpha · UC004 Nord", "UC004 Entwicklung");
+		assertThat(werte()).contains(FELD_1 + "3.2");
+
+		// A2: eine andere MAG; die Rolle ist neu zu wählen, bis dahin kein Radar-Chart der alten MAG
+		waehleMag("UC004 Delta · UC004 Nord");
+		assertThat(rolleAuswahl().getValue()).isNull();
+		assertThat(find(Html.class).all()).isEmpty();
+		assertThat(rollen()).containsExactly("UC004 Entwicklung");
+
+		// dieselbe Rolle wie zuvor zeigt jetzt die Werte der neuen MAG
+		waehleRolle("UC004 Entwicklung");
+		assertThat(werte()).contains(FELD_1 + "2.0", FELD_2 + "–", FELD_3 + "–");
+	}
+
 	// ---------------------------------------------------------------- BR-002, BR-007
 
 	@Test
 	@UseCase(id = "UC-004", businessRules = { "BR-002" })
 	void fremde_mag_wird_nicht_ausgewertet() {
+		long scoresVorher = scores();
 		// die Ansicht bietet die fremde MAG 9604 nicht an (Hauptablauf); auch ein direkter Aufruf zeigt keine Scores
 		assertThatThrownBy(() -> this.service.radarChart(9604, 9601)).isInstanceOf(MagNichtZugeordnetException.class);
 		assertThatThrownBy(() -> this.service.rollen(9604)).isInstanceOf(MagNichtZugeordnetException.class);
+		// Fehlerfall: Es werden keine Daten geändert.
+		assertThat(scores()).isEqualTo(scoresVorher);
 	}
 
 	@Test
@@ -218,12 +251,20 @@ class UC004RadarChartEinerMagAuswertenTest extends SpringBrowserlessTest {
 	}
 
 	private void waehle(String mag, String rolle) {
+		waehleMag(mag);
+		waehleRolle(rolle);
+	}
+
+	private void waehleMag(String mag) {
 		Select<MagListItem> magFeld = magAuswahl();
 		magFeld.setValue(magFeld.getListDataView()
 			.getItems()
 			.filter((eintrag) -> magFeld.getItemLabelGenerator().apply(eintrag).equals(mag))
 			.findFirst()
 			.orElseThrow());
+	}
+
+	private void waehleRolle(String rolle) {
 		Select<RolleOption> rolleFeld = rolleAuswahl();
 		rolleFeld.setValue(
 				rolleFeld.getListDataView().getItems().filter((r) -> r.name().equals(rolle)).findFirst().orElseThrow());

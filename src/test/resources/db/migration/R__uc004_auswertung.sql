@@ -8,13 +8,14 @@ VALUES (9601, 'uc004-teamleitung', '{noop}uc004-test', 'Teamleitung'),
        (9603, 'uc004-andere-teamleitung', 'unused', 'Teamleitung')
 ON CONFLICT DO NOTHING;
 
--- 9601 mit Scores, 9602 ohne Scores (beide uc004-teamleitung); 9603 ohne Scores (uc004-ohne-scores);
+-- 9601 und 9605 mit Scores, 9602 ohne Scores (alle uc004-teamleitung); 9603 ohne Scores (uc004-ohne-scores);
 -- 9604 mit Scores, aber einer anderen Teamleitung
 INSERT INTO mag (id, scrum_team, linienteam, teamleitung_id)
 VALUES (9601, 'UC004 Alpha', 'UC004 Nord', 9601),
        (9602, 'UC004 Beta', 'UC004 Süd', 9601),
        (9603, 'UC004 Gamma', 'UC004 West', 9602),
-       (9604, 'UC004 Fremd', 'UC004 Ost', 9603)
+       (9604, 'UC004 Fremd', 'UC004 Ost', 9603),
+       (9605, 'UC004 Delta', 'UC004 Nord', 9601)
 ON CONFLICT DO NOTHING;
 
 -- 9601 und 9602 mit Scores der MAG 9601; 9603 ohne Score
@@ -43,6 +44,7 @@ ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status;
 --   Handlungsfeld 6: 5.0                         -> 5.0
 -- MAG 9601, Rolle 9602: nur Handlungsfeld 1 mit 1.0 (BR-003, ein einziges Assessment)
 -- MAG 9604 (fremd), Rolle 9601: Handlungsfeld 1 mit 0.0, fließt nicht in MAG 9601 ein
+-- MAG 9605, Rolle 9601 (dieselbe Rolle wie bei 9601): nur Handlungsfeld 1 mit 2.0 (A2, Wechsel der MAG)
 INSERT INTO score (id, mag_id, rolle_id, handlungsfeld_id, fragenkatalog_id, wert, erfasst_am)
 VALUES (9601, 9601, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9601, 3.0, DATE '2026-02-01'),
        (9602, 9601, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9602, 4.0, DATE '2026-04-01'),
@@ -53,5 +55,6 @@ VALUES (9601, 9601, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9601,
        (9607, 9601, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 5), 9602, 1.0, DATE '2026-04-01'),
        (9608, 9601, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 6), 9602, 5.0, DATE '2026-04-01'),
        (9609, 9601, 9602, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9603, 1.0, DATE '2026-04-01'),
-       (9610, 9604, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9602, 0.0, DATE '2026-04-01')
+       (9610, 9604, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9602, 0.0, DATE '2026-04-01'),
+       (9611, 9605, 9601, (SELECT id FROM handlungsfeld WHERE nummer = 1), 9602, 2.0, DATE '2026-04-01')
 ON CONFLICT DO NOTHING;
