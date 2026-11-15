@@ -14,7 +14,8 @@ concurrency:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    # Pinned: Playwright's Chromium does not support the ubuntu-26.04 image that ubuntu-latest now resolves to.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     # The full-context test reads its database from DEVACE_DB_*; this throwaway service is only for CI.
     # The other tests start their own PostgreSQL through Testcontainers.
@@ -68,7 +69,7 @@ jobs:
     needs: verify
     # Only on pushes to the default branch, after verify passed.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
