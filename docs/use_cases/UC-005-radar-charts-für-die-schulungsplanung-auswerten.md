@@ -30,7 +30,7 @@
 **Auslöser:** Es liegt noch kein Score vor (Schritt 2)  
 **Ablauf:**
 
-1. Das System weist die Schulungsverantwortliche darauf hin, dass noch keine Auswertung möglich ist.
+1. Das System weist die Schulungsverantwortliche darauf hin, dass noch keine Auswertung möglich ist: „Es liegen noch keine Scores vor.“
 2. Der Use Case endet.
 
 ### A2: Schulungsverantwortliche wechselt die Rolle
@@ -85,4 +85,4 @@ Nur die angemeldete Schulungsverantwortliche wertet die Radar-Charts aller MAGs 
 
 ### BR-008: Keine Leistungsbeurteilung
 
-Die Radar-Charts sind kein Bestandteil der Leistungsbeurteilung.
+Die Radar-Charts sind kein Bestandteil der Leistungsbeurteilung. Die Regel gilt für die Verwendung der Radar-Charts; die Auswertung zeigt dazu keinen Hinweis, wie in UC-004 BR-008.
