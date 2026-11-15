@@ -19,6 +19,7 @@ import info.wylan.devace.persistence.RolleOption;
 import info.wylan.devace.service.AssessmentService.FeldScore;
 import info.wylan.devace.service.AuswertungService;
 import jakarta.annotation.security.RolesAllowed;
+import org.jspecify.annotations.Nullable;
 
 /** UC-004 Radar-Chart einer MAG auswerten. */
 @Route(value = "auswertung", layout = MainLayout.class)
@@ -45,19 +46,17 @@ public class RadarChartEinerMagAuswertenView extends VerticalLayout implements B
 		this.mag.setId("auswertung-mag");
 		this.mag.setItemLabelGenerator((eintrag) -> eintrag.scrumTeam() + " · " + eintrag.linienteam());
 		this.mag.setEmptySelectionAllowed(false);
+		this.mag.setPlaceholder("MAG wählen");
 		this.mag.setWidth("50%");
 		this.rolle.setLabel("Rolle");
 		this.rolle.setId("auswertung-rolle");
 		this.rolle.setItemLabelGenerator(RolleOption::name);
 		this.rolle.setEmptySelectionAllowed(false);
+		this.rolle.setPlaceholder("Rolle wählen");
 		this.rolle.setWidth("50%");
 		this.chart.setWidthFull();
 		// UC-004 step 3 und A2: die Wahl einer anderen MAG zeigt ihre Rollen, die Wahl einer Rolle das Radar-Chart
-		this.mag.addValueChangeListener((event) -> {
-			if (event.getValue() != null) {
-				zeigeRollen(event.getValue());
-			}
-		});
+		this.mag.addValueChangeListener((event) -> zeigeRollen(event.getValue()));
 		this.rolle.addValueChangeListener((event) -> zeigeRadarChart());
 	}
 
@@ -79,17 +78,22 @@ public class RadarChartEinerMagAuswertenView extends VerticalLayout implements B
 		HorizontalLayout auswahl = new HorizontalLayout(this.mag, this.rolle);
 		auswahl.setWidthFull();
 		add(titel, auswahl, this.chart);
+		// UC-004 step 3: Die Teamleitung wählt MAG und Rolle selbst; die Ansicht wählt nichts vor.
 		this.mag.setItems(mags);
-		this.mag.setValue(mags.get(0));
+		this.mag.clear();
+		zeigeRollen(null);
 	}
 
-	/** UC-004 step 2: die Rollen der gewählten MAG, zu denen Scores vorliegen. */
-	private void zeigeRollen(MagListItem gewaehlt) {
-		List<RolleOption> rollen = this.service.rollen(gewaehlt.id());
+	/**
+	 * UC-004 step 2 und A2: die Rollen der gewählten MAG, zu denen Scores vorliegen. Mit einer anderen MAG ist die Rolle
+	 * neu zu wählen; bis dahin zeigt die Ansicht kein Radar-Chart.
+	 */
+	private void zeigeRollen(@Nullable MagListItem gewaehlt) {
+		this.rolle.clear();
+		this.chart.removeAll();
+		List<RolleOption> rollen = (gewaehlt != null) ? this.service.rollen(gewaehlt.id()) : List.of();
 		this.rolle.setItems(rollen);
-		if (!rollen.isEmpty()) {
-			this.rolle.setValue(rollen.get(0));
-		}
+		this.rolle.setEnabled(gewaehlt != null);
 	}
 
 	/** UC-004 step 4: das Radar-Chart der MAG und Rolle mit dem Wert je Handlungsfeld. */
