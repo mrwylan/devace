@@ -7,7 +7,7 @@
 **Primärer Akteur:** Teamleitung  
 **Ziel:** Die Teamleitung sieht das Radar-Chart ihrer MAG je Rolle, damit sie Stärken und Lücken auf einen Blick erkennt und Entwicklungsgespräche an Handlungsfeldern ausrichtet.  
 **Auslösendes Ereignis:** Die Teamleitung fordert die Auswertung ihrer MAG an.  
-**Status:** Genehmigt  
+**Status:** Getestet  
 
 **Anforderungen:** [FR-010, NFR-002, NFR-005, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
@@ -31,7 +31,7 @@
 **Auslöser:** Zu keiner MAG der Teamleitung liegt ein Score vor (Schritt 2)  
 **Ablauf:**
 
-1. Das System weist die Teamleitung darauf hin, dass noch keine Auswertung möglich ist.
+1. Das System weist die Teamleitung darauf hin, dass noch keine Auswertung möglich ist: „Zu Ihren MAGs liegen noch keine Scores vor.“
 2. Der Use Case endet.
 
 ### A2: Teamleitung wechselt MAG oder Rolle
@@ -66,7 +66,7 @@ Die Teamleitung wertet nur MAGs aus, die ihr zugeordnet sind.
 
 ### BR-003: Auch kleine MAGs
 
-Das System erstellt das Radar-Chart auch für kleine MAGs. Es verlangt keine Mindestzahl an Scores.
+Das System erstellt das Radar-Chart auch für kleine MAGs. Es verlangt keine Mindestzahl an Scores; das Radar-Chart entsteht auch aus den Scores eines einzigen Assessments.
 
 ### BR-004: Nur MAGs und Rollen mit Scores
 
@@ -78,7 +78,7 @@ Das System zeigt je Handlungsfeld nur den Mittelwert nach BR-001. Es zeigt keine
 
 ### BR-006: Handlungsfeld ohne Score
 
-Hat die MAG in einem Handlungsfeld keinen Score, zeigt das Radar-Chart für dieses Handlungsfeld keinen Wert.
+Hat die MAG in einem Handlungsfeld keinen Score, zeigt das Radar-Chart für dieses Handlungsfeld keinen Wert, auch nicht 0; das Handlungsfeld behält seine Achse.
 
 ### BR-007: Nur für angemeldete Teamleitungen
 
@@ -86,4 +86,4 @@ Nur die angemeldete Teamleitung wertet Radar-Charts aus. Aufrufe ohne Anmeldung 
 
 ### BR-008: Keine Leistungsbeurteilung
 
-Das Radar-Chart ist kein Bestandteil der Leistungsbeurteilung.
+Das Radar-Chart ist kein Bestandteil der Leistungsbeurteilung. Die Regel gilt für die Verwendung des Radar-Charts; die Auswertung zeigt dazu keinen Hinweis.
