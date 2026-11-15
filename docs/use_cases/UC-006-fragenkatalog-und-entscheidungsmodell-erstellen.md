@@ -10,7 +10,7 @@
 **Auslösendes Ereignis:** Der Administrator fordert die Erstellung eines Fragenkatalogs für eine Rolle an.  
 **Status:** Genehmigt  
 
-**Anforderungen:** [FR-012, FR-013, NFR-005, NFR-010, C-006](../requirements.md)  
+**Anforderungen:** [FR-012, FR-013, NFR-005, NFR-010, NFR-012, C-006](../requirements.md)  
 **Schichten:** UI  
 **Mockup:** [Übersicht](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=29-1999), [Ausgangspunkt wählen](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=29-2274), [Entwurf](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=30-2300), [Frage und Entscheidungsmodell](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=30-2779), [KI-Anforderung fehlgeschlagen (A2, A3)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=31-3722), [Entwurf unvollständig (A4)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=31-4106), [Genügend Fragen vorhanden (A6)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=31-4481)
 
@@ -27,7 +27,7 @@
 3. Der Administrator wählt eine Rolle und legt fest, womit er beginnt: mit einem leeren Entwurf, mit der freigegebenen Version der Rolle als neuer Version oder mit dem vorhandenen Entwurf der Rolle.
 4. Das System zeigt den gewählten Ausgangspunkt je Handlungsfeld an.
 5. Der Administrator gibt optional Schwerpunkte und die Zahl der Fragen je Handlungsfeld an und fordert einen KI-Entwurf an.
-6. Das System lässt das KI-Modell zusätzliche Fragen mit je einem Entscheidungsmodell für die Handlungsfelder der Rolle entwerfen und ergänzt den Entwurf um sie.
+6. Das System lässt das KI-Modell zusätzliche Fragen mit je einem Entscheidungsmodell für die Handlungsfelder der Rolle entwerfen und ergänzt den Entwurf um sie. Bis der KI-Entwurf vorliegt, zeigt das System den Wartehinweis „Der KI-Entwurf wird erstellt.“
 7. Das System zeigt den Entwurf je Handlungsfeld an.
 8. Der Administrator prüft den Entwurf und ändert, ergänzt oder entfernt Fragen und die Entscheidungsmodelle.
 9. Der Administrator speichert den Entwurf.
@@ -87,7 +87,7 @@
 
 1. Das System weist darauf hin, dass genügend Fragen vorhanden sind: „Jedes Handlungsfeld hat bereits mindestens N Fragen.“ mit N als angegebener Zahl. Es bietet an, die KI-Anforderung mit „Abbrechen“ abzubrechen oder mit „Weitere Fragen ergänzen“ weitere Fragen zu ergänzen.
 2. Der Administrator wählt, weitere Fragen zu ergänzen, und gibt an, wie viele weitere Fragen je Handlungsfeld das KI-Modell entwerfen soll. Ist die Zahl ungültig, weist das System darauf hin, und der Administrator korrigiert sie.
-3. Das System lässt das KI-Modell die weiteren Fragen mit je einem Entscheidungsmodell entwerfen und ergänzt den Entwurf um sie.
+3. Das System lässt das KI-Modell die weiteren Fragen mit je einem Entscheidungsmodell entwerfen und ergänzt den Entwurf um sie; bis sie vorliegen, zeigt es den Wartehinweis „Der KI-Entwurf wird erstellt.“
 4. Der Use Case wird bei Schritt 7 fortgesetzt.
 
 ### A7: Administrator bricht die KI-Anforderung ab

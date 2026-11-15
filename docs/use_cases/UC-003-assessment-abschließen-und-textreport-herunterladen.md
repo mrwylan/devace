@@ -8,9 +8,9 @@
 **Sekundäre Akteure:** KI-Modell  
 **Ziel:** Der Teilnehmer schließt sein Assessment ab, sieht seine Auswertung mit Radar-Chart, Scores und Textreport und lädt den Textreport einmalig herunter, damit er seine Ergebnisse selbst verwaltet und von seinem Assessment nur die Scores bleiben.  
 **Auslösendes Ereignis:** Der Teilnehmer fordert den Abschluss seines Assessments an.  
-**Status:** Getestet  
+**Status:** Genehmigt  
 
-**Anforderungen:** [FR-007, FR-008, FR-009, FR-018, NFR-001, NFR-002, NFR-003, NFR-006, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
+**Anforderungen:** [FR-007, FR-008, FR-009, FR-018, NFR-001, NFR-002, NFR-003, NFR-006, NFR-007, NFR-010, NFR-011, NFR-012, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
 **Mockup:** [Auswertung](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4323), [Textreport nicht erstellt (A1)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4487), [Textreport nicht mehr verfügbar (A3)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=48-4564)
 
@@ -22,7 +22,7 @@
 
 1. Der Teilnehmer schließt sein Assessment ab.
 2. Das System berechnet je Handlungsfeld den Score aus den Stufen seiner Antworten.
-3. Das System lässt das KI-Modell den Textreport erstellen, der seine Leistung würdigt, seine Einstufung begründet und Hinweise auf seine nächsten Investitionen gibt.
+3. Das System lässt das KI-Modell den Textreport erstellen, der seine Leistung würdigt, seine Einstufung begründet und Hinweise auf seine nächsten Investitionen gibt. Bis der Textreport vorliegt, zeigt das System den Wartehinweis „Ihr Textreport wird erstellt. Das dauert bis zu 45 Sekunden.“
 4. Das System speichert die Scores ohne Personenbezug, setzt das Assessment auf abgeschlossen und löscht die Antworten des Assessments.
 5. Das System zeigt dem Teilnehmer den Hinweis „Assessment abgeschlossen: Ihre Auswertung ist fertig. Radar-Chart, Scores und Textreport sehen nur Sie, und nur jetzt.“ und seine Auswertung mit dem Radar-Chart, den erreichten Scores je Handlungsfeld und dem Textreport, darunter den Hinweis „Der Textreport steht einmal zum Download bereit. Ihre Antworten sind bereits gelöscht, Ihre Scores bleiben ohne Personenbezug erhalten.“
 6. Der Teilnehmer lädt den Textreport herunter.
@@ -32,7 +32,7 @@
 
 ### A1: KI-Modell liefert keinen Textreport
 
-**Auslöser:** Das KI-Modell ist nicht erreichbar, liefert nicht innerhalb von 10 Sekunden einen Textreport, liefert keinen Textreport oder einen, der eine Antwort des Teilnehmers wörtlich enthält (Schritt 3)  
+**Auslöser:** Das KI-Modell ist nicht erreichbar, liefert nicht innerhalb von 45 Sekunden einen Textreport, liefert keinen Textreport oder einen, der eine Antwort des Teilnehmers wörtlich enthält (Schritt 3)  
 **Ablauf:**
 
 1. Das System zeigt den Hinweis „Textreport nicht erstellt: Das KI-Modell hat keinen Textreport geliefert. Es wurde nichts gespeichert, Ihre Antworten bleiben erhalten. Sie können den Abschluss erneut anfordern.“
