@@ -52,6 +52,9 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 
 	private final Clock clock;
 
+	/** ADR-005: Aufrufe des KI-Modells im Hintergrund, mit Wartehinweis. */
+	private final KiWarten kiWarten;
+
 	/** UC-003 BR-006: Der Textreport steht einmal zum Download bereit. */
 	private boolean textreportHeruntergeladen;
 
@@ -65,9 +68,10 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 	/** Die Rolle der Einladung, für die Kopfzeilen von UC-003. */
 	private String rolle = "";
 
-	public AssessmentView(AssessmentService service, Clock clock) {
+	public AssessmentView(AssessmentService service, Clock clock, KiWarten kiWarten) {
 		this.service = service;
 		this.clock = clock;
+		this.kiWarten = kiWarten;
 		Div kopf = new Div(new Span("devace · Kompetenz-Assessment"));
 		kopf.addClassName("devace-kopf");
 		this.inhalt.addClassName("devace-assessment");
@@ -146,7 +150,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 			abschliessen.setId("assessment-abschliessen");
 			// UC-003 step 1: Der Teilnehmer schließt sein Assessment ab.
 			abschliessen.setDisableOnClick(true);
-			abschliessen.addClickListener((event) -> abschliessen());
+			abschliessen.addClickListener((event) -> abschliessen(abschliessen));
 			setzeInhalt(kopfzeile(stand, dialog.rolle()), fortschritt,
 					meldung("Alle Fragen beantwortet", "Sie haben alle " + dialog.anzahl()
 							+ " Fragen beantwortet. Schließen Sie das Assessment ab, um Ihren Textreport zu erhalten.",
@@ -178,20 +182,31 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		senden.addThemeVariants(ButtonVariant.PRIMARY);
 		senden.setId("assessment-senden");
 		senden.setDisableOnClick(true);
+		// UC-002 step 6, NFR-012: Wartehinweis, bis die Zuordnung vorliegt (ADR-005)
+		Div warten = KiWarten.wartehinweis("Ihre Antwort wird verarbeitet.", "assessment-wartehinweis");
+		warten.setVisible(false);
 		senden.addClickListener((event) -> {
-			try {
-				// UC-002 steps 5–7
-				zeigeDialog(this.service.antworten(this.referenz, antwort.getValue()));
-			}
-			catch (AntwortUngueltigException ex) {
-				// UC-002 A4: Hinweis an der Antwort, weiter bei Schritt 5
-				antwort.setInvalid(true);
-				antwort.setErrorMessage(ex.getMessage());
+			String text = antwort.getValue();
+			antwort.setInvalid(false);
+			antwort.setReadOnly(true);
+			warten.setVisible(true);
+			// UC-002 steps 5–7
+			this.kiWarten.ausfuehren(() -> this.service.antworten(this.referenz, text), this::zeigeDialog, (fehler) -> {
+				warten.setVisible(false);
+				antwort.setReadOnly(false);
 				senden.setEnabled(true);
-			}
-			catch (EinladungNichtNutzbarException ex) {
-				zeigeNichtNutzbar();
-			}
+				if (fehler instanceof AntwortUngueltigException ex) {
+					// UC-002 A4: Hinweis an der Antwort, weiter bei Schritt 5
+					antwort.setInvalid(true);
+					antwort.setErrorMessage(ex.getMessage());
+				}
+				else if (fehler instanceof EinladungNichtNutzbarException) {
+					zeigeNichtNutzbar();
+				}
+				else {
+					throw fehler;
+				}
+			});
 		});
 		Paragraph fussnote = new Paragraph("Höchstens 500 Zeichen. Sie können das Assessment jederzeit verlassen; "
 				+ "bereits gegebene Antworten bleiben 7 Tage erhalten.");
@@ -199,29 +214,42 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		HorizontalLayout aktion = new HorizontalLayout(senden);
 		aktion.setWidthFull();
 		aktion.setJustifyContentMode(com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END);
-		karte.add(antwort, aktion, fussnote);
+		karte.add(antwort, aktion, warten, fussnote);
 		setzeInhalt(kopfzeile(stand, dialog.rolle()), fortschritt, karte);
 	}
 
-	/** UC-003 steps 1–5; A1 wenn kein Textreport entsteht. */
-	private void abschliessen() {
-		try {
-			zeigeAuswertung(this.service.abschliessen(this.referenz));
-		}
-		catch (TextreportNichtErstelltException ex) {
-			zeigeTextreportNichtErstellt(ex);
-		}
-		catch (EinladungNichtNutzbarException ex) {
-			zeigeNichtNutzbar();
-		}
+	/**
+	 * UC-003 steps 1–5; A1 wenn kein Textreport entsteht. Bis der Textreport vorliegt, ersetzt der Wartehinweis die
+	 * auslösende Schaltfläche (step 3, NFR-012, ADR-005).
+	 */
+	private void abschliessen(Button ausloeser) {
+		ausloeser.setVisible(false);
+		Div warten = KiWarten.wartehinweis("Ihr Textreport wird erstellt. Das dauert bis zu 45 Sekunden.",
+				"assessment-wartehinweis");
+		this.inhalt.add(warten);
+		this.kiWarten.ausfuehren(() -> this.service.abschliessen(this.referenz), this::zeigeAuswertung, (fehler) -> {
+			if (fehler instanceof TextreportNichtErstelltException ex) {
+				zeigeTextreportNichtErstellt(ex);
+			}
+			else if (fehler instanceof EinladungNichtNutzbarException) {
+				zeigeNichtNutzbar();
+			}
+			else {
+				this.inhalt.remove(warten);
+				ausloeser.setVisible(true);
+				ausloeser.setEnabled(true);
+				throw fehler;
+			}
+		});
 	}
 
 	/** UC-003 A1: Hinweis, nichts gespeichert, der Abschluss lässt sich erneut anfordern. */
 	private void zeigeTextreportNichtErstellt(TextreportNichtErstelltException ex) {
-		Button erneut = new Button("Abschluss erneut anfordern", (event) -> abschliessen());
+		Button erneut = new Button("Abschluss erneut anfordern");
 		erneut.addThemeVariants(ButtonVariant.PRIMARY);
 		erneut.setId("assessment-abschluss-erneut");
 		erneut.setDisableOnClick(true);
+		erneut.addClickListener((event) -> abschliessen(erneut));
 		setzeInhalt(titelzeile("Assessment abschließen", rolle()),
 				meldung(TextreportNichtErstelltException.TITEL, ex.getMessage(), "fehler", "textreport-nicht-erstellt"),
 				erneut);

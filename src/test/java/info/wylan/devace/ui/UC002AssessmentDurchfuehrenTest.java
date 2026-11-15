@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.bean.override.convention.TestBean;
+import org.springframework.core.task.TaskExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,6 +50,16 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 
 	private static final String NICHT_NUTZBAR = "Diese Einladung wurde bereits eingelöst oder ist abgelaufen.";
 
+	private static final HintergrundExecutorFake HINTERGRUND = new HintergrundExecutorFake();
+
+	/** ADR-005: Die KI-Aufrufe laufen im Test sofort; ihr Ergebnis erreicht die Ansicht mit roundTrip(). */
+	@TestBean(name = "applicationTaskExecutor", methodName = "hintergrund")
+	TaskExecutor applicationTaskExecutor;
+
+	static TaskExecutor hintergrund() {
+		return HINTERGRUND;
+	}
+
 	@TestBean
 	KiModellClient kiModellClient;
 
@@ -62,6 +73,7 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 	@BeforeEach
 	void zuruecksetzen() {
 		KI.reset();
+		HINTERGRUND.reset();
 	}
 
 	@AfterEach
@@ -367,6 +379,8 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 				where einladung_id = (select id from einladung where referenz = ?)
 				""").param(referenz).update();
 
+		// der erneute Aufruf ist im Browser ein neuer Seitenaufruf; ohne Umweg ignoriert Browserless ihn nach roundTrip()
+		navigate(LoginView.class);
 		navigate(AssessmentView.class, referenz);
 
 		// die Einladung ist eingelöst und es gibt kein laufendes Assessment mehr: A1
@@ -412,9 +426,36 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 		test(button("assessment-starten")).click();
 	}
 
+	@Test
+	@UseCase(id = "UC-002", scenario = "Main Success Scenario", requirements = { "NFR-012" })
+	void zeigt_den_wartehinweis_bis_die_zuordnung_vorliegt() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		navigate(AssessmentView.class, referenz);
+		test(find(Checkbox.class).withId("assessment-bestaetigung").single()).click();
+		test(button("assessment-starten")).click();
+
+		HINTERGRUND.anhalten();
+		test(antwortFeld()).setValue("Ich halte Kontext, Alternativen und Folgen fest.");
+		test(button("assessment-senden")).click();
+
+		// Schritt 6, NFR-012: der Wartehinweis, bis die Zuordnung vorliegt; die Antwort ist noch nicht gespeichert
+		assertThat(find(Div.class).withId("assessment-wartehinweis").single().getElement().getTextRecursively())
+			.isEqualTo("Ihre Antwort wird verarbeitet.");
+		assertThat(button("assessment-senden").isEnabled()).isFalse();
+		assertThat(stufen(referenz)).isEmpty();
+
+		HINTERGRUND.fortsetzen();
+		roundTrip();
+		// Schritt 7: Antwort und Stufe gespeichert, die nächste Frage, kein Wartehinweis mehr
+		assertThat(find(Div.class).withId("assessment-wartehinweis").all()).isEmpty();
+		assertThat(text()).contains("Frage 2 von 2");
+		assertThat(stufen(referenz)).containsExactly(3);
+	}
+
 	private void antworten(String text) {
 		test(antwortFeld()).setValue(text);
 		test(button("assessment-senden")).click();
+		roundTrip();
 	}
 
 	private TextArea antwortFeld() {

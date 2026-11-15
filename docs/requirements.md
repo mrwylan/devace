@@ -18,8 +18,8 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | FR-009 | Antworten löschen | Als Teilnehmer möchte ich, dass meine einzelnen Antworten nach Erstellung des Textreports gelöscht werden, damit von meinem Assessment nur die Scores bleiben. | High | Verified |
 | FR-010 | Radar-Chart je MAG und Rolle ansehen | Als Teamleitung möchte ich nach der Anmeldung das Radar-Chart meiner MAG je Rolle ansehen, auch für kleine MAGs, damit ich Entwicklungsgespräche an Handlungsfeldern ausrichten kann. | High | Open |
 | FR-011 | Radar-Charts für Schulungsplanung ansehen | Als Schulungsverantwortliche möchte ich nach der Anmeldung die Radar-Charts aller MAGs ansehen (nur Radar-Charts, keine Einladungen), damit ich den Schulungsbedarf anhand der Lücken priorisieren kann. | Medium | Open |
-| FR-012 | Fragenkatalog mit KI erstellen | Als Administrator möchte ich mit KI-Unterstützung einen Fragenkatalog je Rolle erstellen, der die Handlungsfelder gezielt prüft, damit das Assessment die Kompetenzen mit Alltagsrelevanz abdeckt. | High | Open |
-| FR-013 | Entscheidungsmodell pflegen | Als Administrator möchte ich zu jeder Frage festlegen, welcher Stufe welche Antwort entspricht, damit die KI die Antworten fair zuordnen kann. | High | Open |
+| FR-012 | Fragenkatalog mit KI erstellen | Als Administrator möchte ich mit KI-Unterstützung einen Fragenkatalog je Rolle erstellen, der die Handlungsfelder gezielt prüft, damit das Assessment die Kompetenzen mit Alltagsrelevanz abdeckt. | High | Verified |
+| FR-013 | Entscheidungsmodell pflegen | Als Administrator möchte ich zu jeder Frage festlegen, welcher Stufe welche Antwort entspricht, damit die KI die Antworten fair zuordnen kann. | High | Verified |
 | FR-014 | Fragenkatalog freigeben | Als Administrator möchte ich einen Fragenkatalog samt Entscheidungsmodell prüfen und freigeben, damit nur geprüfte Fragen in Assessments verwendet werden. | High | Verified |
 | FR-015 | MAGs und Rollen verwalten | Als Administrator möchte ich MAGs mit ihrer Teamleitung und Rollen anlegen und ändern, damit Einladungen und Radar-Charts der Organisation entsprechen. | Medium | Verified |
 | FR-016 | KI-Bewertung mit Testfällen absichern | Als Administrator möchte ich Testfälle ausführen und deren Ergebnisse einsehen, damit Fehler der KI-Bewertung eingegrenzt und die Vorgaben verfeinert werden können. | High | Open |
@@ -41,6 +41,8 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | NFR-008 | Gleichzeitige Assessments | Das System unterstützt 50 gleichzeitige Assessments ohne Überschreitung der Grenzwerte aus NFR-006. | Scalability | Medium | Open |
 | NFR-009 | Faire Bewertung | Bei Ausführung des Testfall-Katalogs ordnet die KI mindestens 90 % der Testfälle die erwartete Stufe zu; Ergebnis und Abweichungen sind dokumentiert. | Maintainability | High | Open |
 | NFR-010 | Sprache und Zugänglichkeit | Alle Oberflächen, Fragen und Hinweise sind in deutscher Sprache und erfüllen WCAG 2.1 AA. | Usability | Medium | In Progress |
+| NFR-011 | Antwortzeit Textreport | 95 % der Textreporte erscheinen innerhalb von 45 Sekunden, nachdem der Teilnehmer den Abschluss des Assessments angefordert hat; für den Textreport gilt NFR-006 nicht. | Performance | Medium | Verified |
+| NFR-012 | Wartehinweis bei KI-Anfragen | Solange das System auf eine Antwort des KI-Modells wartet, zeigt es innerhalb von 1 Sekunde nach der auslösenden Eingabe einen Wartehinweis, der nennt, worauf gewartet wird. | Usability | Medium | Verified |
 
 ## Randbedingungen
 
@@ -51,6 +53,6 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | C-003 | Aufbewahrung der Scores | Scores je Handlungsfeld werden fünf Jahre aufbewahrt. | Business | | High | In Progress |
 | C-004 | Programmlaufzeit | Das Programm läuft bis 2030; der Erfolg ist anhand der Scores über fünf Jahre nachzuweisen. | Schedule | | High | Open |
 | C-005 | Skala 0 bis 5 | Antworten werden auf der Skala 0 bis 5 mit den Stufenbeschreibungen der Vision bewertet. | Business | | High | In Progress |
-| C-006 | Umfang nach Alltagsrelevanz | Der Fragenkatalog nimmt Technologien und Grundlagen nach Relevanz im Alltag der Teams auf, nicht nach Eintrag in der Kompetenzmatrix. | Business | | Medium | In Progress |
+| C-006 | Umfang nach Alltagsrelevanz | Der Fragenkatalog nimmt Technologien und Grundlagen nach Relevanz im Alltag der Teams auf, nicht nach Eintrag in der Kompetenzmatrix. | Business | | Medium | Verified |
 | C-007 | Kompetenzmatrix bleibt Quelle | Die Kompetenzmatrix bleibt die fachliche Quelle und wird von devace nicht gepflegt. | Business | | Medium | Open |
 | C-008 | Keine Anbindung an HR-Systeme | devace wird nicht an HR-Systeme angebunden und verwaltet weder Zertifikate noch Schulungsbuchungen. | Business | | Medium | Open |

@@ -60,11 +60,22 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 
 	private static final int VORSCHLAG_ANZAHL = 3;
 
+	/** UC-006 step 6 und A6: der Wartehinweis aus der Spezifikation. */
+	private static final String WARTEN_KI_ENTWURF = "Der KI-Entwurf wird erstellt.";
+
 	/** Bezeichnung der Stufen 0 bis 5 (Glossar: Stufe). */
 	static final List<String> STUFEN =List.of("Nie gehört", "Schon mal gehört", "Grundverständnis",
 			"Sicherer Umgang", "Fortgeschrittene Expertise", "Expert:in / Lehrniveau");
 
 	private final FragenkatalogService service;
+
+	/** ADR-005: Aufrufe des KI-Modells im Hintergrund, mit Wartehinweis. */
+	private final KiWarten kiWarten;
+
+	private final Button kiAnfordern = new Button("KI-Entwurf anfordern");
+
+	/** UC-006 step 6, NFR-012: sichtbar, bis der KI-Entwurf vorliegt. */
+	private final Div kiWartehinweis = KiWarten.wartehinweis(WARTEN_KI_ENTWURF, "ki-wartehinweis");
 
 	private final List<Handlungsfeld> handlungsfelder;
 
@@ -90,8 +101,13 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 
 	private int geoeffnetesHandlungsfeld;
 
-	public FragenkatalogUndEntscheidungsmodellErstellenView(FragenkatalogService service) {
+	public FragenkatalogUndEntscheidungsmodellErstellenView(FragenkatalogService service, KiWarten kiWarten) {
 		this.service = service;
+		this.kiWarten = kiWarten;
+		this.kiAnfordern.addClickListener((event) -> kiAnfordern());
+		this.kiAnfordern.addThemeVariants(ButtonVariant.PRIMARY);
+		this.kiAnfordern.setId("ki-anfordern");
+		this.kiWartehinweis.setVisible(false);
 		this.handlungsfelder = service.handlungsfelder();
 		setWidthFull();
 		add(this.inhalt);
@@ -387,16 +403,13 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		this.kiAnzahl.setHelperText("1 bis 10, vorgeschlagen sind " + VORSCHLAG_ANZAHL);
 		this.kiSchwerpunkte.setWidthFull();
 		this.kiSchwerpunkte.setHelperText("Höchstens 2000 Zeichen");
-		Button anfordern = new Button("KI-Entwurf anfordern", (event) -> kiAnfordern());
-		anfordern.addThemeVariants(ButtonVariant.PRIMARY);
-		anfordern.setId("ki-anfordern");
 
 		VerticalLayout karte = karte("KI-Entwurf anfordern", "Das KI-Modell ergänzt Fragen mit Entscheidungsmodell");
 		// UC-006 BR-006, BR-007, BR-010: Vorschlag; nur Rolle, Handlungsfelder, Schwerpunkte, Zahl; Vorhandenes bleibt.
 		Div hinweis = new Div(hinweisTitel("Nur ein Vorschlag"), new Span(
 				"Die Anfrage enthält nur Rolle, Handlungsfelder, Schwerpunkte und Zahl der Fragen, keine Angaben zu Personen. Vorhandene Fragen bleiben unverändert."));
 		hinweis.addClassName("devace-hinweis");
-		karte.add(this.kiAnzahl, this.kiSchwerpunkte, anfordern, hinweis);
+		karte.add(this.kiAnzahl, this.kiSchwerpunkte, this.kiAnfordern, this.kiWartehinweis, hinweis);
 		return karte;
 	}
 
@@ -412,8 +425,11 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 			return;
 		}
 		this.meldung = null;
-		try {
-			KiErgebnis ergebnis = this.service.kiEntwurf(rolle.id(), aktuellerEntwurf(), angaben);
+		List<KatalogFrage> bisher = aktuellerEntwurf();
+		kiWartet(true);
+		// UC-006 step 6, NFR-012: Wartehinweis, bis der KI-Entwurf vorliegt (ADR-005)
+		this.kiWarten.ausfuehren(() -> this.service.kiEntwurf(rolle.id(), bisher, angaben), (ergebnis) -> {
+			kiWartet(false);
 			switch (ergebnis) {
 				case KiErgebnis.Ergaenzt ergaenzt -> {
 					uebernehmeEntwurf(ergaenzt.entwurf());
@@ -421,12 +437,23 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 				}
 				case KiErgebnis.GenuegendFragen genug -> genugFragenDialog(rolle, genug.anzahl(), angaben);
 			}
-		}
-		catch (KeinKiEntwurfException ex) {
-			// UC-006 A2: Es ist kein Entwurf entstanden; Ausgangspunkt und Angaben bleiben, weiter bei Schritt 5.
-			this.meldung = meldungsBox("Kein Entwurf entstanden", ex.getMessage(), "fehler");
-			zeigeEntwurf();
-		}
+		}, (fehler) -> {
+			kiWartet(false);
+			if (fehler instanceof KeinKiEntwurfException ex) {
+				// UC-006 A2: Es ist kein Entwurf entstanden; Ausgangspunkt und Angaben bleiben, weiter bei Schritt 5.
+				this.meldung = meldungsBox("Kein Entwurf entstanden", ex.getMessage(), "fehler");
+				zeigeEntwurf();
+			}
+			else {
+				throw fehler;
+			}
+		});
+	}
+
+	/** NFR-012: Während das KI-Modell entwirft, ist die Anforderung gesperrt und der Wartehinweis sichtbar. */
+	private void kiWartet(boolean wartet) {
+		this.kiAnfordern.setEnabled(!wartet);
+		this.kiWartehinweis.setVisible(wartet);
 	}
 
 	/** UC-006 A6 und A7: Hinweis auf genügend Fragen, weitere ergänzen oder abbrechen. */
@@ -443,7 +470,10 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		weitere.setHelperText("1 bis 10");
 		Paragraph text = new Paragraph("Jedes Handlungsfeld hat bereits mindestens " + anzahl
 				+ " Fragen. Sie können weitere Fragen vom KI-Modell entwerfen lassen oder die Anforderung abbrechen.");
-		dialog.add(new VerticalLayout(text, weitere));
+		// UC-006 A6, NFR-012: Wartehinweis, bis die weiteren Fragen vorliegen (ADR-005)
+		Div warten = KiWarten.wartehinweis(WARTEN_KI_ENTWURF, "genug-wartehinweis");
+		warten.setVisible(false);
+		dialog.add(new VerticalLayout(text, weitere, warten));
 		Button abbrechen = new Button("Abbrechen", (event) -> dialog.close());
 		abbrechen.setId("genug-abbrechen");
 		Button ergaenzen = new Button("Weitere Fragen ergänzen", (event) -> {
@@ -454,20 +484,29 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 				weitere.setErrorMessage("Die Zahl muss zwischen 1 und 10 liegen.");
 				return;
 			}
-			try {
-				KiErgebnis ergebnis = this.service.weitereFragen(rolle.id(), aktuellerEntwurf(),
-						new KiAngaben(wert, bisher.schwerpunkte()));
-				dialog.close();
-				if (ergebnis instanceof KiErgebnis.Ergaenzt ergaenzt) {
-					uebernehmeEntwurf(ergaenzt.entwurf());
-				}
-				zeigeEntwurf();
-			}
-			catch (KeinKiEntwurfException ex) {
-				dialog.close();
-				this.meldung = meldungsBox("Kein Entwurf entstanden", ex.getMessage(), "fehler");
-				zeigeEntwurf();
-			}
+			weitere.setInvalid(false);
+			weitere.setReadOnly(true);
+			event.getSource().setEnabled(false);
+			warten.setVisible(true);
+			List<KatalogFrage> entwurfBisher = aktuellerEntwurf();
+			KiAngaben angaben = new KiAngaben(wert, bisher.schwerpunkte());
+			this.kiWarten.ausfuehren(() -> this.service.weitereFragen(rolle.id(), entwurfBisher, angaben),
+					(ergebnis) -> {
+						dialog.close();
+						if (ergebnis instanceof KiErgebnis.Ergaenzt ergaenzt) {
+							uebernehmeEntwurf(ergaenzt.entwurf());
+						}
+						zeigeEntwurf();
+					}, (fehler) -> {
+						dialog.close();
+						if (fehler instanceof KeinKiEntwurfException ex) {
+							this.meldung = meldungsBox("Kein Entwurf entstanden", ex.getMessage(), "fehler");
+							zeigeEntwurf();
+						}
+						else {
+							throw fehler;
+						}
+					});
 		});
 		ergaenzen.addThemeVariants(ButtonVariant.PRIMARY);
 		ergaenzen.setId("genug-ergaenzen");

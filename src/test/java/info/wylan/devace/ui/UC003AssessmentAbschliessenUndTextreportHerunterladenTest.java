@@ -36,6 +36,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.bean.override.convention.TestBean;
+import org.springframework.core.task.TaskExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,6 +69,16 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 
 	private static final String NICHT_NUTZBAR = "Diese Einladung wurde bereits eingelöst oder ist abgelaufen.";
 
+	private static final HintergrundExecutorFake HINTERGRUND = new HintergrundExecutorFake();
+
+	/** ADR-005: Die KI-Aufrufe laufen im Test sofort; ihr Ergebnis erreicht die Ansicht mit roundTrip(). */
+	@TestBean(name = "applicationTaskExecutor", methodName = "hintergrund")
+	TaskExecutor applicationTaskExecutor;
+
+	static TaskExecutor hintergrund() {
+		return HINTERGRUND;
+	}
+
 	@TestBean
 	KiModellClient kiModellClient;
 
@@ -88,6 +99,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	@BeforeEach
 	void zuruecksetzen() {
 		KI.reset();
+		HINTERGRUND.reset();
 		UHR.zuruecksetzen();
 	}
 
@@ -109,6 +121,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 
 		// Schritt 1
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		// Schritt 5: Auswertung mit Radar-Chart, Scores je Handlungsfeld und Textreport
 		assertThat(text()).contains("Ihre Auswertung").contains("Rolle: UC003 Entwicklung");
@@ -152,6 +165,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		alleFragenBeantwortet();
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		String svg = find(Html.class).single().getElement().getOuterHTML();
 		// BR-001: fünf Ringe für die Ganzzahlen 1 bis 5, eine Achse je Handlungsfeld, ein Punkt je Score
@@ -167,6 +181,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		String referenz = alleFragenBeantwortet();
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		assertThat(KI.textreportAnfragen()).hasSize(1);
 		TextreportAnfrage anfrage = KI.textreportAnfragen().get(0);
@@ -186,6 +201,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		alleFragenBeantwortet();
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		assertThat(text()).contains("Scores und Textreport sind kein Bestandteil der Leistungsbeurteilung.");
 	}
@@ -196,6 +212,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	void teilnehmer_laedt_den_textreport_als_pdf_herunter_und_seine_antworten_sind_geloescht() throws Exception {
 		String referenz = alleFragenBeantwortet();
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		// Schritte 6 und 7
 		ByteArrayOutputStream pdf = new ByteArrayOutputStream();
@@ -225,6 +242,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		KI.failNextTextreport();
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		// A1 Schritt 1: Hinweis im Wortlaut des Mockups (OQ-069)
 		assertThat(find(Div.class).withId("textreport-nicht-erstellt").single().getElement().getTextRecursively())
@@ -242,6 +260,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 
 		// A1 Schritt 3: weiter bei Schritt 1
 		test(button("assessment-abschluss-erneut")).click();
+		roundTrip();
 
 		assertThat(text()).contains("Ihre Auswertung");
 		assertThat(this.jdbc.sql("select count(*) from score where mag_id = 9401").query(Long.class).single()).isEqualTo(2L);
@@ -255,6 +274,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		KI.liefertNaechstenTextreportNicht();
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		assertThat(find(Div.class).withId("textreport-nicht-erstellt").exists()).isTrue();
 		assertThat(this.jdbc.sql("select count(*) from score where mag_id = 9401").query(Long.class).single()).isZero();
@@ -271,6 +291,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 				"Sie schreiben: „Wir halten Kontext, Alternativen und Folgen jeder Entscheidung fest“.", "Weiter so."))));
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		assertThat(find(Div.class).withId("textreport-nicht-erstellt").exists()).isTrue();
 		assertThat(this.jdbc.sql("select count(*) from score where mag_id = 9401").query(Long.class).single()).isZero();
@@ -287,6 +308,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 				"Sie halten Kontext, Alternativen und Folgen jeder Entscheidung bewusst fest.", "Weiter so."))));
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		assertThat(text()).contains("Ihre Auswertung");
 		assertThat(assessmentStatus(referenz)).isEqualTo("Abgeschlossen");
@@ -300,8 +322,11 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	void ohne_download_wird_der_textreport_nicht_erneut_angeboten_und_die_antworten_sind_geloescht() {
 		String referenz = alleFragenBeantwortet();
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		// der Teilnehmer verlässt die Auswertung und ruft seine Einladung erneut auf
+		// der erneute Aufruf ist im Browser ein neuer Seitenaufruf; ohne Umweg ignoriert Browserless ihn nach roundTrip()
+		navigate(LoginView.class);
 		navigate(AssessmentView.class, referenz);
 
 		// A2 Schritt 1, BR-005: keine Auswertung und kein Textreport mehr
@@ -322,6 +347,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	void zweiter_download_ist_nicht_mehr_verfuegbar() {
 		alleFragenBeantwortet();
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 		test(download()).download(new ByteArrayOutputStream());
 
 		ByteArrayOutputStream zweiter = new ByteArrayOutputStream();
@@ -338,6 +364,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	void textreport_ist_innerhalb_der_stunde_nach_seiner_erstellung_verfuegbar() {
 		alleFragenBeantwortet();
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		// 59 Minuten nach der Erstellung ist er noch verfügbar
 		UHR.vorstellen(Duration.ofMinutes(59));
@@ -351,6 +378,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	void verfallener_textreport_ist_nicht_mehr_verfuegbar() {
 		alleFragenBeantwortet();
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		UHR.vorstellen(Duration.ofHours(1).plusSeconds(1));
 		ByteArrayOutputStream pdf = new ByteArrayOutputStream();
@@ -369,6 +397,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 		alleFragenBeantwortet();
 
 		test(button("assessment-abschliessen")).click();
+		roundTrip();
 
 		String svg = find(Html.class).single().getElement().getOuterHTML();
 		assertThat(svg).contains("role=\"img\"").contains("aria-label=\"Radar-Chart der Scores je Handlungsfeld\"");
@@ -380,6 +409,27 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 	 * Vorbedingung: Einladung angelegt, Assessment gestartet und alle fünf Fragen beantwortet, mit den Stufen 4, 3, 3,
 	 * 3 im Handlungsfeld 1 und 2 im Handlungsfeld 2.
 	 */
+	@Test
+	@UseCase(id = "UC-003", scenario = "Main Success Scenario", requirements = { "NFR-012" })
+	void zeigt_den_wartehinweis_bis_der_textreport_vorliegt() {
+		String referenz = alleFragenBeantwortet();
+
+		HINTERGRUND.anhalten();
+		test(button("assessment-abschliessen")).click();
+
+		// Schritt 3, NFR-012: der Wartehinweis ersetzt den Abschluss, bis der Textreport vorliegt
+		assertThat(find(Div.class).withId("assessment-wartehinweis").single().getElement().getTextRecursively())
+			.isEqualTo("Ihr Textreport wird erstellt. Das dauert bis zu 45 Sekunden.");
+		assertThat(find(Button.class).withId("assessment-abschliessen").all()).isEmpty();
+		assertThat(assessmentStatus(referenz)).isEqualTo("Laufend");
+
+		HINTERGRUND.fortsetzen();
+		roundTrip();
+		// Schritt 5: die Auswertung, kein Wartehinweis mehr
+		assertThat(find(Div.class).withId("assessment-wartehinweis").all()).isEmpty();
+		assertThat(find(Div.class).withId("assessment-abgeschlossen").all()).hasSize(1);
+	}
+
 	private String alleFragenBeantwortet() {
 		return alleFragenBeantwortet(null);
 	}
@@ -401,6 +451,7 @@ class UC003AssessmentAbschliessenUndTextreportHerunterladenTest extends SpringBr
 			String text = (i == 0 && ersteAntwort != null) ? ersteAntwort : "Antwort " + (i + 1) + ".";
 			test(find(TextArea.class).withId("assessment-antwort").single()).setValue(text);
 			test(button("assessment-senden")).click();
+			roundTrip();
 		}
 		assertThat(find(Div.class).withId("assessment-fertig").exists()).isTrue();
 		return referenz;

@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -33,6 +34,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.convention.TestBean;
+import org.springframework.core.task.TaskExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,6 +63,16 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 	private static final KiModellClientFake KI = new KiModellClientFake();
 
+	private static final HintergrundExecutorFake HINTERGRUND = new HintergrundExecutorFake();
+
+	/** ADR-005: Die KI-Aufrufe laufen im Test sofort; ihr Ergebnis erreicht die Ansicht mit roundTrip(). */
+	@TestBean(name = "applicationTaskExecutor", methodName = "hintergrund")
+	TaskExecutor applicationTaskExecutor;
+
+	static TaskExecutor hintergrund() {
+		return HINTERGRUND;
+	}
+
 	@TestBean
 	KiModellClient kiModellClient;
 
@@ -74,6 +86,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	@BeforeEach
 	void zuruecksetzen() {
 		KI.reset();
+		HINTERGRUND.reset();
 	}
 
 	@AfterEach
@@ -244,7 +257,8 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 		test(find(Button.class).withId("entwurf-speichern").single()).click();
 
-		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Vorgabe fehlt."));
+		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Der Entwurf ist unvollständig")
+				&& text.contains("Vorgabe fehlt."));
 		assertThat(this.jdbc.sql("select count(*) from fragenkatalog where rolle_id = 9101").query(Long.class).single())
 			.isZero();
 
@@ -331,6 +345,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		assertThat(find(IntegerField.class).withId("ki-anzahl").single().getValue()).isEqualTo(3);
 		find(TextArea.class).withId("ki-schwerpunkte").single().setValue("Praxisfragen zur Zusammenarbeit");
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		assertThat(KI.anfragen()).hasSize(1);
 		KiModellClient.EntwurfAnfrage anfrage = KI.anfragen().get(0);
@@ -347,6 +362,28 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 	}
 
 	@Test
+	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", requirements = { "NFR-012" })
+	void zeigt_den_wartehinweis_bis_der_ki_entwurf_vorliegt() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(LEER)).click();
+
+		HINTERGRUND.anhalten();
+		test(find(Button.class).withId("ki-anfordern").single()).click();
+
+		// Schritt 6, NFR-012: der Wartehinweis, bis der KI-Entwurf vorliegt; die Anforderung ist gesperrt
+		assertThat(find(Div.class).withId("ki-wartehinweis").single().getElement().getTextRecursively())
+			.isEqualTo("Der KI-Entwurf wird erstellt.");
+		assertThat(find(Button.class).withId("ki-anfordern").single().isEnabled()).isFalse();
+		assertThat(KI.anfragen()).isEmpty();
+
+		HINTERGRUND.fortsetzen();
+		roundTrip();
+		// Schritt 7: der Entwurf je Handlungsfeld, kein Wartehinweis mehr
+		assertThat(find(Div.class).withId("ki-wartehinweis").all()).isEmpty();
+		assertThat(fragen(1)).hasSize(3);
+	}
+
+	@Test
 	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "BR-010" })
 	void ki_entwurf_aendert_vorhandene_fragen_nicht_und_ergaenzt_nur_die_fehlenden() {
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
@@ -354,6 +391,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		auswaehlen(Ausgangspunkt.FREIGEGEBENE_VERSION);
 
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		Map<Integer, Integer> angefordert = KI.anfragen()
 			.get(0)
@@ -375,6 +413,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		for (int ungueltig : new int[] { 0, 11 }) {
 			anzahl.setValue(ungueltig);
 			test(find(Button.class).withId("ki-anfordern").single()).click();
+			roundTrip();
 			assertThat(anzahl.isInvalid()).isTrue();
 			assertThat(anzahl.getErrorMessage()).isEqualTo("Die Zahl muss zwischen 1 und 10 liegen.");
 		}
@@ -383,6 +422,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		// die Grenzen 1 und 10 sind zulässig
 		anzahl.setValue(10);
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		assertThat(KI.anfragen()).hasSize(1);
 		assertThat(KI.anfragen().get(0).handlungsfelder()).allMatch(h -> h.anzahl() == 10);
 	}
@@ -396,6 +436,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 		schwerpunkte.setValue("S".repeat(2001));
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		assertThat(schwerpunkte.isInvalid()).isTrue();
 		assertThat(schwerpunkte.getErrorMessage()).isEqualTo("Höchstens 2000 Zeichen.");
@@ -404,6 +445,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		// genau 2000 Zeichen sind zulässig
 		schwerpunkte.setValue("S".repeat(2000));
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		assertThat(KI.anfragen()).hasSize(1);
 		assertThat(KI.anfragen().get(0).schwerpunkte()).hasSize(2000);
 	}
@@ -419,14 +461,17 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 		KI.failNext();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
-		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Das KI-Modell hat keinen Entwurf geliefert."));
+		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Kein Entwurf entstanden")
+				&& text.contains("Das KI-Modell hat keinen Entwurf geliefert."));
 		assertThat(fragenGesamt()).isEqualTo(2);
 		assertThat(find(IntegerField.class).withId("ki-anzahl").single().getValue()).isEqualTo(4);
 		assertThat(find(TextArea.class).withId("ki-schwerpunkte").single().getValue()).isEqualTo("Schwerpunkt A");
 
 		// der Use Case wird bei Schritt 5 fortgesetzt: ein erneuter Versuch ergänzt den Entwurf
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		assertThat(fragenGesamt()).isEqualTo(24);
 	}
 
@@ -438,6 +483,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 
 		KI.antwortet(List.of());
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		assertThat(fehlerMeldungen()).anyMatch(text -> text.contains("Das KI-Modell hat keinen Entwurf geliefert."));
 		assertThat(fragenGesamt()).isZero();
@@ -452,6 +498,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		KI.antwortet(List.of(new VorgeschlageneFrage(1, "UC006 Unvollständige KI-Frage?",
 				List.of("v0", "v1", "v2", "v3", "", ""))));
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		assertThat(fragen(1)).containsExactly("UC006 Unvollständige KI-Frage?");
 		assertThat(test(handlungsfeldGrids().get(0)).getCellComponent(0, 2).getElement().getTextRecursively())
@@ -468,23 +515,95 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		assertThat(fragenGesamt()).isEqualTo(18);
 
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		// BR-010: jedes Handlungsfeld hat schon 3 Fragen: kein weiterer Aufruf, stattdessen der Hinweis
 		assertThat(KI.anfragen()).hasSize(1);
 		assertThat(find(Dialog.class).single().getHeaderTitle()).isEqualTo("Genügend Fragen vorhanden");
 		assertThat(find(Paragraph.class).all().stream().map(p -> p.getText()))
-			.anyMatch(text -> text.contains("Jedes Handlungsfeld hat bereits mindestens 3 Fragen."));
+			.anyMatch(text -> text.contains("Jedes Handlungsfeld hat bereits mindestens 3 Fragen. Sie können weitere Fragen "
+					+ "vom KI-Modell entwerfen lassen oder die Anforderung abbrechen."));
 
 		// A6 Schritt 2 und 3: weitere Fragen je Handlungsfeld
 		find(IntegerField.class).withId("weitere-anzahl").single().setValue(2);
 		test(find(Button.class).withId("genug-ergaenzen").single()).click();
+		roundTrip();
 
 		assertThat(KI.anfragen()).hasSize(2);
 		assertThat(KI.anfragen().get(1).handlungsfelder()).hasSize(6).allMatch(h -> h.anzahl() == 2);
 		assertThat(fragenGesamt()).isEqualTo(30);
+	}
+
+	@Test
+	@UseCase(id = "UC-006", scenario = "A6: Genügend Fragen vorhanden", requirements = { "NFR-012" })
+	void zeigt_den_wartehinweis_bis_die_weiteren_fragen_vorliegen() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(LEER)).click();
+		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
+		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
+
+		HINTERGRUND.anhalten();
+		find(IntegerField.class).withId("weitere-anzahl").single().setValue(1);
+		test(find(Button.class).withId("genug-ergaenzen").single()).click();
+
+		// A6 Schritt 3, NFR-012: der Wartehinweis im Dialog, bis die weiteren Fragen vorliegen
+		assertThat(find(Div.class).withId("genug-wartehinweis").single().getElement().getTextRecursively())
+			.isEqualTo("Der KI-Entwurf wird erstellt.");
+		assertThat(find(Button.class).withId("genug-ergaenzen").single().isEnabled()).isFalse();
+		assertThat(fragenGesamt()).isEqualTo(18);
+
+		HINTERGRUND.fortsetzen();
+		roundTrip();
+		// A6 Schritt 4: weiter bei Schritt 7, der Dialog ist geschlossen
+		assertThat(find(Dialog.class).all()).isEmpty();
+		assertThat(fragenGesamt()).isEqualTo(24);
+	}
+
+	@Test
+	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "BR-010" })
+	void handlungsfeld_mit_genuegend_fragen_wird_nicht_angefragt_und_bekommt_keine_frage() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(FREIGEGEBEN)).click();
+		auswaehlen(Ausgangspunkt.FREIGEGEBENE_VERSION);
+		// die freigegebene Version hat in den Handlungsfeldern 1 und 2 je eine Frage
+		find(IntegerField.class).withId("ki-anzahl").single().setValue(1);
+
+		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
+
+		// BR-010: Handlungsfelder, die die Zahl schon erreichen, fehlen in der Anfrage und bleiben unverändert
+		assertThat(KI.anfragen().get(0).handlungsfelder()).extracting(KiModellClient.HandlungsfeldAnfrage::nummer)
+			.containsExactlyInAnyOrder(3, 4, 5, 6);
+		assertThat(fragen(1)).containsExactly("UC006 Wie gehen Sie mit Anforderungen um?");
+		assertThat(fragen(2)).containsExactly("UC006 Wie begründen Sie eine Entscheidung?");
+		for (int feld = 3; feld <= 6; feld++) {
+			assertThat(fragen(feld)).hasSize(1);
+		}
+	}
+
+	@Test
+	@UseCase(id = "UC-006", scenario = "Steps 5-7: KI-Entwurf", businessRules = { "BR-010" })
+	void ki_entwurf_ergaenzt_hoechstens_bis_zur_angegebenen_zahl() {
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		test(aktion(LEER)).click();
+		find(IntegerField.class).withId("ki-anzahl").single().setValue(1);
+		List<String> vorgaben = List.of("v0", "v1", "v2", "v3", "v4", "v5");
+		// das KI-Modell liefert für Handlungsfeld 1 drei Fragen statt einer
+		KI.antwortet(List.of(new VorgeschlageneFrage(1, "UC006 KI-Frage A?", vorgaben),
+				new VorgeschlageneFrage(1, "UC006 KI-Frage B?", vorgaben),
+				new VorgeschlageneFrage(1, "UC006 KI-Frage C?", vorgaben)));
+
+		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
+
+		// BR-010: das System ergänzt nur, bis die angegebene Zahl erreicht ist
+		assertThat(fragen(1)).hasSize(1);
 	}
 
 	@Test
@@ -493,12 +612,15 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		IntegerField weitere = find(IntegerField.class).withId("weitere-anzahl").single();
 
 		for (int ungueltig : new int[] { 0, 11 }) {
 			weitere.setValue(ungueltig);
 			test(find(Button.class).withId("genug-ergaenzen").single()).click();
+			roundTrip();
 			assertThat(weitere.isInvalid()).isTrue();
 			assertThat(weitere.getErrorMessage()).isEqualTo("Die Zahl muss zwischen 1 und 10 liegen.");
 		}
@@ -514,7 +636,9 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 
 		test(find(Button.class).withId("genug-abbrechen").single()).click();
 
@@ -578,6 +702,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
 		test(aktion(LEER)).click();
 		test(find(Button.class).withId("ki-anfordern").single()).click();
+		roundTrip();
 		test(find(Button.class).withId("entwurf-speichern").single()).click();
 
 		List<int[]> zeilen = this.jdbc.sql("""
@@ -617,6 +742,16 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		UI.getCurrent().navigate("fragenkatalog-erstellen");
 
 		assertThat(find(FragenkatalogUndEntscheidungsmodellErstellenView.class).exists()).isTrue();
+		assertThat(navigationseintrag("Fragenkatalog").isEnabled()).isTrue();
+	}
+
+	@Test
+	@WithMockUser(username = "uc001-teamleitung", roles = "TEAMLEITUNG")
+	@UseCase(id = "UC-006", businessRules = { "BR-009" }, requirements = { "NFR-005" })
+	void navigation_zeigt_den_eintrag_ohne_berechtigung_deaktiviert() {
+		navigate(EinladungErstellenUndVersendenView.class);
+
+		assertThat(navigationseintrag("Fragenkatalog").isEnabled()).isFalse();
 	}
 
 	// ---------------------------------------------------------------- Hilfen
@@ -669,6 +804,14 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		for (int stufe = 0; stufe < vorgaben.length; stufe++) {
 			test(find(TextArea.class).withId("vorgabe-" + stufe).single()).setValue(vorgaben[stufe]);
 		}
+	}
+
+	private SideNavItem navigationseintrag(String beschriftung) {
+		return find(SideNavItem.class).all()
+			.stream()
+			.filter(eintrag -> beschriftung.equals(eintrag.getLabel()))
+			.findFirst()
+			.orElseThrow();
 	}
 
 	private List<String> fehlerMeldungen() {

@@ -10,7 +10,7 @@
 **Auslösendes Ereignis:** Der Teilnehmer ruft das Assessment über seine Einladung auf.  
 **Status:** Getestet  
 
-**Anforderungen:** [FR-003, FR-004, FR-005, FR-006, NFR-001, NFR-004, NFR-006, NFR-010, C-001, C-005](../requirements.md)  
+**Anforderungen:** [FR-003, FR-004, FR-005, FR-006, NFR-001, NFR-004, NFR-006, NFR-010, NFR-012, C-001, C-005](../requirements.md)  
 **Schichten:** UI  
 **Mockup:** [Starthinweis](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=33-3403), [Frage beantworten](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=33-3586), [Antwort zu lang (A4)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=33-3794), [Alle Fragen beantwortet](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=33-3988), [Einladung nicht nutzbar (A1)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=33-4094), [Wiederaufnahme (A2)](https://www.figma.com/design/SSeuF968QrgtXzD5Wvna6x/devace-%E2%80%93-Application?node-id=33-4179)
 
@@ -27,7 +27,7 @@
 3. Der Teilnehmer bestätigt den Starthinweis.
 4. Das System startet das Assessment und stellt die erste Frage des Fragenkatalogs seiner Rolle.
 5. Der Teilnehmer beantwortet die Frage in Freitext.
-6. Das System legt die Antwort dem KI-Modell vor, das sie nach dem Entscheidungsmodell einer Stufe zuordnet.
+6. Das System legt die Antwort dem KI-Modell vor, das sie nach dem Entscheidungsmodell einer Stufe zuordnet. Bis die Zuordnung vorliegt, zeigt das System den Wartehinweis „Ihre Antwort wird verarbeitet.“
 7. Das System speichert Antwort und Stufe und stellt die nächste Frage. Die Schritte 5 bis 7 wiederholen sich, bis alle Fragen beantwortet sind.
 8. Das System meldet, dass alle Fragen beantwortet sind, und bietet den Abschluss des Assessments an, den UC-003 ausführt.
 

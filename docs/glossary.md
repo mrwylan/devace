@@ -22,6 +22,7 @@ Quelle: `docs/vision.md` (Entwurf 0.7). Pro Konzept gilt genau ein Begriff. Spal
 | Score | Ergebnis eines Handlungsfelds: Summe der Stufen aller Fragen dieses Handlungsfelds geteilt durch deren Anzahl, also ein Wert zwischen 0 und 5. | Punktzahl, Punkte |
 | Radar-Chart | Darstellung der Scores aller Handlungsfelder als Netzdiagramm: je MAG und Rolle für Teamleitung und Schulungsverantwortliche, beim Abschluss eines Assessments die eigenen Scores des Teilnehmers. | Spinnendiagramm |
 | Textreport | Vom KI-Modell erstelltes Textdokument zum Abschluss eines Assessments: Es würdigt die Leistung des Teilnehmers, begründet seine Einstufung und gibt Hinweise auf seine nächsten Investitionen. Der Teilnehmer erhält es einmalig zum Download und verwaltet es selbst. | Bericht |
+| Wartehinweis | Hinweis, den das System zeigt, solange es auf eine Antwort des KI-Modells wartet, und der nennt, worauf gewartet wird. | |
 | Einladung | Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt, einer MAG und Rolle zuordnet und per E-Mail verschickt. Sie gilt 1 bis 30 Tage und berechtigt in dieser Zeit zu genau einem Assessment. | Token |
 | Starthinweis | Information, die jeder Teilnehmer vor dem Assessment erhält: eingesetzte KI-Modelle, nicht zu erfassende Angaben und Geltung der Firmenweisungen zum Umgang mit KI. | |
 | Testfall | Vorgegebene Antwort mit erwarteter Stufe, mit dem die KI-Bewertung abgesichert wird. | |
