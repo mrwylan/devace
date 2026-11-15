@@ -50,7 +50,7 @@
 **Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert keine Frage, obwohl Fragen offen sind (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist darauf hin, dass kein Entwurf entstanden ist: „Das KI-Modell hat keinen Entwurf geliefert.“
+1. Das System weist darauf hin, dass kein Entwurf entstanden ist: „Kein Entwurf entstanden“ mit „Das KI-Modell hat keinen Entwurf geliefert.“
 2. Das System behält den Ausgangspunkt und die bisherigen Angaben.
 3. Der Use Case wird bei Schritt 5 fortgesetzt.
 
@@ -68,7 +68,7 @@
 **Auslöser:** Eine Frage hat keinen Wortlaut, ein Entscheidungsmodell hat nicht für jede Stufe von 0 bis 5 eine Vorgabe, oder eine Angabe ist zu lang (Schritt 10)  
 **Ablauf:**
 
-1. Das System weist auf die betroffenen Fragen und Angaben hin: „Wortlaut fehlt.“, „Vorgabe fehlt.“ oder „Höchstens 500 Zeichen.“
+1. Das System weist mit „Der Entwurf ist unvollständig“ auf die betroffenen Fragen und Angaben hin, je Frage und Stufe mit „Wortlaut fehlt.“, „Vorgabe fehlt.“ oder „Höchstens 500 Zeichen.“
 2. Der Administrator korrigiert den Entwurf.
 3. Der Use Case wird bei Schritt 8 fortgesetzt.
 
@@ -85,7 +85,7 @@
 **Auslöser:** Jedes Handlungsfeld hat bereits mindestens die angegebene Zahl an Fragen (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist darauf hin, dass genügend Fragen vorhanden sind: „Jedes Handlungsfeld hat bereits mindestens N Fragen.“ mit N als angegebener Zahl. Es bietet an, die KI-Anforderung mit „Abbrechen“ abzubrechen oder mit „Weitere Fragen ergänzen“ weitere Fragen zu ergänzen.
+1. Das System weist darauf hin, dass genügend Fragen vorhanden sind: „Jedes Handlungsfeld hat bereits mindestens N Fragen.“ mit N als angegebener Zahl, gefolgt von „Sie können weitere Fragen vom KI-Modell entwerfen lassen oder die Anforderung abbrechen.“ Es bietet an, die KI-Anforderung mit „Abbrechen“ abzubrechen oder mit „Weitere Fragen ergänzen“ weitere Fragen zu ergänzen.
 2. Der Administrator wählt, weitere Fragen zu ergänzen, und gibt an, wie viele weitere Fragen je Handlungsfeld das KI-Modell entwerfen soll. Ist die Zahl ungültig, weist das System darauf hin, und der Administrator korrigiert sie.
 3. Das System lässt das KI-Modell die weiteren Fragen mit je einem Entscheidungsmodell entwerfen und ergänzt den Entwurf um sie; bis sie vorliegen, zeigt es den Wartehinweis „Der KI-Entwurf wird erstellt.“
 4. Der Use Case wird bei Schritt 7 fortgesetzt.
@@ -128,7 +128,7 @@ Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10. Vorgeschl
 
 ### BR-004: Versionen und Entwurf
 
-Ein neuer Fragenkatalog einer Rolle erhält die um 1 höhere Nummer als die höchste Version dieser Rolle. Eine Rolle hat höchstens einen Entwurf; besteht ein Entwurf, setzt der Administrator ihn fort, statt einen weiteren zu beginnen. Die freigegebene Version als Ausgangspunkt steht nur zur Verfügung, wenn die Rolle eine freigegebene Version hat. Mit ihr übernimmt das System die Fragen mit ihren Entscheidungsmodellen und deren Testfälle (UC-009 BR-010) in die neue Version.
+Ein neuer Fragenkatalog einer Rolle erhält die um 1 höhere Nummer als die höchste Version dieser Rolle. Eine Rolle hat höchstens einen Entwurf; besteht ein Entwurf, setzt der Administrator ihn fort, statt einen weiteren zu beginnen. Die freigegebene Version als Ausgangspunkt steht nur zur Verfügung, wenn die Rolle eine freigegebene Version hat. Mit ihr übernimmt das System die Fragen mit ihren Entscheidungsmodellen in die neue Version; was mit ihren Testfällen geschieht, regelt UC-009 BR-010.
 
 ### BR-005: Nur der Entwurf ändert sich
 

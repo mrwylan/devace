@@ -584,13 +584,14 @@ Das Mockup zeigt für A1 und A2 andere Hinweistexte als OQ-030 festlegt, z. B. "
 **Element:** UC-006 step 6
 **Raised by:** /use-case-implement, 2026-11-08
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Das Modell je Aufgabe (Fragenkatalog erstellen, Antworten bewerten, Textreport) wird in der Konfiguration festgelegt und ist ohne Neubau über Umgebungsvariablen änderbar. Für UC-006 gilt nur die Aufgabe Fragenkatalog erstellen.
 
 Der Nutzer wünscht, dass die Modelle dynamisch gewählt werden können: ein besseres Modell zum Erstellen der Fragen samt Bewertungs-Prompt, ein günstigeres für die Durchführung und Bewertung eines Assessments, ein kleineres für den Textreport. Ob die Wahl später in der Oberfläche (zur Laufzeit) erfolgen soll, ist offen und gehört in eine eigene Anforderung. Der Sekundärakteur ist das KI-Modell. Ersetzt OQ-034, dessen Element keine gültige Form hatte.
 
 **Answer:** Wird per Umgebungsvariable festgelegt. - Aber Achtung JEV Model für die Bewertung hat ein abweichendes REST api (wird aber auch über den OpenRouter URL) angesprochen.
 **Answered by:** Jakob Albrecht, 2026-11-10
+**Resolved in:** UC-006 step 6 (unverändert: die Wahl des Modells je Aufgabe ist Konfiguration der Umsetzung, `DEVACE_KI_MODELL_*`, und gehört nicht in den Schritt)
 
 ## OQ-045: Welche Angaben enthält der Textreport je Handlungsfeld, und enthält er Antworttexte?
 
