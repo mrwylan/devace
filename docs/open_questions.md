@@ -764,10 +764,13 @@ BR-008 lässt die Einladung bis 24:00 Uhr des letzten Gültigkeitstags gelten. U
 **Element:** Entity: EINLADUNG.laeuft_ab_am
 **Raised by:** /entity-model, 2026-11-10
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Der Tag der Erstellung zählt als erster Tag: Eine Einladung mit einem Tag Gültigkeit gilt bis 24 Uhr des Erstellungstags; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
 
 BR-008 lässt die Gültigkeit mit der Erstellung beginnen und bis 24 Uhr des letzten Tages gelten, nennt aber nicht, ob der Erstellungstag mitzählt. Lesart (b): Der Erstellungstag zählt nicht, das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage.
+
+**Answer:** Bestätigt: Der Tag der Erstellung zählt als erster Tag; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-058: Gilt für das Radar-Chart einer kleinen MAG wirklich keine Mindestzahl an Scores?
 
@@ -802,50 +805,65 @@ Ein Handlungsfeld ohne Frage hat nach UC-003 BR-001 keinen Score. Die Anforderun
 **Element:** UC-009 BR-006
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Nein: Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
 
 NFR-009 verlangt, dass die KI mindestens 90 % der Testfälle die erwartete Stufe zuordnet. Offen ist, ob die Freigabe daran gebunden ist. Lesarten: (a) keine Kopplung; (b) die Freigabe verlangt einen bestandenen Testlauf des Entwurfs.
+
+**Answer:** Bestätigt: keine Kopplung. Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-061: Welche Fragenkataloge sind für die Testfälle prüfbar?
 
 **Element:** UC-009 BR-002
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge nicht.
 
 FR-016 nennt nicht, welche Fragenkataloge geprüft werden. Zur Verfeinerung der Vorgaben dient der Entwurf, zur Absicherung die freigegebene Version. Lesarten: (a) Entwurf und freigegebene Version; (b) nur der Entwurf; (c) alle drei Status.
+
+**Answer:** Bestätigt: der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge sind nicht prüfbar.
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-062: Wird bei der Eindeutigkeit einer Matrix-Spalte die Schreibweise unterschieden?
 
 **Element:** UC-010 BR-002
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Nein: Groß- und Kleinschreibung und umgebende Leerzeichen zählen nicht, wie bei MAG und Rolle (UC-008).
 
 Ohne Regel entstünden „Docker“ und „docker“ als zwei Spalten mit getrennten Zuordnungen.
+
+**Answer:** Bestätigt: Groß- und Kleinschreibung und umgebende Leerzeichen zählen nicht, wie bei MAG und Rolle (UC-008).
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-063: Ab wann gilt eine neue Version des Starthinweises, und darf sie rückwirkend beginnen?
 
 **Element:** UC-011 BR-004
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Es gilt die Version mit dem jüngsten Beginn der Gültigkeit, der nicht in der Zukunft liegt; der Beginn liegt nicht in der Vergangenheit.
 
 Das Entity-Modell führt `gueltig_ab` als Datum. Offen ist, ob ein Beginn in der Vergangenheit zulässig ist. Lesarten: (a) nicht in der Vergangenheit; (b) auch rückwirkend, dann gälte die neue Version sofort.
+
+**Answer:** Bestätigt: Es gilt die Version mit dem jüngsten Beginn der Gültigkeit, der nicht in der Zukunft liegt; der Beginn einer neuen Version liegt nicht in der Vergangenheit.
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-064: Gehen Testfälle mit, wenn eine neue Version aus der freigegebenen Version beginnt?
 
 **Element:** UC-009 BR-010
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Ja: Die Testfälle werden mit den übernommenen Fragen in die neue Version übernommen; entfernt der Administrator eine Frage, entfernt das System ihre Testfälle mit.
 
 Ein Testfall gehört zu einer Frage (UC-009 BR-001). UC-006 Schritt 3 erlaubt, die freigegebene Version als neue Version zu beginnen; dabei entstehen neue Fragen. Ohne Regel hätte jede neue Version zunächst keine Testfälle. Lesarten: (a) Testfälle werden übernommen; (b) sie bleiben bei der alten Version, und der Administrator legt sie neu an. UC-006 beschreibt die Übernahme der Fragen, nicht die der Testfälle und müsste ergänzt werden.
+
+**Answer:** Bestätigt: Die Testfälle gehen mit den übernommenen Fragen in die neue Version; entfernt der Administrator eine Frage, entfallen ihre Testfälle (siehe OQ-082).
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-065: Welchen Wortlaut haben die Hinweise bei einer nicht nutzbaren Einladung und bei einer ungültigen Antwort?
 
@@ -947,10 +965,13 @@ BR-007 löscht die Antworten nach dem Download, spätestens 1 Stunde nach Erstel
 **Element:** UC-003 BR-003
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Ab einer Folge von mindestens acht aufeinanderfolgenden Wörtern einer Antwort; dann gilt der Textreport als nicht erstellt (A1).
 
 BR-003 verlangt jetzt, dass das System den Textreport auf wörtliche Antworttexte prüft. Eine kurze Antwort („Ja.“) steht fast immer irgendwo im Text; eine Grenze braucht es, damit die Prüfung nicht jeden Textreport verwirft. Lesarten: eine feste Zahl Wörter, ein Anteil an der Antwort, nur vollständige Antworten.
+
+**Answer:** Bestätigt: ab einer Folge von mindestens acht aufeinanderfolgenden Wörtern einer Antwort; dann gilt der Textreport als nicht erstellt (A1).
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-073: Welche Seite sieht ein Benutzer direkt nach der Anmeldung?
 
