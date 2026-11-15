@@ -774,20 +774,28 @@ BR-008 lässt die Gültigkeit mit der Erstellung beginnen und bis 24 Uhr des let
 **Element:** UC-004 BR-003
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Keine Mindestzahl: Das Radar-Chart entsteht auch aus dem Score eines einzigen Assessments (Vision: „auch für kleine MAGs“).
 
 Bei einer MAG mit einem einzigen Teilnehmer zeigt das Radar-Chart dessen Scores. Die Teamleitung kann sie damit der einen Person zuordnen, obwohl der Score keinen Verweis auf eine Person trägt (NFR-002). Lesarten: (a) keine Mindestzahl, wie die Vision sagt; (b) eine Mindestzahl, darunter kein Chart.
+
+**Answer:** Keine Mindestzahl; das Radar-Chart entsteht auch aus den Scores eines einzigen Assessments.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-004 BR-003
 
 ## OQ-059: Wie erscheint ein Handlungsfeld ohne Score im Radar-Chart?
 
 **Element:** UC-004 BR-006
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Das Handlungsfeld erscheint ohne Wert (nicht als 0), mit der Achse im Chart.
 
 Ein Handlungsfeld ohne Frage hat nach UC-003 BR-001 keinen Score. Die Anforderung sagt nicht, wie das Radar-Chart ihn zeigt. Lesarten: (a) ohne Wert; (b) als 0; (c) Handlungsfeld entfällt im Chart.
+
+**Answer:** Das Handlungsfeld behält seine Achse und zeigt keinen Wert, auch nicht 0.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-004 BR-006
 
 ## OQ-060: Hängt die Freigabe eines Fragenkatalogs an der Trefferquote der Testfälle?
 
@@ -1019,21 +1027,23 @@ Schritt 9 nennt die Bestätigung, aber keinen Wortlaut. Lesarten: „Fragenkatal
 **Element:** UC-004 A1
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A1 nennt den Hinweis, aber keinen Wortlaut. Lesarten: ein Titel mit erklärendem Satz; nur ein Satz.
 
 **Answer:** Nur der Satz „Zu Ihren MAGs liegen noch keine Scores vor.“
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-004 A1
 
 ## OQ-079: Zeigt die Auswertung den Hinweis, dass das Radar-Chart kein Bestandteil der Leistungsbeurteilung ist?
 
 **Element:** UC-004 BR-008
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 BR-008 sagt, dass das Radar-Chart kein Bestandteil der Leistungsbeurteilung ist, aber nicht, ob und wie die Ansicht das zeigt. Lesarten: ein Hinweis unter dem Radar-Chart wie in UC-003; kein Hinweis, die Regel gilt nur für die Verwendung.
 
 **Answer:** Die Ansicht zeigt keinen Hinweis; BR-008 gilt für die Verwendung des Radar-Charts.
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-004 BR-008
