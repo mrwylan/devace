@@ -1012,3 +1012,28 @@ Schritt 9 nennt die Bestätigung, aber keinen Wortlaut. Lesarten: „Fragenkatal
 **Answer:** „Fragenkatalog freigegeben.“
 **Answered by:** Jakob Albrecht, 2026-11-11
 **Resolved in:** UC-007 step 9
+
+
+## OQ-078: Welchen Wortlaut hat der Hinweis, dass noch keine Auswertung möglich ist?
+
+**Element:** UC-004 A1
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Answered
+
+A1 nennt den Hinweis, aber keinen Wortlaut. Lesarten: ein Titel mit erklärendem Satz; nur ein Satz.
+
+**Answer:** Nur der Satz „Zu Ihren MAGs liegen noch keine Scores vor.“
+**Answered by:** Jakob Albrecht, 2026-11-15
+
+## OQ-079: Zeigt die Auswertung den Hinweis, dass das Radar-Chart kein Bestandteil der Leistungsbeurteilung ist?
+
+**Element:** UC-004 BR-008
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Answered
+
+BR-008 sagt, dass das Radar-Chart kein Bestandteil der Leistungsbeurteilung ist, aber nicht, ob und wie die Ansicht das zeigt. Lesarten: ein Hinweis unter dem Radar-Chart wie in UC-003; kein Hinweis, die Regel gilt nur für die Verwendung.
+
+**Answer:** Die Ansicht zeigt keinen Hinweis; BR-008 gilt für die Verwendung des Radar-Charts.
+**Answered by:** Jakob Albrecht, 2026-11-15

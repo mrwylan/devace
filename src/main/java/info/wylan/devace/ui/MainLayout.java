@@ -41,7 +41,11 @@ public class MainLayout extends AppLayout {
 				VaadinIcon.PAPERPLANE.create());
 		// UC-001 BR-009: Einträge ohne passende Berechtigung erscheinen deaktiviert.
 		einladung.setEnabled(teamleitung);
-		einladungen.addItem(einladung);
+		SideNavItem auswertung = new SideNavItem("Radar-Chart", RadarChartEinerMagAuswertenView.class,
+				VaadinIcon.PIE_CHART.create());
+		// UC-004 BR-007: Einträge ohne passende Berechtigung erscheinen deaktiviert.
+		auswertung.setEnabled(teamleitung);
+		einladungen.addItem(einladung, auswertung);
 		// Die Einträge der Administration folgen demselben Muster.
 		SideNav administration = new SideNav("Administration");
 		SideNavItem mags = new SideNavItem("MAGs und Rollen", MagsUndRollenView.class, VaadinIcon.USER.create());
