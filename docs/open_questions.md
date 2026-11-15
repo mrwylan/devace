@@ -764,13 +764,14 @@ BR-008 lässt die Einladung bis 24:00 Uhr des letzten Gültigkeitstags gelten. U
 **Element:** Entity: EINLADUNG.laeuft_ab_am
 **Raised by:** /entity-model, 2026-11-10
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Tag der Erstellung zählt als erster Tag: Eine Einladung mit einem Tag Gültigkeit gilt bis 24 Uhr des Erstellungstags; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
 
 BR-008 lässt die Gültigkeit mit der Erstellung beginnen und bis 24 Uhr des letzten Tages gelten, nennt aber nicht, ob der Erstellungstag mitzählt. Lesart (b): Der Erstellungstag zählt nicht, das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage.
 
 **Answer:** Bestätigt: Der Tag der Erstellung zählt als erster Tag; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** Entity: EINLADUNG.laeuft_ab_am
 
 ## OQ-058: Gilt für das Radar-Chart einer kleinen MAG wirklich keine Mindestzahl an Scores?
 
