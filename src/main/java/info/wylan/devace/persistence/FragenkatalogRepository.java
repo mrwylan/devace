@@ -4,13 +4,17 @@ import static info.wylan.devace.persistence.db.Tables.FRAGE;
 import static info.wylan.devace.persistence.db.Tables.FRAGENKATALOG;
 import static info.wylan.devace.persistence.db.Tables.ROLLE;
 import static info.wylan.devace.persistence.db.Tables.STUFENVORGABE;
+import static info.wylan.devace.persistence.db.Tables.TESTFALL;
 import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.inline;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.jooq.DSLContext;
 import org.jooq.Records;
@@ -61,11 +65,12 @@ public class FragenkatalogRepository {
 			.select(FRAGE.HANDLUNGSFELD_ID, FRAGE.TEXT,
 					multiset(select(STUFENVORGABE.BESCHREIBUNG).from(STUFENVORGABE)
 						.where(STUFENVORGABE.FRAGE_ID.eq(FRAGE.ID))
-						.orderBy(STUFENVORGABE.STUFE)).convertFrom(r -> r.map(rec -> rec.value1())))
+						.orderBy(STUFENVORGABE.STUFE)).convertFrom(r -> r.map(rec -> rec.value1())),
+					FRAGE.ID)
 			.from(FRAGE)
 			.where(FRAGE.FRAGENKATALOG_ID.eq(katalogId))
 			.orderBy(FRAGE.POSITION)
-			.fetch(Records.mapping(KatalogFrage::new));
+			.fetch(Records.mapping((feld, text, vorgaben, id) -> new KatalogFrage(feld, text, vorgaben, id)));
 	}
 
 	/**
@@ -96,20 +101,54 @@ public class FragenkatalogRepository {
 
 	/**
 	 * UC-006 step 11: ersetzt die Fragen des Katalogs durch die übergebenen; die Position ergibt sich aus der
-	 * Reihenfolge, die Stufenvorgaben der alten Fragen entfallen mit ihnen.
+	 * Reihenfolge. Eine Frage dieses Katalogs bleibt mit ihren Testfällen erhalten und wird geändert; eine Frage aus
+	 * einem anderen Katalog (die freigegebene Version als Ausgangspunkt) wird neu angelegt und bringt ihre Testfälle
+	 * mit; eine entfernte Frage entfällt samt ihren Testfällen (UC-009 BR-010).
 	 */
 	public void ersetzeFragen(long katalogId, List<KatalogFrage> fragen) {
-		this.ctx.deleteFrom(FRAGE).where(FRAGE.FRAGENKATALOG_ID.eq(katalogId)).execute();
+		Set<Long> vorhanden = new HashSet<>(
+				this.ctx.select(FRAGE.ID).from(FRAGE).where(FRAGE.FRAGENKATALOG_ID.eq(katalogId)).fetch(FRAGE.ID));
+		Set<Long> behalten = new HashSet<>();
+		// UC-006 BR-002: Die Position ist eindeutig. Damit behaltene Fragen ihre Plätze tauschen können, rücken sie
+		// zuerst hinter alle bisherigen und künftigen Positionen.
+		int ausweich = Math.max(vorhanden.size(), fragen.size());
+		this.ctx.update(FRAGE)
+			.set(FRAGE.POSITION, FRAGE.POSITION.plus(ausweich))
+			.where(FRAGE.FRAGENKATALOG_ID.eq(katalogId))
+			.execute();
 		int position = 1;
 		for (KatalogFrage frage : fragen) {
-			long frageId = this.ctx.insertInto(FRAGE)
-				.set(FRAGE.FRAGENKATALOG_ID, katalogId)
-				.set(FRAGE.HANDLUNGSFELD_ID, frage.handlungsfeldId())
-				.set(FRAGE.TEXT, frage.text())
-				.set(FRAGE.POSITION, position++)
-				.returning(FRAGE.ID)
-				.fetchSingle()
-				.getId();
+			Long herkunft = frage.frageId();
+			long frageId;
+			if (herkunft != null && vorhanden.contains(herkunft)) {
+				// UC-009 BR-010: Die Frage bleibt dieselbe, damit ihre Testfälle erhalten bleiben.
+				this.ctx.update(FRAGE)
+					.set(FRAGE.HANDLUNGSFELD_ID, frage.handlungsfeldId())
+					.set(FRAGE.TEXT, frage.text())
+					.set(FRAGE.POSITION, position++)
+					.where(FRAGE.ID.eq(herkunft))
+					.execute();
+				this.ctx.deleteFrom(STUFENVORGABE).where(STUFENVORGABE.FRAGE_ID.eq(herkunft)).execute();
+				frageId = herkunft;
+				behalten.add(herkunft);
+			}
+			else {
+				frageId = this.ctx.insertInto(FRAGE)
+					.set(FRAGE.FRAGENKATALOG_ID, katalogId)
+					.set(FRAGE.HANDLUNGSFELD_ID, frage.handlungsfeldId())
+					.set(FRAGE.TEXT, frage.text())
+					.set(FRAGE.POSITION, position++)
+					.returning(FRAGE.ID)
+					.fetchSingle()
+					.getId();
+				if (herkunft != null) {
+					// UC-009 BR-010: Die neue Version übernimmt die Testfälle der Frage, aus der sie stammt.
+					this.ctx.insertInto(TESTFALL, TESTFALL.FRAGE_ID, TESTFALL.ANTWORTTEXT, TESTFALL.ERWARTETE_STUFE)
+						.select(select(inline(frageId), TESTFALL.ANTWORTTEXT, TESTFALL.ERWARTETE_STUFE).from(TESTFALL)
+							.where(TESTFALL.FRAGE_ID.eq(herkunft)))
+						.execute();
+				}
+			}
 			for (int stufe = 0; stufe < frage.vorgaben().size(); stufe++) {
 				this.ctx.insertInto(STUFENVORGABE)
 					.set(STUFENVORGABE.FRAGE_ID, frageId)
@@ -118,6 +157,9 @@ public class FragenkatalogRepository {
 					.execute();
 			}
 		}
+		vorhanden.removeAll(behalten);
+		// UC-009 BR-010: Eine entfernte Frage entfällt; ihre Testfälle entfallen mit ihr (ON DELETE CASCADE).
+		this.ctx.deleteFrom(FRAGE).where(FRAGE.ID.in(vorhanden)).execute();
 	}
 
 	/**

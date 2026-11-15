@@ -8,7 +8,7 @@ import java.util.OptionalInt;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Das KI-Modell, wie UC-006, UC-002 und UC-003 es aufrufen.
+ * Das KI-Modell, wie UC-006, UC-002, UC-003 und UC-009 es aufrufen.
  */
 public interface KiModellClient {
 
@@ -26,6 +26,21 @@ public interface KiModellClient {
 	 * @throws KiModellNichtErreichbarException wenn das KI-Modell nicht antwortet (A5)
 	 */
 	OptionalInt antwortBewerten(BewertungAnfrage anfrage);
+
+	/**
+	 * UC-009 steps 7–8: ordnet eine Antwort wie {@link #antwortBewerten} einer Stufe zu und nennt das Modell, das
+	 * bewertet hat (OQ-084). Liefert leer, wenn das KI-Modell keine gültige Stufe zuordnet (A4).
+	 *
+	 * @throws KiModellNichtErreichbarException wenn das KI-Modell nicht antwortet (A4)
+	 */
+	default Optional<Bewertung> bewerten(BewertungAnfrage anfrage) {
+		OptionalInt stufe = antwortBewerten(anfrage);
+		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), "unbekannt")) : Optional.empty();
+	}
+
+	/** UC-009 step 8: die zugeordnete Stufe und das tatsächlich verwendete Modell. */
+	record Bewertung(int stufe, String modell) {
+	}
 
 	/**
 	 * UC-002 BR-007: nur die Frage, ihre Stufenvorgaben und der Text der Antwort, nichts zu einer Person und keine

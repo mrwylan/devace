@@ -53,11 +53,15 @@ public class MainLayout extends AppLayout {
 				FragenkatalogUndEntscheidungsmodellErstellenView.class, VaadinIcon.LIST_OL.create());
 		SideNavItem freigabe = new SideNavItem("Freigabe", FragenkatalogFreigebenView.class,
 				VaadinIcon.CHECK_SQUARE_O.create());
+		SideNavItem absicherung = new SideNavItem("KI-Absicherung", KiBewertungMitTestfaellenAbsichernView.class,
+				VaadinIcon.FLASK.create());
 		// UC-006 BR-009, UC-007 BR-007, UC-008 BR-007: Einträge ohne Berechtigung erscheinen deaktiviert.
+		// UC-009 BR-011: Einträge ohne passende Berechtigung erscheinen deaktiviert.
+		absicherung.setEnabled(administrator);
 		mags.setEnabled(administrator);
 		katalog.setEnabled(administrator);
 		freigabe.setEnabled(administrator);
-		administration.addItem(katalog, freigabe, mags);
+		administration.addItem(katalog, freigabe, absicherung, mags);
 
 		addToNavbar(new DrawerToggle(), title, abmelden);
 		addToDrawer(einladungen, administration);
