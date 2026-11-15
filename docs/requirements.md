@@ -41,6 +41,8 @@ Dieses Dokument beschreibt Fachinhalt. Technische Umsetzung steht in `CLAUDE.md`
 | NFR-008 | Gleichzeitige Assessments | Das System unterstützt 50 gleichzeitige Assessments ohne Überschreitung der Grenzwerte aus NFR-006. | Scalability | Medium | Open |
 | NFR-009 | Faire Bewertung | Bei Ausführung des Testfall-Katalogs ordnet die KI mindestens 90 % der Testfälle die erwartete Stufe zu; Ergebnis und Abweichungen sind dokumentiert. | Maintainability | High | Open |
 | NFR-010 | Sprache und Zugänglichkeit | Alle Oberflächen, Fragen und Hinweise sind in deutscher Sprache und erfüllen WCAG 2.1 AA. | Usability | Medium | In Progress |
+| NFR-011 | Antwortzeit Textreport | 95 % der Textreporte erscheinen innerhalb von 45 Sekunden, nachdem der Teilnehmer den Abschluss des Assessments angefordert hat; für den Textreport gilt NFR-006 nicht. | Performance | Medium | Open |
+| NFR-012 | Wartehinweis bei KI-Anfragen | Solange das System auf eine Antwort des KI-Modells wartet, zeigt es innerhalb von 1 Sekunde nach der auslösenden Eingabe einen Wartehinweis, der nennt, worauf gewartet wird. | Usability | Medium | Open |
 
 ## Randbedingungen
 
