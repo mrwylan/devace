@@ -28,6 +28,7 @@ final class RadarChart {
 				"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 340' role='img' aria-label='Radar-Chart der Scores je Handlungsfeld' class='devace-radar-svg'>");
 		// UC-003 BR-001: Die Skala zeigt nur die Ganzzahlen 1 bis 5.
 		// UC-004 BR-001: Die Skala zeigt nur die Ganzzahlen.
+		// UC-005 BR-001: Die Skala zeigt nur die Ganzzahlen.
 		for (int stufe = 1; stufe <= 5; stufe++) {
 			svg.append("<polygon class='devace-radar-ring' points='").append(punkte(achsen, stufe / 5.0)).append("'/>");
 		}

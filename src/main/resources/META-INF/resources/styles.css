@@ -240,3 +240,10 @@
     animation-duration: 2.5s;
   }
 }
+
+/* UC-005 step 4: die Radar-Charts aller MAGs nebeneinander */
+.devace-radar-raster {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  gap: 1rem;
+}

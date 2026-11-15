@@ -1047,3 +1047,30 @@ BR-008 sagt, dass das Radar-Chart kein Bestandteil der Leistungsbeurteilung ist,
 **Answer:** Die Ansicht zeigt keinen Hinweis; BR-008 gilt für die Verwendung des Radar-Charts.
 **Answered by:** Jakob Albrecht, 2026-11-15
 **Resolved in:** UC-004 BR-008
+
+
+## OQ-080: Welchen Wortlaut hat der Hinweis, dass noch keine Auswertung für die Schulungsplanung möglich ist?
+
+**Element:** UC-005 A1
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+A1 nennt den Hinweis, aber keinen Wortlaut. Lesarten: ein Satz wie in UC-004 A1, ohne Bezug auf eigene MAGs; ein Satz mit Hinweis, wann Radar-Charts erscheinen.
+
+**Answer:** „Es liegen noch keine Scores vor.“
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-005 A1
+
+## OQ-081: Zeigt die Auswertung für die Schulungsplanung den Hinweis, dass die Radar-Charts kein Bestandteil der Leistungsbeurteilung sind?
+
+**Element:** UC-005 BR-008
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+BR-008 sagt, dass die Radar-Charts kein Bestandteil der Leistungsbeurteilung sind, aber nicht, ob die Ansicht das zeigt. Lesarten: ein Hinweis unter den Radar-Charts; kein Hinweis wie in UC-004 (OQ-079).
+
+**Answer:** Die Ansicht zeigt keinen Hinweis, wie in UC-004; BR-008 gilt für die Verwendung der Radar-Charts.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-005 BR-008
