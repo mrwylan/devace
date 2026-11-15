@@ -184,6 +184,7 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 	void testlauf_fuehrt_alle_testfaelle_aus_und_zeigt_trefferquote_und_abweichungen() {
 		String fragenVorher = fragenUndVorgaben();
 		long laeufeVorher = laeufe();
+		java.time.LocalDateTime vorher = java.time.LocalDateTime.now().minusSeconds(1);
 		navigate(KiBewertungMitTestfaellenAbsichernView.class);
 		waehleKatalog(ENTWURF);
 		// erwartet 3, 1, 4; das KI-Modell ordnet 3, 2, 0 zu: ein Treffer von drei
@@ -215,6 +216,12 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 				from testlauf l join benutzer b on b.id = l.ausgefuehrt_von_id
 				where l.fragenkatalog_id = 9802 order by l.id desc limit 1
 				""").query(String.class).single()).isEqualTo(KiModellClientFake.MODELL + ":uc009-admin:33.33");
+		// Erfolgsfall: der Testlauf mit dem Zeitpunkt seiner Ausführung
+		java.time.LocalDateTime zeitpunkt = this.jdbc
+			.sql("select ausgefuehrt_am from testlauf where fragenkatalog_id = 9802 order by id desc limit 1")
+			.query(java.time.LocalDateTime.class)
+			.single();
+		assertThat(zeitpunkt).isBetween(vorher, java.time.LocalDateTime.now().plusSeconds(1));
 		assertThat(this.jdbc.sql("""
 				select e.ermittelte_stufe from testergebnis e
 				where e.testlauf_id = (select max(id) from testlauf where fragenkatalog_id = 9802) order by e.id
@@ -350,6 +357,7 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 	@UseCase(id = "UC-009", scenario = "A4: KI-Modell liefert keine Stufe")
 	void ohne_stufe_zu_einem_testfall_wird_kein_testlauf_gespeichert() {
 		long laeufeVorher = laeufe();
+		String fragenVorher = fragenUndVorgaben();
 		navigate(KiBewertungMitTestfaellenAbsichernView.class);
 		waehleKatalog(ENTWURF);
 		KI.bewertetDerReiheNachMit(3, -1);
@@ -361,6 +369,11 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 			.isEqualTo("Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.");
 		// Fehlerfall: kein unvollständiger Testlauf
 		assertThat(laeufe()).isEqualTo(laeufeVorher);
+		// Fehlerfall: Fragen und Entscheidungsmodell sind unverändert
+		assertThat(fragenUndVorgaben()).isEqualTo(fragenVorher);
+		// Fehlerfall: Das KI-Modell erhielt bis zum Abbruch keine Angabe, die auf eine Person schließen lässt.
+		assertThat(KI.bewertungen()).hasSize(2)
+			.allSatisfy((anfrage) -> assertThat(anfrage.toString()).doesNotContain("uc009-admin").doesNotContain("@"));
 		// weiter bei Schritt 6: die Ausführung lässt sich erneut anfordern
 		assertThat(button("ki-ausfuehren").isEnabled()).isTrue();
 	}

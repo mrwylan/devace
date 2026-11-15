@@ -104,4 +104,68 @@ class UC009KiBewertungMitTestfaellenAbsichernIT extends AbstractBasePlaywrightIT
 
 	}
 
+
+	@Nested
+	@DisplayName("A2: Angaben zum Testfall ungültig")
+	class A2AngabenUngueltig {
+
+		@Test
+		@DisplayName("Testfall ohne Antwort und Stufe wird am Feld gemeldet")
+		void ohne_antwort_und_stufe() {
+			waehleEntwurf();
+			page.locator("#testfall-hinzufuegen-9804").click();
+			page.locator("#testfall-speichern").click();
+
+			PlaywrightAssertions.assertThat(page.getByText("Antwort fehlt.")).isVisible();
+			PlaywrightAssertions.assertThat(page.getByText("Stufe fehlt.")).isVisible();
+		}
+
+	}
+
+	@Nested
+	@DisplayName("A3: Fragenkatalog ohne Testfall")
+	class A3OhneTestfall {
+
+		@Test
+		@DisplayName("Ausführen ohne Testfall weist darauf hin, dass es nichts auszuführen gibt")
+		void ohne_testfall() {
+			page.locator("vaadin-grid-cell-content")
+				.filter(new com.microsoft.playwright.Locator.FilterOptions().setHasText("UC009 Ohne Testfall"))
+				.first()
+				.click();
+			page.locator("#ki-ausfuehren").click();
+
+			PlaywrightAssertions.assertThat(page.locator("#ki-ausfuehren-hinweis"))
+				.hasText("Der Fragenkatalog hat keinen Testfall.", new LocatorAssertions.HasTextOptions().setTimeout(10_000));
+		}
+
+	}
+
+	@Nested
+	@DisplayName("A4: KI-Modell liefert keine Stufe")
+	class A4KeineStufe {
+
+		@Test
+		@DisplayName("Nicht erreichbares KI-Modell speichert keinen Testlauf")
+		void nicht_erreichbar() {
+			waehleEntwurf();
+			KI.failNextBewertung();
+			page.locator("#ki-ausfuehren").click();
+
+			PlaywrightAssertions.assertThat(page.locator("#ki-ausfuehren-hinweis"))
+				.hasText("Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.",
+						new LocatorAssertions.HasTextOptions().setTimeout(10_000));
+		}
+
+	}
+
+	/** Schritt 3: der Entwurf von UC009 Entwicklung, die zweite Zeile dieser Rolle (Version 2). */
+	private void waehleEntwurf() {
+		page.locator("vaadin-grid-cell-content")
+			.filter(new com.microsoft.playwright.Locator.FilterOptions().setHasText("UC009 Entwicklung"))
+			.nth(1)
+			.click();
+		PlaywrightAssertions.assertThat(page.locator("#ki-frage-9803")).isVisible();
+	}
+
 }
