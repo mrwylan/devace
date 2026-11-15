@@ -10,7 +10,7 @@
 **Auslösendes Ereignis:** Der Administrator fordert die Absicherung der KI-Bewertung an.  
 **Status:** Genehmigt  
 
-**Anforderungen:** [FR-016, NFR-001, NFR-005, NFR-009, NFR-010, C-005](../requirements.md)  
+**Anforderungen:** [FR-016, NFR-001, NFR-005, NFR-009, NFR-010, NFR-012, C-005](../requirements.md)  
 **Schichten:** UI  
 
 ## Vorbedingungen
@@ -25,8 +25,8 @@
 4. Das System zeigt die Testfälle je Frage und die bisherigen Testläufe mit Zeitpunkt und Trefferquote.
 5. Der Administrator legt bei Bedarf Testfälle an, ändert oder entfernt sie, mit Frage, vorgegebener Antwort und erwarteter Stufe.
 6. Der Administrator fordert die Ausführung der Testfälle an.
-7. Das System legt jeden Testfall dem KI-Modell vor, das die Antwort nach dem Entscheidungsmodell der Frage einer Stufe zuordnet.
-8. Das System speichert den Testlauf mit dem verwendeten KI-Modell, der ermittelten Stufe je Testfall und der Trefferquote.
+7. Das System legt jeden Testfall dem KI-Modell vor, das die Antwort nach dem Entscheidungsmodell der Frage einer Stufe zuordnet. Bis alle Testfälle bewertet sind, zeigt das System den Wartehinweis „Die Testfälle werden ausgeführt.“
+8. Das System speichert den Testlauf mit dem KI-Modell in der Version, die es bei der Bewertung meldet, der ermittelten Stufe je Testfall und der Trefferquote.
 9. Das System zeigt dem Administrator die Trefferquote und die Abweichungen, also die Testfälle, deren ermittelte Stufe von der erwarteten abweicht.
 
 ## Alternativabläufe
@@ -36,7 +36,7 @@
 **Auslöser:** Es gibt keinen prüfbaren Fragenkatalog (Schritt 2)  
 **Ablauf:**
 
-1. Das System weist den Administrator darauf hin, dass noch kein Fragenkatalog zur Prüfung vorliegt.
+1. Das System weist den Administrator darauf hin, dass noch kein Fragenkatalog zur Prüfung vorliegt: „Noch kein Fragenkatalog zur Prüfung vorhanden.“
 2. Der Use Case endet.
 
 ### A2: Angaben zum Testfall ungültig
@@ -44,7 +44,7 @@
 **Auslöser:** Die Angaben zu einem Testfall sind unvollständig oder ungültig (Schritt 5)  
 **Ablauf:**
 
-1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
+1. Das System weist am Feld auf die fehlenden oder ungültigen Angaben hin: „Antwort fehlt.“, „Höchstens 500 Zeichen.“ oder „Stufe fehlt.“
 2. Das System speichert den Testfall nicht.
 3. Der Use Case wird bei Schritt 5 fortgesetzt.
 
@@ -53,7 +53,7 @@
 **Auslöser:** Der gewählte Fragenkatalog hat keinen Testfall (Schritt 6)  
 **Ablauf:**
 
-1. Das System weist den Administrator darauf hin, dass es nichts auszuführen gibt.
+1. Das System weist den Administrator darauf hin, dass es nichts auszuführen gibt: „Der Fragenkatalog hat keinen Testfall.“
 2. Der Use Case wird bei Schritt 5 fortgesetzt.
 
 ### A4: KI-Modell liefert keine Stufe
@@ -61,7 +61,7 @@
 **Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert zu mindestens einem Testfall keine Stufe (Schritt 7)  
 **Ablauf:**
 
-1. Das System weist den Administrator darauf hin, dass der Testlauf nicht abgeschlossen werden konnte.
+1. Das System weist den Administrator darauf hin, dass der Testlauf nicht abgeschlossen werden konnte: „Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.“
 2. Das System speichert keinen Testlauf.
 3. Der Use Case wird bei Schritt 6 fortgesetzt.
 
@@ -99,15 +99,15 @@ Das KI-Modell ordnet die vorgegebene Antwort eines Testfalls nach dem Entscheidu
 
 ### BR-005: Trefferquote
 
-Die Trefferquote ist der Anteil der Testfälle eines Testlaufs, deren ermittelte Stufe der erwarteten entspricht, in Prozent mit höchstens zwei Nachkommastellen.
+Die Trefferquote ist der Anteil der Testfälle eines Testlaufs, deren ermittelte Stufe der erwarteten entspricht, in Prozent, kaufmännisch auf zwei Nachkommastellen gerundet (2 von 3 sind 66,67 %).
 
 ### BR-006: Zielwert der Trefferquote
 
-Der Zielwert der Trefferquote ist 90 Prozent. Das System kennzeichnet einen Testlauf mit einer Trefferquote unter 90 Prozent als nicht bestanden und führt die Abweichungen auf.
+Der Zielwert der Trefferquote ist 90 Prozent; maßgeblich ist der gerundete Wert nach BR-005. Das System kennzeichnet einen Testlauf mit einer Trefferquote unter 90 Prozent mit „Nicht bestanden“, sonst mit „Bestanden“, und führt die Abweichungen auf. Die Freigabe eines Fragenkatalogs nach UC-007 hängt nicht an der Trefferquote.
 
 ### BR-007: Dokumentation der Testläufe
 
-Das System hält jeden Testlauf mit seinen Abweichungen fest und löscht ihn nicht. Der Administrator sieht frühere Testläufe eines Fragenkatalogs.
+Das System hält jeden Testlauf mit seinen Abweichungen fest und löscht ihn nicht. Zu jedem Testfall hält es dessen Frage, vorgegebene Antwort und erwartete Stufe fest, sodass ein früherer Testlauf erhalten bleibt, auch wenn der Administrator den Testfall später ändert oder entfernt. Der Administrator sieht frühere Testläufe eines Fragenkatalogs.
 
 ### BR-008: Anfrage ohne Personenbezug
 
@@ -119,7 +119,7 @@ Die Ausführung der Testfälle ändert weder Fragen noch Entscheidungsmodell. Di
 
 ### BR-010: Testfälle folgen ihrer Frage
 
-Beginnt der Administrator nach UC-006 eine neue Version aus der freigegebenen Version einer Rolle, übernimmt das System deren Testfälle zu den übernommenen Fragen in die neue Version. Entfernt der Administrator in UC-006 eine Frage aus dem Entwurf, entfernt das System ihre Testfälle mit.
+Beginnt der Administrator nach UC-006 eine neue Version aus der freigegebenen Version einer Rolle, übernimmt das System deren Testfälle zu den übernommenen Fragen in die neue Version. Speichert der Administrator in UC-006 einen Entwurf, behalten die verbliebenen Fragen ihre Testfälle. Entfernt der Administrator in UC-006 eine Frage aus dem Entwurf, entfernt das System ihre Testfälle mit.
 
 ### BR-011: Nur für Administratoren
 

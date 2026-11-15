@@ -805,26 +805,28 @@ Ein Handlungsfeld ohne Frage hat nach UC-003 BR-001 keinen Score. Die Anforderun
 **Element:** UC-009 BR-006
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Nein: Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
 
 NFR-009 verlangt, dass die KI mindestens 90 % der Testfälle die erwartete Stufe zuordnet. Offen ist, ob die Freigabe daran gebunden ist. Lesarten: (a) keine Kopplung; (b) die Freigabe verlangt einen bestandenen Testlauf des Entwurfs.
 
 **Answer:** Bestätigt: keine Kopplung. Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-006
 
 ## OQ-061: Welche Fragenkataloge sind für die Testfälle prüfbar?
 
 **Element:** UC-009 BR-002
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge nicht.
 
 FR-016 nennt nicht, welche Fragenkataloge geprüft werden. Zur Verfeinerung der Vorgaben dient der Entwurf, zur Absicherung die freigegebene Version. Lesarten: (a) Entwurf und freigegebene Version; (b) nur der Entwurf; (c) alle drei Status.
 
 **Answer:** Bestätigt: der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge sind nicht prüfbar.
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-002
 
 ## OQ-062: Wird bei der Eindeutigkeit einer Matrix-Spalte die Schreibweise unterschieden?
 
@@ -857,13 +859,14 @@ Das Entity-Modell führt `gueltig_ab` als Datum. Offen ist, ob ein Beginn in der
 **Element:** UC-009 BR-010
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 **Assumed:** Ja: Die Testfälle werden mit den übernommenen Fragen in die neue Version übernommen; entfernt der Administrator eine Frage, entfernt das System ihre Testfälle mit.
 
 Ein Testfall gehört zu einer Frage (UC-009 BR-001). UC-006 Schritt 3 erlaubt, die freigegebene Version als neue Version zu beginnen; dabei entstehen neue Fragen. Ohne Regel hätte jede neue Version zunächst keine Testfälle. Lesarten: (a) Testfälle werden übernommen; (b) sie bleiben bei der alten Version, und der Administrator legt sie neu an. UC-006 beschreibt die Übernahme der Fragen, nicht die der Testfälle und müsste ergänzt werden.
 
 **Answer:** Bestätigt: Die Testfälle gehen mit den übernommenen Fragen in die neue Version; entfernt der Administrator eine Frage, entfallen ihre Testfälle (siehe OQ-082).
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-010
 
 ## OQ-065: Welchen Wortlaut haben die Hinweise bei einer nicht nutzbaren Einladung und bei einer ungültigen Antwort?
 
@@ -1075,126 +1078,127 @@ BR-008 sagt, dass das Radar-Chart kein Bestandteil der Leistungsbeurteilung ist,
 **Element:** UC-009 BR-010
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 UC-006 löscht beim Speichern alle Fragen eines Entwurfs und legt sie neu an. Testfälle hängen an einer Frage und gingen dabei verloren, oder das Speichern scheiterte. Lesarten: UC-006 behält vorhandene Fragen beim Speichern; BR-010 vorerst auslassen.
 
 **Answer:** UC-006 behält vorhandene Fragen beim Speichern (ändern statt löschen und neu anlegen) und löscht nur entfernte Fragen samt ihren Testfällen. Beginnt eine neue Version aus der freigegebenen, übernimmt das System deren Testfälle.
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 BR-010
 
 ## OQ-083: Was geschieht mit den Ergebnissen früherer Testläufe, wenn der Administrator einen Testfall entfernt?
 
 **Element:** UC-009 BR-007
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Ein Testergebnis verweist auf seinen Testfall. Schritt 5 erlaubt, Testfälle zu entfernen, BR-007 verlangt, dass Testläufe mit ihren Abweichungen erhalten bleiben. Lesarten: das Ergebnis hält eine Kopie des Testfalls; Testfälle mit Ergebnissen lassen sich nicht entfernen.
 
 **Answer:** Ein Testergebnis hält Frage, vorgegebene Antwort und erwartete Stufe seines Testfalls als Kopie; der Verweis auf den Testfall darf danach leer sein. Das Entity-Modell (TESTERGEBNIS) ist entsprechend zu ergänzen.
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 BR-007
 
 ## OQ-084: Welches KI-Modell hält ein Testlauf fest?
 
 **Element:** UC-009 step 8
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Jev läuft mit dem Alias jev-latest (ADR-004). Lesarten: die tatsächlich verwendete Version, die OpenRouter meldet; der konfigurierte Name.
 
 **Answer:** Die tatsächlich verwendete Version, die das KI-Modell bei der Bewertung meldet, zum Beispiel typesafe/jev-1.14-20261014.
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 step 8
 
 ## OQ-085: Welchen Wortlaut hat der Hinweis, dass noch kein Fragenkatalog zur Prüfung vorliegt?
 
 **Element:** UC-009 A1
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A1 nennt den Hinweis, aber keinen Wortlaut.
 
 **Answer:** „Noch kein Fragenkatalog zur Prüfung vorhanden.“
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 A1
 
 ## OQ-086: Welchen Wortlaut haben die Hinweise auf ungültige Angaben eines Testfalls?
 
 **Element:** UC-009 A2
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A2 nennt die Hinweise, aber keinen Wortlaut. Lesarten: Meldungen am Feld wie in UC-006; ein gemeinsamer Hinweis.
 
 **Answer:** Meldungen am Feld wie in UC-006: „Antwort fehlt.“, „Höchstens 500 Zeichen.“, „Stufe fehlt.“
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 A2
 
 ## OQ-087: Welchen Wortlaut hat der Hinweis, dass es nichts auszuführen gibt?
 
 **Element:** UC-009 A3
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A3 nennt den Hinweis, aber keinen Wortlaut.
 
 **Answer:** „Der Fragenkatalog hat keinen Testfall.“
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 A3
 
 ## OQ-088: Welchen Wortlaut hat der Hinweis, dass der Testlauf nicht abgeschlossen werden konnte?
 
 **Element:** UC-009 A4
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 A4 nennt den Hinweis, aber keinen Wortlaut.
 
 **Answer:** „Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.“
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 A4
 
 ## OQ-089: Wie kennzeichnet das System einen nicht bestandenen Testlauf?
 
 **Element:** UC-009 BR-006
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 BR-006 verlangt die Kennzeichnung, nennt aber keinen Wortlaut.
 
 **Answer:** „Nicht bestanden“ bei einer Trefferquote unter 90 Prozent, sonst „Bestanden“.
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 BR-006
 
 ## OQ-090: Zeigt das System einen Wartehinweis, solange die Testfälle ausgeführt werden?
 
 **Element:** UC-009 step 7
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 Die Ausführung kann je Testfall bis zu 10 Sekunden dauern. UC-009 verlinkt NFR-012 nicht. Lesarten: Wartehinweis wie in ADR-005; synchrone Ausführung ohne Hinweis.
 
 **Answer:** Ja, wie in ADR-005: „Die Testfälle werden ausgeführt.“, die Ausführung läuft im Hintergrund (NFR-012).
 **Answered by:** Jakob Albrecht, 2026-11-15
-
+**Resolved in:** UC-009 step 7
 
 ## OQ-091: Wie wird die Trefferquote gerundet?
 
 **Element:** UC-009 BR-005
 **Raised by:** /use-case-implement, 2026-11-15
 **Blocking:** No
-**Status:** Answered
+**Status:** Resolved
 
 BR-005 nennt höchstens zwei Nachkommastellen, aber keine Rundung. Lesarten: kaufmännisch gerundet; abgeschnitten.
 
 **Answer:** Kaufmännisch auf zwei Nachkommastellen gerundet, zum Beispiel 66,67 % bei 2 von 3; BR-006 prüft den gerundeten Wert.
 **Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-005
