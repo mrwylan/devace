@@ -58,7 +58,7 @@
 
 ### A4: KI-Modell liefert keine Stufe
 
-**Auslöser:** Das KI-Modell ist nicht erreichbar, liefert zu mindestens einem Testfall keine Stufe oder meldet keine Version (Schritt 7)  
+**Auslöser:** Das KI-Modell ist nicht erreichbar, liefert zu mindestens einem Testfall keine Stufe, meldet keine Version oder meldet im selben Testlauf verschiedene Versionen (Schritt 7)  
 **Ablauf:**
 
 1. Das System weist den Administrator darauf hin, dass der Testlauf nicht abgeschlossen werden konnte: „Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.“
