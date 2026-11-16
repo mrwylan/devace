@@ -15,9 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.vaadin.addons.dramafinder.AbstractBasePlaywrightIT;
-import org.vaadin.addons.dramafinder.element.ButtonElement;
-import org.vaadin.addons.dramafinder.element.PasswordFieldElement;
-import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 /**
  * Browser-Test für UC-005 "Radar-Charts für die Schulungsplanung auswerten". Die erwarteten Werte stammen aus der
@@ -50,10 +47,7 @@ class UC005RadarChartsFuerDieSchulungsplanungAuswertenIT extends AbstractBasePla
 	@BeforeEach
 	void anmelden() {
 		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-005 BR-007, NFR-005).
-		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(SCHULUNG);
-		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(PASSWORT);
-		ButtonElement.getByText(this.page, "Anmelden").click();
-		this.page.waitForURL(url -> !url.contains("login"));
+		Anmeldung.anmelden(this.page, SCHULUNG, PASSWORT);
 		this.page.navigate(getUrl() + getView());
 	}
 

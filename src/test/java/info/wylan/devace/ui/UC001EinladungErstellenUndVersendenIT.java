@@ -19,9 +19,7 @@ import org.springframework.test.context.bean.override.convention.TestBean;
 import org.vaadin.addons.dramafinder.AbstractBasePlaywrightIT;
 import org.vaadin.addons.dramafinder.element.ButtonElement;
 import org.vaadin.addons.dramafinder.element.IntegerFieldElement;
-import org.vaadin.addons.dramafinder.element.PasswordFieldElement;
 import org.vaadin.addons.dramafinder.element.TextAreaElement;
-import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -71,10 +69,7 @@ class UC001EinladungErstellenUndVersendenIT extends AbstractBasePlaywrightIT {
 	void anmelden() {
 		MAIL.reset();
 		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-001 BR-009, NFR-005).
-		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(TEAMLEITUNG);
-		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(PASSWORT);
-		ButtonElement.getByText(this.page, "Anmelden").click();
-		this.page.waitForURL(url -> !url.contains("login"));
+		Anmeldung.anmelden(this.page, TEAMLEITUNG, PASSWORT);
 		this.page.navigate(getUrl() + getView());
 		PlaywrightAssertions.assertThat(this.page.getByText("Hinweis zur Einladung")).isVisible();
 	}

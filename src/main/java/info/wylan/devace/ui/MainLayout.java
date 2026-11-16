@@ -69,13 +69,17 @@ public class MainLayout extends AppLayout {
 				VaadinIcon.CHECK_SQUARE_O.create());
 		SideNavItem absicherung = new SideNavItem("KI-Absicherung", KiBewertungMitTestfaellenAbsichernView.class,
 				VaadinIcon.FLASK.create());
+		SideNavItem matrix = new SideNavItem("Kompetenzmatrix", KompetenzmatrixZuordnungDokumentierenView.class,
+				VaadinIcon.TABLE.create());
 		// UC-006 BR-009, UC-007 BR-007, UC-008 BR-007: Einträge ohne Berechtigung erscheinen deaktiviert.
 		// UC-009 BR-011: Einträge ohne passende Berechtigung erscheinen deaktiviert.
 		absicherung.setEnabled(administrator);
+		// UC-010 BR-004: Einträge ohne passende Berechtigung erscheinen deaktiviert.
+		matrix.setEnabled(administrator);
 		mags.setEnabled(administrator);
 		katalog.setEnabled(administrator);
 		freigabe.setEnabled(administrator);
-		administration.addItem(katalog, freigabe, absicherung, mags);
+		administration.addItem(katalog, freigabe, absicherung, matrix, mags);
 
 		addToNavbar(new DrawerToggle(), title, abmelden);
 		addToDrawer(einladungen, schulung, administration);

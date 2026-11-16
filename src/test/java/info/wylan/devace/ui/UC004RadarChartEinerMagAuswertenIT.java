@@ -14,9 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.vaadin.addons.dramafinder.AbstractBasePlaywrightIT;
-import org.vaadin.addons.dramafinder.element.ButtonElement;
-import org.vaadin.addons.dramafinder.element.PasswordFieldElement;
-import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 /**
  * Browser-Test für UC-004 "Radar-Chart einer MAG auswerten". Die erwarteten Werte stammen aus der Spezifikation und
@@ -49,10 +46,7 @@ class UC004RadarChartEinerMagAuswertenIT extends AbstractBasePlaywrightIT {
 	@BeforeEach
 	void anmelden() {
 		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-004 BR-007, NFR-005).
-		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(TEAMLEITUNG);
-		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(PASSWORT);
-		ButtonElement.getByText(this.page, "Anmelden").click();
-		this.page.waitForURL(url -> !url.contains("login"));
+		Anmeldung.anmelden(this.page, TEAMLEITUNG, PASSWORT);
 		this.page.navigate(getUrl() + getView());
 	}
 

@@ -19,9 +19,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.convention.TestBean;
 import org.vaadin.addons.dramafinder.AbstractBasePlaywrightIT;
-import org.vaadin.addons.dramafinder.element.ButtonElement;
-import org.vaadin.addons.dramafinder.element.PasswordFieldElement;
-import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 /**
  * Browser-Test für UC-009 "KI-Bewertung mit Testfällen absichern". Die erwarteten Werte stammen aus der Spezifikation
@@ -71,10 +68,7 @@ class UC009KiBewertungMitTestfaellenAbsichernIT extends AbstractBasePlaywrightIT
 	void anmelden() {
 		KI.reset();
 		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-009 BR-011, NFR-005).
-		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(ADMIN);
-		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(ADMIN_PASSWORT);
-		ButtonElement.getByText(this.page, "Anmelden").click();
-		this.page.waitForURL(url -> !url.contains("login"));
+		Anmeldung.anmelden(this.page, ADMIN, ADMIN_PASSWORT);
 		this.page.navigate(getUrl() + getView());
 	}
 
