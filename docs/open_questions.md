@@ -1203,3 +1203,15 @@ BR-005 nennt höchstens zwei Nachkommastellen, aber keine Rundung. Lesarten: kau
 **Answer:** Kaufmännisch auf zwei Nachkommastellen gerundet, zum Beispiel 66,67 % bei 2 von 3; BR-006 prüft den gerundeten Wert.
 **Answered by:** Jakob Albrecht, 2026-11-15
 **Resolved in:** UC-009 BR-005
+
+## OQ-092: Was gilt, wenn das KI-Modell im selben Testlauf verschiedene Versionen meldet?
+
+**Element:** UC-009 A4
+**Raised by:** /use-case-coverage, 2026-11-16
+**Blocking:** No
+**Status:** Answered
+
+Schritt 8 und die Erfolgs-Nachbedingung nennen ein KI-Modell in der Version, die es bei der Bewertung meldet. Der Auslöser von A4 nennt den Fall nicht, dass die Testfälle eines Laufs von verschiedenen Versionen bewertet werden. Lesarten: (a) alle gemeldeten Versionen werden mit dem Testlauf gespeichert; (b) der Testlauf gilt nicht, wie A4.
+
+**Answer:** Wie A4: Meldet das KI-Modell innerhalb eines Testlaufs eine andere Version als zuvor, wird der Testlauf nicht abgeschlossen und nichts gespeichert.
+**Answered by:** Jakob Albrecht, 2026-11-16

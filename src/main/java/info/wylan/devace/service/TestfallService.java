@@ -6,11 +6,9 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import info.wylan.devace.persistence.BenutzerKonto;
 import info.wylan.devace.persistence.BenutzerRepository;
@@ -137,7 +135,7 @@ public class TestfallService {
 			throw new KeinTestfallException();
 		}
 		List<Testergebnis> ergebnisse = new ArrayList<>();
-		Set<String> modelle = new LinkedHashSet<>();
+		String modell = null;
 		for (AuszufuehrenderTestfall testfall : testfaelle) {
 			// UC-009 BR-004: Bewertung wie im Assessment (UC-002 BR-006).
 			// UC-009 BR-008: nur Frage, Entscheidungsmodell und vorgegebene Antwort, nichts zu einer Person
@@ -157,16 +155,24 @@ public class TestfallService {
 				// UC-009 A4: Ohne gemeldete Version des KI-Modells wird der Testlauf nicht abgeschlossen (Schritt 8).
 				throw new TestlaufNichtAbgeschlossenException();
 			}
-			modelle.add(gemeldet);
+			if (modell != null && !modell.equals(gemeldet)) {
+				// UC-009 A4: Meldet das KI-Modell im selben Lauf eine andere Version, gilt der Lauf nicht (OQ-092).
+				throw new TestlaufNichtAbgeschlossenException();
+			}
+			modell = gemeldet;
 			ergebnisse.add(new Testergebnis(testfall.testfallId(), testfall.frage(), testfall.antworttext(),
 					testfall.erwarteteStufe(), ermittelt.stufe()));
 		}
 		BigDecimal trefferquote = trefferquote(ergebnisse);
-		String modell = kurz(String.join(", ", modelle), 100);
+		if (modell == null) {
+			// tritt nicht ein: nach A3 gibt es mindestens einen Testfall mit gemeldeter Version
+			throw new TestlaufNichtAbgeschlossenException();
+		}
+		String verwendet = kurz(modell, 100);
 		LocalDateTime jetzt = LocalDateTime.now(this.clock);
 		// UC-009 step 8: der Testlauf wird nur vollständig gespeichert (Fehlerfall: kein unvollständiger Testlauf).
 		Long laufId = this.transaktion.execute((status) -> this.testlaufRepository.insert(katalogId, administratorId,
-				jetzt, modell, trefferquote, ergebnisse));
+				jetzt, verwendet, trefferquote, ergebnisse));
 		List<Testergebnis> abweichungen = ergebnisse.stream().filter(Testergebnis::abweichung).toList();
 		return new TestlaufErgebnis((laufId != null) ? laufId : 0, trefferquote, bestanden(trefferquote), abweichungen);
 	}
