@@ -195,8 +195,9 @@ public class FragenkatalogService {
 		// UC-006 BR-002: Die Position ist eindeutig; die Fragen stehen nach Handlungsfeld geordnet.
 		List<KatalogFrage> geordnet = entwurf.stream()
 			.sorted(Comparator.comparingInt(f -> reihenfolge.getOrDefault(f.handlungsfeldId(), Integer.MAX_VALUE)))
+			// UC-009 BR-010: Die Herkunft der Frage bleibt erhalten, damit ihre Testfälle mitgehen.
 			.map(f -> new KatalogFrage(f.handlungsfeldId(), f.text().strip(),
-					f.vorgaben().stream().limit(STUFEN).map(String::strip).toList()))
+					f.vorgaben().stream().limit(STUFEN).map(String::strip).toList(), f.frageId()))
 			.toList();
 		long katalogId = this.katalogRepository.findEntwurf(rolleId)
 			.map(k -> k.id())

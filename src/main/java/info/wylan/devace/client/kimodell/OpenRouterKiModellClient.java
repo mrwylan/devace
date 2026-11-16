@@ -165,6 +165,14 @@ class OpenRouterKiModellClient implements KiModellClient {
 	 */
 	@Override
 	public OptionalInt antwortBewerten(BewertungAnfrage anfrage) {
+		return bewerten(anfrage).map((bewertung) -> OptionalInt.of(bewertung.stufe())).orElse(OptionalInt.empty());
+	}
+
+	/**
+	 * UC-009 steps 7–8: dieselbe Bewertung wie in UC-002 (UC-009 BR-004), dazu das Modell, das Jev meldet (OQ-084).
+	 */
+	@Override
+	public Optional<Bewertung> bewerten(BewertungAnfrage anfrage) {
 		String modell = this.properties.modelle().bewertung();
 		if (isBlank(modell) || isBlank(this.properties.apiKey())) {
 			// UC-002 A5: ohne eingerichtetes Modell oder Schlüssel gibt es keine Zuordnung
@@ -190,8 +198,11 @@ class OpenRouterKiModellClient implements KiModellClient {
 					.retrieve()
 					.body(JevAntwort.class);
 				// ADR-004: das verwendete Modell protokollieren, nie den Antworttext
-				log.info("Jev bewertete mit Modell {}", (antwort != null) ? antwort.model() : "unbekannt");
-				return stufe(antwort);
+				// UC-009 A4: meldet Jev kein Modell, bleibt es leer; der Alias der Konfiguration ersetzt es nicht
+				String verwendet = (antwort != null && !isBlank(antwort.model())) ? antwort.model() : null;
+				log.info("Jev bewertete mit Modell {}", (verwendet != null) ? verwendet : "(nicht gemeldet)");
+				OptionalInt stufe = stufe(antwort);
+				return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), verwendet)) : Optional.empty();
 			}
 			catch (HttpStatusCodeException ex) {
 				int status = ex.getStatusCode().value();

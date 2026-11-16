@@ -622,8 +622,9 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		abbrechen.addThemeVariants(ButtonVariant.TERTIARY);
 		abbrechen.setId("frage-abbrechen");
 		Button uebernehmen = new Button("Übernehmen", (event) -> {
+			// UC-009 BR-010: Die geänderte Frage behält ihre Herkunft und damit ihre Testfälle.
 			this.entwurf.set(index, new KatalogFrage(frage.handlungsfeldId(), wortlaut.getValue(),
-					vorgaben.stream().map(TextArea::getValue).toList()));
+					vorgaben.stream().map(TextArea::getValue).toList(), frage.frageId()));
 			this.pruefmeldungen.remove(index);
 			zeigeEntwurf();
 		});

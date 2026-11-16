@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import info.wylan.devace.service.KiModellClient.Bewertung;
 import info.wylan.devace.service.KiModellClient.EntwurfAnfrage;
 import info.wylan.devace.service.KiModellClient.HandlungsfeldAnfrage;
 import info.wylan.devace.service.KiModellClient.VorgeschlageneFrage;
@@ -54,6 +55,12 @@ public class KiModellClientFake implements KiModellClient {
 
 	private OptionalInt naechsteStufe;
 
+	/** UC-009: der Reihe nach je Bewertung eine Stufe, leer heißt keine Zuordnung; danach wieder die Vorgabe. */
+	private final java.util.ArrayDeque<OptionalInt> stufenFolge = new java.util.ArrayDeque<>();
+
+	/** UC-009 step 8: das Modell, das der Fake als verwendet meldet. */
+	public static final String MODELL = "test/jev-fake";
+
 	@Override
 	public OptionalInt antwortBewerten(BewertungAnfrage anfrage) {
 		this.bewertungen.add(anfrage);
@@ -67,7 +74,42 @@ public class KiModellClientFake implements KiModellClient {
 			this.naechsteStufe = null;
 			return stufe;
 		}
+		if (!this.stufenFolge.isEmpty()) {
+			return this.stufenFolge.poll();
+		}
 		return OptionalInt.of(3);
+	}
+
+	/** UC-009 A4: die nächste Bewertung meldet kein Modell. */
+	private boolean naechsteOhneModell;
+
+	@Override
+	public Optional<Bewertung> bewerten(BewertungAnfrage anfrage) {
+		OptionalInt stufe = antwortBewerten(anfrage);
+		String modell = this.naechsteOhneModell ? null
+				: (this.modellFolge.isEmpty() ? MODELL : this.modellFolge.poll());
+		this.naechsteOhneModell = false;
+		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), modell)) : Optional.empty();
+	}
+
+	/** UC-009 A4 (OQ-092): die folgenden Bewertungen melden der Reihe nach diese Modelle; danach wieder MODELL. */
+	private final java.util.ArrayDeque<String> modellFolge = new java.util.ArrayDeque<>();
+
+	/** UC-009 A4 (OQ-092): die folgenden Bewertungen melden der Reihe nach diese Modelle. */
+	public void meldetDerReiheNachModelle(String... modelle) {
+		this.modellFolge.addAll(List.of(modelle));
+	}
+
+	/** UC-009 A4: die nächste Bewertung ordnet eine Stufe zu, meldet aber kein Modell. */
+	public void meldetBeiDerNaechstenKeinModell() {
+		this.naechsteOhneModell = true;
+	}
+
+	/** UC-009: die folgenden Bewertungen liefern der Reihe nach diese Stufen; -1 heißt keine Zuordnung (A4). */
+	public void bewertetDerReiheNachMit(int... stufen) {
+		for (int stufe : stufen) {
+			this.stufenFolge.add((stufe < 0) ? OptionalInt.empty() : OptionalInt.of(stufe));
+		}
 	}
 
 	/** UC-002 A5: das KI-Modell ist bei der nächsten Bewertung nicht erreichbar. */
@@ -157,6 +199,9 @@ public class KiModellClientFake implements KiModellClient {
 		this.bewertungen.clear();
 		this.naechsterBewertungsfehler = null;
 		this.naechsteStufe = null;
+		this.stufenFolge.clear();
+		this.naechsteOhneModell = false;
+		this.modellFolge.clear();
 		this.textreportAnfragen.clear();
 		this.naechsterTextreportFehler = null;
 		this.naechsterTextreportLeer = false;

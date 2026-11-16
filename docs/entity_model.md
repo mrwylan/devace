@@ -31,7 +31,7 @@ erDiagram
     FRAGE ||--o{ TESTFALL : "wird abgesichert durch"
     FRAGENKATALOG ||--o{ TESTLAUF : "wird geprüft in"
     TESTLAUF ||--o{ TESTERGEBNIS : "enthält"
-    TESTFALL ||--o{ TESTERGEBNIS : "ergibt"
+    TESTFALL |o--o{ TESTERGEBNIS : "ergibt"
     HANDLUNGSFELD ||--o{ MATRIX_ZUORDNUNG : "verdichtet"
 ```
 
@@ -216,7 +216,7 @@ Eindeutige Referenz, die eine Teamleitung für einen Teilnehmer erstellt; sie is
 
 #### Constraints
 
-- Laeuft_ab_am ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
+- Laeuft_ab_am ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag; der Tag der Erstellung zählt als erster Tag der Gültigkeit.
 
 ### STARTHINWEIS
 
@@ -256,13 +256,16 @@ Ausführung aller Testfälle eines Fragenkatalogs mit der Trefferquote.
 
 ### TESTERGEBNIS
 
-Ergebnis eines Testfalls in einem Testlauf, damit Abweichungen dokumentiert sind.
+Ergebnis eines Testfalls in einem Testlauf mit einer Kopie des Testfalls, damit Abweichungen dokumentiert bleiben, auch wenn der Testfall später geändert oder entfernt wird.
 
 | Attribute | Description | Data Type | Length/Precision | Validation Rules |
 |-----------|-------------|-----------|------------------|------------------|
 | id | Unique identifier | Long | 19 | Primary Key, Sequence |
 | testlauf_id | Testlauf des Ergebnisses | Long | 19 | Not Null, Foreign Key (TESTLAUF.id) |
-| testfall_id | Ausgeführter Testfall | Long | 19 | Not Null, Foreign Key (TESTFALL.id) |
+| testfall_id | Ausgeführter Testfall; leer, sobald der Testfall entfernt ist | Long | 19 | Optional, Foreign Key (TESTFALL.id) |
+| frage_text | Wortlaut der Frage zum Zeitpunkt des Testlaufs | String | 500 | Not Null |
+| antworttext | Vorgegebene Antwort zum Zeitpunkt des Testlaufs | String | 500 | Not Null |
+| erwartete_stufe | Erwartete Stufe zum Zeitpunkt des Testlaufs | Integer | 10 | Not Null, Min: 0, Max: 5 |
 | ermittelte_stufe | Von der KI zugeordnete Stufe | Integer | 10 | Not Null, Min: 0, Max: 5 |
 
 #### Constraints
@@ -279,3 +282,7 @@ Zuordnung einer Spalte der Kompetenzmatrix zu einem Handlungsfeld.
 | handlungsfeld_id | Zugeordnetes Handlungsfeld | Long | 19 | Not Null, Foreign Key (HANDLUNGSFELD.id) |
 | matrix_spalte | Name der Spalte in der Kompetenzmatrix | String | 200 | Not Null, Unique |
 | begruendung | Begründung der Zuordnung | String | 500 | Optional |
+
+#### Constraints
+
+- Matrix_spalte ist eindeutig ohne Beachtung von Groß- und Kleinschreibung und umgebenden Leerzeichen („Docker“ und „ docker “ sind dieselbe Spalte).

@@ -764,10 +764,14 @@ BR-008 lässt die Einladung bis 24:00 Uhr des letzten Gültigkeitstags gelten. U
 **Element:** Entity: EINLADUNG.laeuft_ab_am
 **Raised by:** /entity-model, 2026-11-10
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Der Tag der Erstellung zählt als erster Tag: Eine Einladung mit einem Tag Gültigkeit gilt bis 24 Uhr des Erstellungstags; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
 
 BR-008 lässt die Gültigkeit mit der Erstellung beginnen und bis 24 Uhr des letzten Tages gelten, nennt aber nicht, ob der Erstellungstag mitzählt. Lesart (b): Der Erstellungstag zählt nicht, das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage.
+
+**Answer:** Bestätigt: Der Tag der Erstellung zählt als erster Tag; das Ablaufdatum ist der Tag von erstellt_am plus gueltigkeit_tage minus 1 Tag.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** Entity: EINLADUNG.laeuft_ab_am
 
 ## OQ-058: Gilt für das Radar-Chart einer kleinen MAG wirklich keine Mindestzahl an Scores?
 
@@ -802,50 +806,68 @@ Ein Handlungsfeld ohne Frage hat nach UC-003 BR-001 keinen Score. Die Anforderun
 **Element:** UC-009 BR-006
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Nein: Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
 
 NFR-009 verlangt, dass die KI mindestens 90 % der Testfälle die erwartete Stufe zuordnet. Offen ist, ob die Freigabe daran gebunden ist. Lesarten: (a) keine Kopplung; (b) die Freigabe verlangt einen bestandenen Testlauf des Entwurfs.
+
+**Answer:** Bestätigt: keine Kopplung. Die Trefferquote ist eine Kennzahl für den Administrator; die Freigabe nach UC-007 verlangt weder einen Testlauf noch einen Mindestwert.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-006
 
 ## OQ-061: Welche Fragenkataloge sind für die Testfälle prüfbar?
 
 **Element:** UC-009 BR-002
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge nicht.
 
 FR-016 nennt nicht, welche Fragenkataloge geprüft werden. Zur Verfeinerung der Vorgaben dient der Entwurf, zur Absicherung die freigegebene Version. Lesarten: (a) Entwurf und freigegebene Version; (b) nur der Entwurf; (c) alle drei Status.
+
+**Answer:** Bestätigt: der Entwurf und die freigegebene Version einer Rolle; archivierte Fragenkataloge sind nicht prüfbar.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-002
 
 ## OQ-062: Wird bei der Eindeutigkeit einer Matrix-Spalte die Schreibweise unterschieden?
 
 **Element:** UC-010 BR-002
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Nein: Groß- und Kleinschreibung und umgebende Leerzeichen zählen nicht, wie bei MAG und Rolle (UC-008).
 
 Ohne Regel entstünden „Docker“ und „docker“ als zwei Spalten mit getrennten Zuordnungen.
+
+**Answer:** Bestätigt: Groß- und Kleinschreibung und umgebende Leerzeichen zählen nicht, wie bei MAG und Rolle (UC-008).
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-063: Ab wann gilt eine neue Version des Starthinweises, und darf sie rückwirkend beginnen?
 
 **Element:** UC-011 BR-004
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Es gilt die Version mit dem jüngsten Beginn der Gültigkeit, der nicht in der Zukunft liegt; der Beginn liegt nicht in der Vergangenheit.
 
 Das Entity-Modell führt `gueltig_ab` als Datum. Offen ist, ob ein Beginn in der Vergangenheit zulässig ist. Lesarten: (a) nicht in der Vergangenheit; (b) auch rückwirkend, dann gälte die neue Version sofort.
+
+**Answer:** Bestätigt: Es gilt die Version mit dem jüngsten Beginn der Gültigkeit, der nicht in der Zukunft liegt; der Beginn einer neuen Version liegt nicht in der Vergangenheit.
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-064: Gehen Testfälle mit, wenn eine neue Version aus der freigegebenen Version beginnt?
 
 **Element:** UC-009 BR-010
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Resolved
 **Assumed:** Ja: Die Testfälle werden mit den übernommenen Fragen in die neue Version übernommen; entfernt der Administrator eine Frage, entfernt das System ihre Testfälle mit.
 
 Ein Testfall gehört zu einer Frage (UC-009 BR-001). UC-006 Schritt 3 erlaubt, die freigegebene Version als neue Version zu beginnen; dabei entstehen neue Fragen. Ohne Regel hätte jede neue Version zunächst keine Testfälle. Lesarten: (a) Testfälle werden übernommen; (b) sie bleiben bei der alten Version, und der Administrator legt sie neu an. UC-006 beschreibt die Übernahme der Fragen, nicht die der Testfälle und müsste ergänzt werden.
+
+**Answer:** Bestätigt: Die Testfälle gehen mit den übernommenen Fragen in die neue Version; entfernt der Administrator eine Frage, entfallen ihre Testfälle (siehe OQ-082).
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-010
 
 ## OQ-065: Welchen Wortlaut haben die Hinweise bei einer nicht nutzbaren Einladung und bei einer ungültigen Antwort?
 
@@ -947,10 +969,13 @@ BR-007 löscht die Antworten nach dem Download, spätestens 1 Stunde nach Erstel
 **Element:** UC-003 BR-003
 **Raised by:** /use-case-spec, 2026-11-11
 **Blocking:** No
-**Status:** Open
+**Status:** Answered
 **Assumed:** Ab einer Folge von mindestens acht aufeinanderfolgenden Wörtern einer Antwort; dann gilt der Textreport als nicht erstellt (A1).
 
 BR-003 verlangt jetzt, dass das System den Textreport auf wörtliche Antworttexte prüft. Eine kurze Antwort („Ja.“) steht fast immer irgendwo im Text; eine Grenze braucht es, damit die Prüfung nicht jeden Textreport verwirft. Lesarten: eine feste Zahl Wörter, ein Anteil an der Antwort, nur vollständige Antworten.
+
+**Answer:** Bestätigt: ab einer Folge von mindestens acht aufeinanderfolgenden Wörtern einer Antwort; dann gilt der Textreport als nicht erstellt (A1).
+**Answered by:** Jakob Albrecht, 2026-11-15
 
 ## OQ-073: Welche Seite sieht ein Benutzer direkt nach der Anmeldung?
 
@@ -1074,3 +1099,146 @@ BR-008 sagt, dass die Radar-Charts kein Bestandteil der Leistungsbeurteilung sin
 **Answer:** Die Ansicht zeigt keinen Hinweis, wie in UC-004; BR-008 gilt für die Verwendung der Radar-Charts.
 **Answered by:** Jakob Albrecht, 2026-11-15
 **Resolved in:** UC-005 BR-008
+
+## OQ-082: Wie bleiben Testfälle erhalten, wenn UC-006 einen Entwurf speichert?
+
+**Element:** UC-009 BR-010
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+UC-006 löscht beim Speichern alle Fragen eines Entwurfs und legt sie neu an. Testfälle hängen an einer Frage und gingen dabei verloren, oder das Speichern scheiterte. Lesarten: UC-006 behält vorhandene Fragen beim Speichern; BR-010 vorerst auslassen.
+
+**Answer:** UC-006 behält vorhandene Fragen beim Speichern (ändern statt löschen und neu anlegen) und löscht nur entfernte Fragen samt ihren Testfällen. Beginnt eine neue Version aus der freigegebenen, übernimmt das System deren Testfälle.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-010
+
+## OQ-083: Was geschieht mit den Ergebnissen früherer Testläufe, wenn der Administrator einen Testfall entfernt?
+
+**Element:** UC-009 BR-007
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+Ein Testergebnis verweist auf seinen Testfall. Schritt 5 erlaubt, Testfälle zu entfernen, BR-007 verlangt, dass Testläufe mit ihren Abweichungen erhalten bleiben. Lesarten: das Ergebnis hält eine Kopie des Testfalls; Testfälle mit Ergebnissen lassen sich nicht entfernen.
+
+**Answer:** Ein Testergebnis hält Frage, vorgegebene Antwort und erwartete Stufe seines Testfalls als Kopie; der Verweis auf den Testfall darf danach leer sein. Das Entity-Modell (TESTERGEBNIS) ist entsprechend zu ergänzen.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-007
+
+## OQ-084: Welches KI-Modell hält ein Testlauf fest?
+
+**Element:** UC-009 step 8
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+Jev läuft mit dem Alias jev-latest (ADR-004). Lesarten: die tatsächlich verwendete Version, die OpenRouter meldet; der konfigurierte Name.
+
+**Answer:** Die tatsächlich verwendete Version, die das KI-Modell bei der Bewertung meldet, zum Beispiel typesafe/jev-1.14-20261014.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 step 8
+
+## OQ-085: Welchen Wortlaut hat der Hinweis, dass noch kein Fragenkatalog zur Prüfung vorliegt?
+
+**Element:** UC-009 A1
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+A1 nennt den Hinweis, aber keinen Wortlaut.
+
+**Answer:** „Noch kein Fragenkatalog zur Prüfung vorhanden.“
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 A1
+
+## OQ-086: Welchen Wortlaut haben die Hinweise auf ungültige Angaben eines Testfalls?
+
+**Element:** UC-009 A2
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+A2 nennt die Hinweise, aber keinen Wortlaut. Lesarten: Meldungen am Feld wie in UC-006; ein gemeinsamer Hinweis.
+
+**Answer:** Meldungen am Feld wie in UC-006: „Antwort fehlt.“, „Höchstens 500 Zeichen.“, „Stufe fehlt.“
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 A2
+
+## OQ-087: Welchen Wortlaut hat der Hinweis, dass es nichts auszuführen gibt?
+
+**Element:** UC-009 A3
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+A3 nennt den Hinweis, aber keinen Wortlaut.
+
+**Answer:** „Der Fragenkatalog hat keinen Testfall.“
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 A3
+
+## OQ-088: Welchen Wortlaut hat der Hinweis, dass der Testlauf nicht abgeschlossen werden konnte?
+
+**Element:** UC-009 A4
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+A4 nennt den Hinweis, aber keinen Wortlaut.
+
+**Answer:** „Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.“
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 A4
+
+## OQ-089: Wie kennzeichnet das System einen nicht bestandenen Testlauf?
+
+**Element:** UC-009 BR-006
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+BR-006 verlangt die Kennzeichnung, nennt aber keinen Wortlaut.
+
+**Answer:** „Nicht bestanden“ bei einer Trefferquote unter 90 Prozent, sonst „Bestanden“.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-006
+
+## OQ-090: Zeigt das System einen Wartehinweis, solange die Testfälle ausgeführt werden?
+
+**Element:** UC-009 step 7
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+Die Ausführung kann je Testfall bis zu 10 Sekunden dauern. UC-009 verlinkt NFR-012 nicht. Lesarten: Wartehinweis wie in ADR-005; synchrone Ausführung ohne Hinweis.
+
+**Answer:** Ja, wie in ADR-005: „Die Testfälle werden ausgeführt.“, die Ausführung läuft im Hintergrund (NFR-012).
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 step 7
+
+## OQ-091: Wie wird die Trefferquote gerundet?
+
+**Element:** UC-009 BR-005
+**Raised by:** /use-case-implement, 2026-11-15
+**Blocking:** No
+**Status:** Resolved
+
+BR-005 nennt höchstens zwei Nachkommastellen, aber keine Rundung. Lesarten: kaufmännisch gerundet; abgeschnitten.
+
+**Answer:** Kaufmännisch auf zwei Nachkommastellen gerundet, zum Beispiel 66,67 % bei 2 von 3; BR-006 prüft den gerundeten Wert.
+**Answered by:** Jakob Albrecht, 2026-11-15
+**Resolved in:** UC-009 BR-005
+
+## OQ-092: Was gilt, wenn das KI-Modell im selben Testlauf verschiedene Versionen meldet?
+
+**Element:** UC-009 A4
+**Raised by:** /use-case-coverage, 2026-11-16
+**Blocking:** No
+**Status:** Resolved
+
+Schritt 8 und die Erfolgs-Nachbedingung nennen ein KI-Modell in der Version, die es bei der Bewertung meldet. Der Auslöser von A4 nennt den Fall nicht, dass die Testfälle eines Laufs von verschiedenen Versionen bewertet werden. Lesarten: (a) alle gemeldeten Versionen werden mit dem Testlauf gespeichert; (b) der Testlauf gilt nicht, wie A4.
+
+**Answer:** Wie A4: Meldet das KI-Modell innerhalb eines Testlaufs eine andere Version als zuvor, wird der Testlauf nicht abgeschlossen und nichts gespeichert.
+**Answered by:** Jakob Albrecht, 2026-11-16
+**Resolved in:** UC-009 A4
