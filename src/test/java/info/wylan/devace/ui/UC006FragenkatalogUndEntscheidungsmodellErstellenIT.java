@@ -29,9 +29,7 @@ import org.vaadin.addons.dramafinder.element.DialogElement;
 import org.vaadin.addons.dramafinder.element.GridElement;
 import org.vaadin.addons.dramafinder.element.IntegerFieldElement;
 import org.vaadin.addons.dramafinder.element.NotificationElement;
-import org.vaadin.addons.dramafinder.element.PasswordFieldElement;
 import org.vaadin.addons.dramafinder.element.TextAreaElement;
-import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -90,10 +88,7 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenIT extends AbstractBasePl
 	void anmelden() {
 		KI.reset();
 		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-006 BR-009, NFR-005).
-		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(ADMIN);
-		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(ADMIN_PASSWORT);
-		ButtonElement.getByText(this.page, "Anmelden").click();
-		this.page.waitForURL(url -> !url.contains("login"));
+		Anmeldung.anmelden(this.page, ADMIN, ADMIN_PASSWORT);
 		this.page.navigate(getUrl() + getView());
 		GridElement.getById(this.page, "rolle-grid").waitForGridToStopLoading();
 	}

@@ -22,7 +22,6 @@ import org.vaadin.addons.dramafinder.AbstractBasePlaywrightIT;
 import org.vaadin.addons.dramafinder.element.ButtonElement;
 import org.vaadin.addons.dramafinder.element.ComboBoxElement;
 import org.vaadin.addons.dramafinder.element.GridElement;
-import org.vaadin.addons.dramafinder.element.PasswordFieldElement;
 import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,10 +68,7 @@ class UC008MagsUndRollenVerwaltenIT extends AbstractBasePlaywrightIT {
 	@BeforeEach
 	void anmelden() {
 		// Der Aufruf ohne Anmeldung führt zur Anmeldeseite (UC-008 BR-007, NFR-005).
-		TextFieldElement.getByLabel(this.page, "Benutzername").setValue(ADMIN);
-		PasswordFieldElement.getByLabel(this.page, "Passwort").setValue(ADMIN_PASSWORT);
-		ButtonElement.getByText(this.page, "Anmelden").click();
-		this.page.waitForURL(url -> !url.contains("login"));
+		Anmeldung.anmelden(this.page, ADMIN, ADMIN_PASSWORT);
 		this.page.navigate(getUrl() + getView());
 		GridElement.getById(this.page, "mag-grid").waitForGridToStopLoading();
 	}
