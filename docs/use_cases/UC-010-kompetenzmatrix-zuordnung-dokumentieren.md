@@ -22,17 +22,17 @@
 1. Der Administrator öffnet die Dokumentation der Zuordnung.
 2. Das System zeigt die vorhandenen Zuordnungen je Handlungsfeld.
 3. Der Administrator legt eine Zuordnung an, ändert oder entfernt sie, mit dem Namen der Matrix-Spalte, dem Handlungsfeld und optional einer Begründung.
-4. Der Administrator speichert die Änderung.
+4. Der Administrator speichert die Änderung; das Entfernen einer Zuordnung bestätigt er.
 5. Das System prüft die Angaben, speichert die Änderung und zeigt die aktualisierten Zuordnungen.
 
 ## Alternativabläufe
 
 ### A1: Angaben fehlen oder sind ungültig
 
-**Auslöser:** Der Name der Spalte fehlt oder die Angaben überschreiten die zulässige Länge (Schritt 5)  
+**Auslöser:** Der Name der Spalte oder das Handlungsfeld fehlt, oder die Angaben überschreiten die zulässige Länge (Schritt 5)  
 **Ablauf:**
 
-1. Das System weist auf die fehlenden oder ungültigen Angaben hin.
+1. Das System weist am jeweiligen Feld auf die fehlenden oder ungültigen Angaben hin: „Pflichtangabe fehlt.“ oder „Höchstens 200 Zeichen.“ (bei der Begründung „Höchstens 500 Zeichen.“)
 2. Das System speichert die Änderung nicht.
 3. Der Use Case wird bei Schritt 3 fortgesetzt.
 
@@ -41,13 +41,13 @@
 **Auslöser:** Die Spalte ist bereits einem Handlungsfeld zugeordnet (Schritt 5)  
 **Ablauf:**
 
-1. Das System weist den Administrator auf die bestehende Zuordnung und ihr Handlungsfeld hin.
+1. Das System weist am Namen der Spalte auf die bestehende Zuordnung und ihr Handlungsfeld hin: „Diese Spalte ist bereits dem Handlungsfeld <Nummer> <Name> zugeordnet.“
 2. Das System speichert die Änderung nicht.
 3. Der Use Case wird bei Schritt 3 fortgesetzt.
 
 ### A3: Administrator bricht ab
 
-**Auslöser:** Der Administrator bricht die Änderung ab (Schritt 4)  
+**Auslöser:** Der Administrator bricht die Änderung oder das Entfernen ab (Schritt 4)  
 **Ablauf:**
 
 1. Das System verwirft die Angaben.
@@ -69,7 +69,7 @@
 
 ### BR-001: Zuordnung
 
-Eine Zuordnung verbindet eine Spalte der Kompetenzmatrix mit genau einem der sechs Handlungsfelder. Der Name der Spalte ist eine Pflichtangabe mit höchstens 200 Zeichen. Die Begründung ist optional und hat höchstens 500 Zeichen.
+Eine Zuordnung verbindet eine Spalte der Kompetenzmatrix mit genau einem der sechs Handlungsfelder; das Handlungsfeld ist eine Pflichtangabe. Der Name der Spalte ist eine Pflichtangabe mit höchstens 200 Zeichen. Die Begründung ist optional und hat höchstens 500 Zeichen.
 
 ### BR-002: Eine Spalte, ein Handlungsfeld
 
