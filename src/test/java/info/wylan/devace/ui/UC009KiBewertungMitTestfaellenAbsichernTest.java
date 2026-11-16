@@ -422,6 +422,23 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 		assertThat(laeufe()).isEqualTo(laeufeVorher);
 	}
 
+	@Test
+	@UseCase(id = "UC-009", scenario = "A4: KI-Modell liefert keine Stufe")
+	void verschiedene_gemeldete_versionen_in_einem_lauf_speichern_keinen_testlauf() {
+		long laeufeVorher = laeufe();
+		navigate(KiBewertungMitTestfaellenAbsichernView.class);
+		waehleKatalog(ENTWURF);
+		// OQ-092: der zweite Testfall wird von einer anderen Version bewertet als der erste
+		KI.meldetDerReiheNachModelle("typesafe/jev-1", "typesafe/jev-2");
+
+		test(button("ki-ausfuehren")).click();
+		roundTrip();
+
+		assertThat(text("ki-ausfuehren-hinweis"))
+			.isEqualTo("Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.");
+		assertThat(laeufe()).isEqualTo(laeufeVorher);
+	}
+
 	// ---------------------------------------------------------------- BR-010
 
 	@Test

@@ -86,9 +86,18 @@ public class KiModellClientFake implements KiModellClient {
 	@Override
 	public Optional<Bewertung> bewerten(BewertungAnfrage anfrage) {
 		OptionalInt stufe = antwortBewerten(anfrage);
-		String modell = this.naechsteOhneModell ? null : MODELL;
+		String modell = this.naechsteOhneModell ? null
+				: (this.modellFolge.isEmpty() ? MODELL : this.modellFolge.poll());
 		this.naechsteOhneModell = false;
 		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), modell)) : Optional.empty();
+	}
+
+	/** UC-009 A4 (OQ-092): die folgenden Bewertungen melden der Reihe nach diese Modelle; danach wieder MODELL. */
+	private final java.util.ArrayDeque<String> modellFolge = new java.util.ArrayDeque<>();
+
+	/** UC-009 A4 (OQ-092): die folgenden Bewertungen melden der Reihe nach diese Modelle. */
+	public void meldetDerReiheNachModelle(String... modelle) {
+		this.modellFolge.addAll(List.of(modelle));
 	}
 
 	/** UC-009 A4: die nächste Bewertung ordnet eine Stufe zu, meldet aber kein Modell. */
@@ -192,6 +201,7 @@ public class KiModellClientFake implements KiModellClient {
 		this.naechsteStufe = null;
 		this.stufenFolge.clear();
 		this.naechsteOhneModell = false;
+		this.modellFolge.clear();
 		this.textreportAnfragen.clear();
 		this.naechsterTextreportFehler = null;
 		this.naechsterTextreportLeer = false;
