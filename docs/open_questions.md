@@ -1242,3 +1242,51 @@ Schritt 8 und die Erfolgs-Nachbedingung nennen ein KI-Modell in der Version, die
 **Answer:** Wie A4: Meldet das KI-Modell innerhalb eines Testlaufs eine andere Version als zuvor, wird der Testlauf nicht abgeschlossen und nichts gespeichert.
 **Answered by:** Jakob Albrecht, 2026-11-16
 **Resolved in:** UC-009 A4
+
+## OQ-093: Welchen Wortlaut haben die Hinweise auf fehlende oder ungültige Angaben einer Zuordnung?
+
+**Element:** UC-010 A1
+**Raised by:** /use-case-implement, 2026-11-16
+**Blocking:** No
+**Status:** Answered
+
+A1 nennt den Hinweis, aber keinen Wortlaut. Lesarten: wie in UC-008 A1 am jeweiligen Feld; ein Satz, der das Feld nennt.
+
+**Answer:** Wie in UC-008 A1, am jeweiligen Feld: „Pflichtangabe fehlt.“, „Höchstens 200 Zeichen.“ (Name der Spalte), „Höchstens 500 Zeichen.“ (Begründung).
+**Answered by:** Jakob Albrecht, 2026-11-16
+
+## OQ-094: Welchen Wortlaut hat der Hinweis auf eine bereits zugeordnete Spalte?
+
+**Element:** UC-010 A2
+**Raised by:** /use-case-implement, 2026-11-16
+**Blocking:** No
+**Status:** Answered
+
+A2 verlangt, auf die bestehende Zuordnung und ihr Handlungsfeld hinzuweisen, nennt aber keinen Wortlaut. Lesarten: ein Satz mit dem Handlungsfeld; ein Satz, der zusätzlich die gespeicherte Schreibweise der Spalte nennt.
+
+**Answer:** Am Namen der Spalte: „Diese Spalte ist bereits dem Handlungsfeld <Nummer> <Name> zugeordnet.“
+**Answered by:** Jakob Albrecht, 2026-11-16
+
+## OQ-095: Wie entfernt der Administrator eine Zuordnung?
+
+**Element:** UC-010 step 3
+**Raised by:** /use-case-implement, 2026-11-16
+**Blocking:** No
+**Status:** Answered
+
+Schritt 3 erlaubt, eine Zuordnung zu entfernen, Schritt 4 verlangt das Speichern und A3 das Abbrechen. Lesarten: das Entfernen wird bestätigt; ein Klick entfernt sofort.
+
+**Answer:** Das Entfernen wird bestätigt: „Entfernen“ ist das Speichern aus Schritt 4, „Abbrechen“ ist A3 und behält die Zuordnung.
+**Answered by:** Jakob Albrecht, 2026-11-16
+
+## OQ-096: Was gilt, wenn der Administrator kein Handlungsfeld wählt?
+
+**Element:** UC-010 A1
+**Raised by:** /use-case-implement, 2026-11-16
+**Blocking:** No
+**Status:** Answered
+
+BR-001 verlangt genau ein Handlungsfeld, der Auslöser von A1 nennt aber nur den fehlenden Namen der Spalte. Lesarten: das Handlungsfeld ist Pflichtangabe und fällt unter A1; die Auswahl ist vorbelegt und kann nicht leer sein.
+
+**Answer:** Das Handlungsfeld ist Pflichtangabe; fehlt es, gilt A1 mit „Pflichtangabe fehlt.“ am Feld.
+**Answered by:** Jakob Albrecht, 2026-11-16
