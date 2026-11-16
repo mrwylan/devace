@@ -334,6 +334,18 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 		assertThat(testfaelleDerFrage(9804)).hasSize(2);
 	}
 
+	@Test
+	@UseCase(id = "UC-009", scenario = "A2: Angaben zum Testfall ungültig", businessRules = { "BR-001" })
+	void erwartete_stufe_laesst_nur_ganze_zahlen_von_0_bis_5_zu() {
+		navigate(KiBewertungMitTestfaellenAbsichernView.class);
+		waehleKatalog(ENTWURF);
+
+		test(button("testfall-hinzufuegen-9804")).click();
+
+		// BR-001, C-005: eine Stufe außerhalb 0 bis 5 lässt sich nicht angeben
+		assertThat(stufeFeld().getListDataView().getItems()).containsExactly(0, 1, 2, 3, 4, 5);
+	}
+
 	// ---------------------------------------------------------------- A3
 
 	@Test
