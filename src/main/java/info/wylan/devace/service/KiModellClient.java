@@ -29,17 +29,18 @@ public interface KiModellClient {
 
 	/**
 	 * UC-009 steps 7–8: ordnet eine Antwort wie {@link #antwortBewerten} einer Stufe zu und nennt das Modell, das
-	 * bewertet hat (OQ-084). Liefert leer, wenn das KI-Modell keine gültige Stufe zuordnet (A4).
+	 * bewertet hat (OQ-084), oder {@code null}, wenn es kein Modell meldet. Liefert leer, wenn das KI-Modell keine
+	 * gültige Stufe zuordnet (A4).
 	 *
 	 * @throws KiModellNichtErreichbarException wenn das KI-Modell nicht antwortet (A4)
 	 */
 	default Optional<Bewertung> bewerten(BewertungAnfrage anfrage) {
 		OptionalInt stufe = antwortBewerten(anfrage);
-		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), "unbekannt")) : Optional.empty();
+		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), null)) : Optional.empty();
 	}
 
-	/** UC-009 step 8: die zugeordnete Stufe und das tatsächlich verwendete Modell. */
-	record Bewertung(int stufe, String modell) {
+	/** UC-009 step 8: die zugeordnete Stufe und das tatsächlich verwendete Modell; {@code null}, wenn keines gemeldet. */
+	record Bewertung(int stufe, @Nullable String modell) {
 	}
 
 	/**

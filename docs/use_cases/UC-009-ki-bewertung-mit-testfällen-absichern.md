@@ -22,7 +22,7 @@
 1. Der Administrator öffnet die Absicherung der KI-Bewertung.
 2. Das System zeigt die prüfbaren Fragenkataloge der Rollen mit der Zahl ihrer Testfälle und dem Ergebnis des jüngsten Testlaufs.
 3. Der Administrator wählt einen Fragenkatalog.
-4. Das System zeigt die Testfälle je Frage und die bisherigen Testläufe mit Zeitpunkt und Trefferquote.
+4. Das System zeigt die Testfälle je Frage und die bisherigen Testläufe mit Zeitpunkt, Administrator, KI-Modell und Trefferquote.
 5. Der Administrator legt bei Bedarf Testfälle an, ändert oder entfernt sie, mit Frage, vorgegebener Antwort und erwarteter Stufe.
 6. Der Administrator fordert die Ausführung der Testfälle an.
 7. Das System legt jeden Testfall dem KI-Modell vor, das die Antwort nach dem Entscheidungsmodell der Frage einer Stufe zuordnet. Bis alle Testfälle bewertet sind, zeigt das System den Wartehinweis „Die Testfälle werden ausgeführt.“
@@ -58,7 +58,7 @@
 
 ### A4: KI-Modell liefert keine Stufe
 
-**Auslöser:** Das KI-Modell ist nicht erreichbar oder liefert zu mindestens einem Testfall keine Stufe (Schritt 7)  
+**Auslöser:** Das KI-Modell ist nicht erreichbar, liefert zu mindestens einem Testfall keine Stufe oder meldet keine Version (Schritt 7)  
 **Ablauf:**
 
 1. Das System weist den Administrator darauf hin, dass der Testlauf nicht abgeschlossen werden konnte: „Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.“

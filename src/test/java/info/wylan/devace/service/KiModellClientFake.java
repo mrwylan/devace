@@ -80,10 +80,20 @@ public class KiModellClientFake implements KiModellClient {
 		return OptionalInt.of(3);
 	}
 
+	/** UC-009 A4: die nächste Bewertung meldet kein Modell. */
+	private boolean naechsteOhneModell;
+
 	@Override
 	public Optional<Bewertung> bewerten(BewertungAnfrage anfrage) {
 		OptionalInt stufe = antwortBewerten(anfrage);
-		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), MODELL)) : Optional.empty();
+		String modell = this.naechsteOhneModell ? null : MODELL;
+		this.naechsteOhneModell = false;
+		return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), modell)) : Optional.empty();
+	}
+
+	/** UC-009 A4: die nächste Bewertung ordnet eine Stufe zu, meldet aber kein Modell. */
+	public void meldetBeiDerNaechstenKeinModell() {
+		this.naechsteOhneModell = true;
 	}
 
 	/** UC-009: die folgenden Bewertungen liefern der Reihe nach diese Stufen; -1 heißt keine Zuordnung (A4). */
@@ -181,6 +191,7 @@ public class KiModellClientFake implements KiModellClient {
 		this.naechsterBewertungsfehler = null;
 		this.naechsteStufe = null;
 		this.stufenFolge.clear();
+		this.naechsteOhneModell = false;
 		this.textreportAnfragen.clear();
 		this.naechsterTextreportFehler = null;
 		this.naechsterTextreportLeer = false;

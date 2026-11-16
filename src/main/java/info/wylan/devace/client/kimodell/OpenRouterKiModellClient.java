@@ -198,8 +198,9 @@ class OpenRouterKiModellClient implements KiModellClient {
 					.retrieve()
 					.body(JevAntwort.class);
 				// ADR-004: das verwendete Modell protokollieren, nie den Antworttext
-				String verwendet = (antwort != null && antwort.model() != null) ? antwort.model() : modell;
-				log.info("Jev bewertete mit Modell {}", verwendet);
+				// UC-009 A4: meldet Jev kein Modell, bleibt es leer; der Alias der Konfiguration ersetzt es nicht
+				String verwendet = (antwort != null && !isBlank(antwort.model())) ? antwort.model() : null;
+				log.info("Jev bewertete mit Modell {}", (verwendet != null) ? verwendet : "(nicht gemeldet)");
 				OptionalInt stufe = stufe(antwort);
 				return stufe.isPresent() ? Optional.of(new Bewertung(stufe.getAsInt(), verwendet)) : Optional.empty();
 			}

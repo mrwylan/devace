@@ -266,6 +266,17 @@ class KiModellClientTest {
 
 	@Test
 	@UseCase(id = "UC-009", scenario = "A4: KI-Modell liefert keine Stufe")
+	void bewertung_ohne_gemeldetes_modell_nennt_kein_modell() {
+		this.antwortKoerper = "{\"answers\":{\"stufe\":{\"type\":\"score\",\"score\":4,"
+				+ "\"probabilities\":{\"4\":0.9,\"3\":0.1},\"confidence\":0.8}}}";
+
+		// A4: der Alias der Konfiguration ersetzt die fehlende Meldung nicht
+		assertThat(bewertungsAdapter(JEV, SCHLUESSEL).bewerten(bewertung()))
+			.contains(new KiModellClient.Bewertung(4, null));
+	}
+
+	@Test
+	@UseCase(id = "UC-009", scenario = "A4: KI-Modell liefert keine Stufe")
 	void bewertung_ohne_zuordnung_liefert_kein_ergebnis() {
 		this.antwortKoerper = "{\"model\":\"typesafe/jev-test-1\",\"answers\":{}}";
 

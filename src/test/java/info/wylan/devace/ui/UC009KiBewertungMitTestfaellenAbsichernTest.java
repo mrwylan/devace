@@ -406,7 +406,48 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 		assertThat(laeufe()).isEqualTo(laeufeVorher);
 	}
 
+	@Test
+	@UseCase(id = "UC-009", scenario = "A4: KI-Modell liefert keine Stufe")
+	void ohne_gemeldete_version_des_ki_modells_wird_kein_testlauf_gespeichert() {
+		long laeufeVorher = laeufe();
+		navigate(KiBewertungMitTestfaellenAbsichernView.class);
+		waehleKatalog(ENTWURF);
+		KI.meldetBeiDerNaechstenKeinModell();
+
+		test(button("ki-ausfuehren")).click();
+		roundTrip();
+
+		assertThat(text("ki-ausfuehren-hinweis"))
+			.isEqualTo("Der Testlauf konnte nicht abgeschlossen werden. Es wurde nichts gespeichert.");
+		assertThat(laeufe()).isEqualTo(laeufeVorher);
+	}
+
 	// ---------------------------------------------------------------- BR-010
+
+	@Test
+	@Transactional
+	@UseCase(id = "UC-009", businessRules = { "BR-010" })
+	void geaenderte_frage_behaelt_beim_speichern_in_uc006_ihre_testfaelle() {
+		// UC-006: den Entwurf von UC009 Entwicklung fortsetzen, Frage A ändern und speichern
+		navigate(FragenkatalogUndEntscheidungsmodellErstellenView.class);
+		@SuppressWarnings("unchecked")
+		Grid<info.wylan.devace.persistence.RolleListItem> rollen = find(Grid.class).withId("rolle-grid").single();
+		List<info.wylan.devace.persistence.RolleListItem> zeilen = rollen.getListDataView().getItems().toList();
+		int zeile = zeilen.indexOf(zeilen.stream().filter((r) -> r.name().equals("UC009 Entwicklung")).findFirst().orElseThrow());
+		// UC-006 BR-004: mit einem Entwurf setzt "Entwurf fortsetzen" ihn ohne Auswahl fort
+		test((Button) test(rollen).getCellComponent(zeile, 3)).click();
+
+		Grid<?> handlungsfeld1 = find(Grid.class).all().get(0);
+		test((Button) test(handlungsfeld1).getCellComponent(0, 3)).click();
+		test(find(TextArea.class).withId("frage-text").single()).setValue("UC009 Frage A, geändert?");
+		test(button("frage-uebernehmen")).click();
+		test(button("entwurf-speichern")).click();
+
+		// Die geänderte Frage ist dieselbe Frage geblieben, ihre Testfälle sind noch da.
+		assertThat(this.jdbc.sql("select text from frage where id = 9803").query(String.class).single())
+			.isEqualTo("UC009 Frage A, geändert?");
+		assertThat(testfallIds(9802)).containsExactly(9801L, 9802L, 9803L);
+	}
 
 	@Test
 	@Transactional

@@ -152,7 +152,12 @@ public class TestfallService {
 			}
 			// UC-009 A4: Ohne Stufe zu einem Testfall wird der Testlauf nicht abgeschlossen.
 			Bewertung ermittelt = bewertung.orElseThrow(TestlaufNichtAbgeschlossenException::new);
-			modelle.add(ermittelt.modell());
+			String gemeldet = ermittelt.modell();
+			if (gemeldet == null || gemeldet.isBlank()) {
+				// UC-009 A4: Ohne gemeldete Version des KI-Modells wird der Testlauf nicht abgeschlossen (Schritt 8).
+				throw new TestlaufNichtAbgeschlossenException();
+			}
+			modelle.add(gemeldet);
 			ergebnisse.add(new Testergebnis(testfall.testfallId(), testfall.frage(), testfall.antworttext(),
 					testfall.erwarteteStufe(), ermittelt.stufe()));
 		}
