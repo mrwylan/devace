@@ -21,6 +21,8 @@ public class MainLayout extends AppLayout {
 
 	private static final String ROLLE_TEAMLEITUNG = "ROLE_TEAMLEITUNG";
 
+	private static final String ROLLE_SCHULUNGSVERANTWORTLICHE = "ROLE_SCHULUNGSVERANTWORTLICHE";
+
 	public MainLayout(AuthenticationContext authenticationContext) {
 		H1 title = new H1("devace");
 		title.getStyle().set("font-size", "var(--aura-font-size-l, 1.25rem)").set("margin", "0");
@@ -35,6 +37,12 @@ public class MainLayout extends AppLayout {
 			.map((benutzer) -> benutzer.getAuthorities().stream().anyMatch((recht) -> ROLLE_TEAMLEITUNG.equals(recht.getAuthority())))
 			.orElse(false);
 
+		boolean schulungsverantwortliche = authenticationContext.getAuthenticatedUser(UserDetails.class)
+			.map((benutzer) -> benutzer.getAuthorities()
+				.stream()
+				.anyMatch((recht) -> ROLLE_SCHULUNGSVERANTWORTLICHE.equals(recht.getAuthority())))
+			.orElse(false);
+
 		// Die Einträge sind für alle sichtbar; ohne Berechtigung sind sie deaktiviert.
 		SideNav einladungen = new SideNav("Einladungen");
 		SideNavItem einladung = new SideNavItem("Einladungen", EinladungErstellenUndVersendenView.class,
@@ -46,6 +54,12 @@ public class MainLayout extends AppLayout {
 		// UC-004 BR-007: Einträge ohne passende Berechtigung erscheinen deaktiviert.
 		auswertung.setEnabled(teamleitung);
 		einladungen.addItem(einladung, auswertung);
+		SideNav schulung = new SideNav("Schulung");
+		SideNavItem schulungsplanung = new SideNavItem("Schulungsplanung",
+				RadarChartsFuerDieSchulungsplanungAuswertenView.class, VaadinIcon.BAR_CHART.create());
+		// UC-005 BR-007: Einträge ohne passende Berechtigung erscheinen deaktiviert.
+		schulungsplanung.setEnabled(schulungsverantwortliche);
+		schulung.addItem(schulungsplanung);
 		// Die Einträge der Administration folgen demselben Muster.
 		SideNav administration = new SideNav("Administration");
 		SideNavItem mags = new SideNavItem("MAGs und Rollen", MagsUndRollenView.class, VaadinIcon.USER.create());
@@ -64,7 +78,7 @@ public class MainLayout extends AppLayout {
 		administration.addItem(katalog, freigabe, absicherung, mags);
 
 		addToNavbar(new DrawerToggle(), title, abmelden);
-		addToDrawer(einladungen, administration);
+		addToDrawer(einladungen, schulung, administration);
 	}
 
 }

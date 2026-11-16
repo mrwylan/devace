@@ -7,7 +7,7 @@
 **Primärer Akteur:** Schulungsverantwortliche  
 **Ziel:** Die Schulungsverantwortliche sieht die Radar-Charts aller MAGs je Rolle nebeneinander, damit sie den Schulungsbedarf anhand der Lücken priorisiert.  
 **Auslösendes Ereignis:** Die Schulungsverantwortliche fordert die Auswertung für die Schulungsplanung an.  
-**Status:** Genehmigt  
+**Status:** Getestet  
 
 **Anforderungen:** [FR-011, NFR-002, NFR-005, NFR-007, NFR-010, C-002, C-003, C-005](../requirements.md)  
 **Schichten:** UI  
@@ -30,7 +30,7 @@
 **Auslöser:** Es liegt noch kein Score vor (Schritt 2)  
 **Ablauf:**
 
-1. Das System weist die Schulungsverantwortliche darauf hin, dass noch keine Auswertung möglich ist.
+1. Das System weist die Schulungsverantwortliche darauf hin, dass noch keine Auswertung möglich ist: „Es liegen noch keine Scores vor.“
 2. Der Use Case endet.
 
 ### A2: Schulungsverantwortliche wechselt die Rolle
@@ -85,4 +85,4 @@ Nur die angemeldete Schulungsverantwortliche wertet die Radar-Charts aller MAGs 
 
 ### BR-008: Keine Leistungsbeurteilung
 
-Die Radar-Charts sind kein Bestandteil der Leistungsbeurteilung.
+Die Radar-Charts sind kein Bestandteil der Leistungsbeurteilung. Die Regel gilt für die Verwendung der Radar-Charts; die Auswertung zeigt dazu keinen Hinweis, wie in UC-004 BR-008.
