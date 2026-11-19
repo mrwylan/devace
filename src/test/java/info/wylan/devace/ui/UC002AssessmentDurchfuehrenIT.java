@@ -159,10 +159,12 @@ class UC002AssessmentDurchfuehrenIT extends AbstractBasePlaywrightIT {
 			page.locator("#assessment-bestaetigung").click();
 			page.locator("#assessment-starten").click();
 
-			antworten("a".repeat(501));
+			page.locator("#assessment-antwort textarea").fill("a".repeat(501));
 
+			// ADR-006: Der Hinweis aus A4 erscheint beim Tippen, Senden bleibt gesperrt.
 			PlaywrightAssertions.assertThat(page.getByText("Die Antwort ist zu lang: 501 von höchstens 500 Zeichen.").first())
 				.isVisible();
+			PlaywrightAssertions.assertThat(page.locator("#assessment-senden")).isDisabled();
 			PlaywrightAssertions.assertThat(page.getByText("Frage 1 von 2")).isVisible();
 		}
 

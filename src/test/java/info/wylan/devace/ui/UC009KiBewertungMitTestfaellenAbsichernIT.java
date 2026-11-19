@@ -80,10 +80,7 @@ class UC009KiBewertungMitTestfaellenAbsichernIT extends AbstractBasePlaywrightIT
 		@DisplayName("Steps 1-9: Fragenkatalog wählen, Testfälle ausführen, Trefferquote und Abweichungen sehen")
 		void testfaelle_ausfuehren() {
 			// Schritt 2 und 3: der Entwurf von UC009 Entwicklung, die einzige Zeile mit drei Testfällen und Status Entwurf
-			page.locator("vaadin-grid-cell-content")
-				.filter(new com.microsoft.playwright.Locator.FilterOptions().setHasText("UC009 Entwicklung"))
-				.nth(1)
-				.click();
+			waehle("UC009 Entwicklung", 1);
 
 			// Schritt 4: die Testfälle je Frage
 			PlaywrightAssertions.assertThat(page.locator("#ki-frage-9803")).containsText("UC009 Antwort eins");
@@ -123,10 +120,7 @@ class UC009KiBewertungMitTestfaellenAbsichernIT extends AbstractBasePlaywrightIT
 		@Test
 		@DisplayName("Ausführen ohne Testfall weist darauf hin, dass es nichts auszuführen gibt")
 		void ohne_testfall() {
-			page.locator("vaadin-grid-cell-content")
-				.filter(new com.microsoft.playwright.Locator.FilterOptions().setHasText("UC009 Ohne Testfall"))
-				.first()
-				.click();
+			waehle("UC009 Ohne Testfall", 0);
 			page.locator("#ki-ausfuehren").click();
 
 			PlaywrightAssertions.assertThat(page.locator("#ki-ausfuehren-hinweis"))
@@ -153,13 +147,24 @@ class UC009KiBewertungMitTestfaellenAbsichernIT extends AbstractBasePlaywrightIT
 
 	}
 
-	/** Schritt 3: der Entwurf von UC009 Entwicklung, die zweite Zeile dieser Rolle (Version 2). */
+	/**
+	 * Schritt 3: der Entwurf von UC009 Entwicklung, die zweite Zeile dieser Rolle (Version 2). Die Liste scrollt in sich
+	 * (ADR-006); die Suche bringt die Zeilen der Rolle nach oben.
+	 */
 	private void waehleEntwurf() {
-		page.locator("vaadin-grid-cell-content")
-			.filter(new com.microsoft.playwright.Locator.FilterOptions().setHasText("UC009 Entwicklung"))
-			.nth(1)
-			.click();
+		waehle("UC009 Entwicklung", 1);
 		PlaywrightAssertions.assertThat(page.locator("#ki-frage-9803")).isVisible();
+	}
+
+	/** Die Liste scrollt in sich (ADR-006); die Suche bringt die Zeilen der Rolle nach oben, dann die n-te Zeile. */
+	private void waehle(String rolle, int zeile) {
+		page.locator("#pruefbare-kataloge-suche input").fill(rolle);
+		PlaywrightAssertions.assertThat(page.locator("#pruefbare-kataloge-anzahl"))
+			.hasText(java.util.regex.Pattern.compile("^\\d+ von \\d+$"));
+		page.locator("vaadin-grid-cell-content")
+			.filter(new com.microsoft.playwright.Locator.FilterOptions().setHasText(rolle))
+			.nth(zeile)
+			.click();
 	}
 
 }
