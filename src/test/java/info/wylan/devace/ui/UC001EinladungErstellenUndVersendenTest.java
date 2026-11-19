@@ -233,7 +233,9 @@ class UC001EinladungErstellenUndVersendenTest extends SpringBrowserlessTest {
 		navigate(EinladungErstellenUndVersendenView.class);
 
 		adressen(adressen(51));
-		anfordern();
+		// ADR-006: Die Zahl erscheint beim Tippen, über 50 steht der Hinweis sofort am Feld und das Versenden ist gesperrt.
+		assertThat(adressenFeld().getHelperText()).contains("51 von höchstens 50 Adressen");
+		assertThat(find(Button.class).withId("einladung-erstellen").single().isEnabled()).isFalse();
 		assertThat(adressenFeld().isInvalid()).isTrue();
 		assertThat(adressenFeld().getErrorMessage()).isEqualTo("Höchstens 50 Adressen je Durchgang.");
 

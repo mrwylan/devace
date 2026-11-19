@@ -4,19 +4,20 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.BeforeEvent;
@@ -36,6 +37,8 @@ import info.wylan.devace.service.AssessmentService.FeldScore;
 import info.wylan.devace.service.EinladungNichtNutzbarException;
 import info.wylan.devace.service.KiModellClient.Abschnitt;
 import info.wylan.devace.service.TextreportNichtErstelltException;
+import info.wylan.devace.ui.bausteine.Aktionsleiste;
+import info.wylan.devace.ui.bausteine.Zeichenzaehler;
 
 /**
  * UC-002 Assessment durchführen und UC-003 Assessment abschließen und Textreport herunterladen. Der Teilnehmer meldet
@@ -60,6 +63,9 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 
 	/** UC-003 A3: Zahl der Anforderungen des Textreports in dieser Auswertung. */
 	private int textreportAnforderungen;
+
+	/** UC-002 BR-004: Eine Antwort hat höchstens 500 Zeichen. */
+	private static final int HOECHSTZAHL_ZEICHEN = 500;
 
 	private final Div inhalt = new Div();
 
@@ -119,10 +125,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		starten.setId("assessment-starten");
 		starten.setEnabled(false);
 		bestaetigung.addValueChangeListener((event) -> starten.setEnabled(event.getValue()));
-		HorizontalLayout aktionen = new HorizontalLayout(nichtStarten, starten);
-		aktionen.setWidthFull();
-		aktionen.setJustifyContentMode(com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END);
-		karte.add(bestaetigung, aktionen);
+		karte.add(bestaetigung, new Aktionsleiste(nichtStarten, starten));
 		setzeInhalt(kopfzeile("Willkommen zu Ihrem Assessment", rolle), karte);
 	}
 
@@ -158,30 +161,51 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 					abschliessen);
 			return;
 		}
-		H3 titel = new H3("Dialog");
-		Paragraph untertitel = new Paragraph(
-				"Beantworten Sie jede Frage in eigenen Worten. Eine abgegebene Antwort lässt sich nicht ändern.");
-		untertitel.addClassName("devace-untertitel");
-		Div karte = new Div(titel, untertitel);
-		karte.addClassName("devace-karte");
-		// UC-002 BR-008: Der Verlauf zeigt die zugeordnete Stufe nicht.
-		for (Verlauf eintrag : dialog.verlauf()) {
-			karte.add(eintrag("Q", "Frage " + eintrag.position(), eintrag.frage()),
-					eintrag("S", "Ihre Antwort", eintrag.antwort()));
+		// ADR-006: Frühere Fragen und Antworten sind eingeklappt; die aktuelle Frage und das Antwortfeld bleiben sichtbar.
+		List<Component> teile = new ArrayList<>();
+		Div kopf = new Div(kopfzeile(stand, dialog.rolle()), fortschritt);
+		kopf.addClassName("devace-assessment-kopf");
+		teile.add(kopf);
+		if (!dialog.verlauf().isEmpty()) {
+			Div bisher = new Div();
+			bisher.addClassName("devace-verlauf");
+			// UC-002 BR-008: Der Verlauf zeigt die zugeordnete Stufe nicht.
+			for (Verlauf eintrag : dialog.verlauf()) {
+				bisher.add(eintrag("Q", "Frage " + eintrag.position(), eintrag.frage()),
+						eintrag("S", "Ihre Antwort", eintrag.antwort()));
+			}
+			Details verlauf = new Details("Bisherige Antworten (" + dialog.verlauf().size() + ")", bisher);
+			verlauf.setId("assessment-verlauf");
+			verlauf.addThemeVariants(DetailsVariant.FILLED);
+			verlauf.setWidthFull();
+			teile.add(verlauf);
 		}
-		karte.add(eintrag("Q", "Frage " + dialog.nummer(), dialog.naechsteFrage()));
+
+		H3 titel = new H3("Frage " + dialog.nummer());
+		Paragraph untertitel = new Paragraph(
+				"Beantworten Sie die Frage in eigenen Worten. Eine abgegebene Antwort lässt sich nicht ändern.");
+		untertitel.addClassName("devace-untertitel");
+		Paragraph frage = new Paragraph(dialog.naechsteFrage());
+		frage.addClassName("devace-aktuelle-frage");
+		frage.setId("assessment-frage");
+		Div karte = new Div(titel, untertitel, frage);
+		karte.addClassName("devace-karte");
+		karte.setId("assessment-aktuell");
 		TextArea antwort = new TextArea();
 		antwort.setId("assessment-antwort");
 		antwort.setPlaceholder("Ihre Antwort in eigenen Worten …");
 		// NFR-010: zugänglicher Name des Antwortfelds (WCAG 2.1 AA), das Layout bleibt wie im Mockup ohne sichtbares Label
 		antwort.setAriaLabel("Ihre Antwort");
 		antwort.setWidthFull();
-		antwort.setMinHeight("6rem");
-		antwort.getStyle().set("margin-top", "0.75rem");
+		antwort.setMinHeight("8rem");
 		Button senden = new Button("Senden");
 		senden.addThemeVariants(ButtonVariant.PRIMARY);
 		senden.setId("assessment-senden");
 		senden.setDisableOnClick(true);
+		// UC-002 BR-004, A4, ADR-006: Zähler am Antwortfeld; über 500 Zeichen der Hinweis sofort und Senden gesperrt
+		Zeichenzaehler zaehler = Zeichenzaehler.mitMeldung(antwort, HOECHSTZAHL_ZEICHEN,
+				(zahl) -> "Die Antwort ist zu lang: " + zahl + " von höchstens " + HOECHSTZAHL_ZEICHEN + " Zeichen.");
+		Zeichenzaehler.sperrt(senden, zaehler);
 		// UC-002 step 6, NFR-012: Wartehinweis, bis die Zuordnung vorliegt (ADR-005)
 		Div warten = KiWarten.wartehinweis("Ihre Antwort wird verarbeitet.", "assessment-wartehinweis");
 		warten.setVisible(false);
@@ -194,7 +218,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 			this.kiWarten.ausfuehren(() -> this.service.antworten(this.referenz, text), this::zeigeDialog, (fehler) -> {
 				warten.setVisible(false);
 				antwort.setReadOnly(false);
-				senden.setEnabled(true);
+				senden.setEnabled(zaehler.eingehalten());
 				if (fehler instanceof AntwortUngueltigException ex) {
 					// UC-002 A4: Hinweis an der Antwort, weiter bei Schritt 5
 					antwort.setInvalid(true);
@@ -208,14 +232,14 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 				}
 			});
 		});
-		Paragraph fussnote = new Paragraph("Höchstens 500 Zeichen. Sie können das Assessment jederzeit verlassen; "
+		Paragraph fussnote = new Paragraph("Sie können das Assessment jederzeit verlassen; "
 				+ "bereits gegebene Antworten bleiben 7 Tage erhalten.");
 		fussnote.addClassName("devace-fussnote");
-		HorizontalLayout aktion = new HorizontalLayout(senden);
-		aktion.setWidthFull();
-		aktion.setJustifyContentMode(com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END);
-		karte.add(antwort, aktion, warten, fussnote);
-		setzeInhalt(kopfzeile(stand, dialog.rolle()), fortschritt, karte);
+		karte.add(antwort, warten, new Aktionsleiste(senden), fussnote);
+		teile.add(karte);
+		setzeInhalt(teile.toArray(Component[]::new));
+		// nach jeder Antwort steht die neue Frage im sichtbaren Bereich
+		karte.scrollIntoView();
 	}
 
 	/**
@@ -289,7 +313,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		}
 		Paragraph ohneFrage = new Paragraph("Handlungsfelder ohne Frage haben keinen Score.");
 		ohneFrage.addClassName("devace-fussnote");
-		Div diagramm = new Div(new Html(RadarChart.svg(auswertung.scores())), new Div(scores, ohneFrage));
+		Div diagramm = new Div(RadarChart.anzeige(auswertung.scores()), new Div(scores, ohneFrage));
 		diagramm.addClassName("devace-radar");
 		Div chartKarte = new Div(chartTitel, chartText, diagramm);
 		chartKarte.addClassName("devace-karte");

@@ -2,6 +2,7 @@ package info.wylan.devace.ui;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
@@ -9,9 +10,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -30,6 +31,10 @@ import info.wylan.devace.service.TestfallService;
 import info.wylan.devace.service.TestfallService.TestlaufErgebnis;
 import info.wylan.devace.service.TestfallUngueltigException;
 import info.wylan.devace.service.TestlaufNichtAbgeschlossenException;
+import info.wylan.devace.ui.bausteine.Aktionsleiste;
+import info.wylan.devace.ui.bausteine.DevaceListe;
+import info.wylan.devace.ui.bausteine.Symbolknopf;
+import info.wylan.devace.ui.bausteine.Zeichenzaehler;
 import jakarta.annotation.security.RolesAllowed;
 import org.jspecify.annotations.Nullable;
 
@@ -53,7 +58,11 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 	/** ADR-005: Aufrufe des KI-Modells im Hintergrund, mit Wartehinweis. */
 	private final KiWarten kiWarten;
 
-	private final Grid<PruefbarerKatalog> kataloge = new Grid<>();
+	/** ADR-006: Liste mit Suche und Sortierung; die Auswahl einer Zeile öffnet das Detail darunter. */
+	private final DevaceListe<PruefbarerKatalog> katalogListe = new DevaceListe<>("pruefbare-kataloge",
+			"Kein prüfbarer Fragenkatalog.");
+
+	private final Grid<PruefbarerKatalog> kataloge = this.katalogListe.getGrid();
 
 	private final Div detail = new Div();
 
@@ -66,15 +75,17 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		this.service = service;
 		this.kiWarten = kiWarten;
 		setWidthFull();
-		this.kataloge.setId("pruefbare-kataloge");
-		this.kataloge.addColumn(PruefbarerKatalog::rolle).setHeader("Rolle").setAutoWidth(true);
-		this.kataloge.addColumn(PruefbarerKatalog::version).setHeader("Version").setAutoWidth(true);
-		this.kataloge.addColumn(PruefbarerKatalog::status).setHeader("Status").setAutoWidth(true);
-		this.kataloge.addColumn(PruefbarerKatalog::testfaelle).setHeader("Testfälle").setAutoWidth(true);
-		this.kataloge.addColumn(KiBewertungMitTestfaellenAbsichernView::letzterLauf)
-			.setHeader("Jüngster Testlauf")
+		this.katalogListe.spalte("Rolle", PruefbarerKatalog::rolle).setAutoWidth(true);
+		this.katalogListe.spalte("Version", (k) -> String.valueOf(k.version()))
+			.setComparator(Comparator.comparingInt(PruefbarerKatalog::version))
 			.setAutoWidth(true);
-		this.kataloge.setAllRowsVisible(true);
+		this.katalogListe.spalte("Status", PruefbarerKatalog::status).setAutoWidth(true);
+		this.katalogListe.spalte("Testfälle", (k) -> String.valueOf(k.testfaelle()))
+			.setComparator(Comparator.comparingInt(PruefbarerKatalog::testfaelle))
+			.setAutoWidth(true);
+		this.katalogListe.spalte("Jüngster Testlauf", KiBewertungMitTestfaellenAbsichernView::letzterLauf)
+			.setAutoWidth(true);
+		this.kataloge.setHeight("18rem");
 		// UC-009 step 3: Der Administrator wählt einen Fragenkatalog.
 		this.kataloge.asSingleSelect().addValueChangeListener((event) -> {
 			if (this.uebersichtWirdErneuert) {
@@ -84,27 +95,29 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 			zeigeDetail();
 		});
 		this.detail.setWidthFull();
+		this.detail.addClassName("devace-detail");
 	}
 
 	/** UC-009 steps 1–2: Bei jedem Öffnen zeigt die Ansicht die prüfbaren Fragenkataloge; A1 ohne Katalog. */
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		removeAll();
-		H2 titel = new H2("KI-Absicherung");
-		titel.addClassName("devace-seitentitel");
 		List<PruefbarerKatalog> pruefbar = this.service.pruefbareKataloge();
 		if (pruefbar.isEmpty()) {
 			// UC-009 A1: Es gibt keinen prüfbaren Fragenkatalog; der Use Case endet.
 			Div hinweis = new Div(new Span(KEIN_KATALOG));
 			hinweis.addClassName("devace-hinweis");
 			hinweis.setId("ki-absicherung-kein-katalog");
-			add(titel, hinweis);
+			add(hinweis);
 			return;
 		}
 		this.gewaehlt = null;
-		this.kataloge.setItems(pruefbar);
+		this.katalogListe.setItems(pruefbar);
 		this.detail.removeAll();
-		add(titel, this.kataloge, this.detail);
+		Span auswahlHinweis = new Span("Wählen Sie einen Fragenkatalog, um seine Testfälle und Testläufe zu sehen.");
+		auswahlHinweis.addClassName("devace-untertitel");
+		this.detail.add(auswahlHinweis);
+		add(this.katalogListe, this.detail);
 	}
 
 	/** UC-009 step 4: die Testfälle je Frage und die bisherigen Testläufe des gewählten Fragenkatalogs. */
@@ -136,28 +149,34 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		kopf.getStyle().set("font-weight", "600");
 		Div karte = new Div(kopf);
 		karte.addClassName("devace-karte");
+		karte.setWidthFull();
 		karte.setId("ki-frage-" + frage.frageId());
 		for (Testfall testfall : frage.testfaelle()) {
 			Span antwort = new Span(testfall.antworttext());
 			Span stufe = new Span("Erwartete Stufe: " + testfall.erwarteteStufe());
 			stufe.addClassName("devace-untertitel");
-			Button bearbeiten = new Button("Bearbeiten", (event) -> testfallDialog(frage, testfall));
-			bearbeiten.addThemeVariants(ButtonVariant.TERTIARY);
+			Button bearbeiten = Symbolknopf.erstellen(VaadinIcon.EDIT, "Bearbeiten", "Testfall bearbeiten");
+			bearbeiten.addClickListener((event) -> testfallDialog(frage, testfall));
 			bearbeiten.setId("testfall-bearbeiten-" + testfall.id());
-			Button entfernen = new Button("Entfernen", (event) -> {
+			Button entfernen = Symbolknopf.erstellen(VaadinIcon.TRASH, "Entfernen", "Testfall entfernen");
+			entfernen.addThemeVariants(ButtonVariant.ERROR);
+			entfernen.addClickListener((event) -> {
 				this.service.testfallEntfernen(testfall.id());
 				aktualisiere();
 			});
-			entfernen.addThemeVariants(ButtonVariant.TERTIARY, ButtonVariant.ERROR);
 			entfernen.setId("testfall-entfernen-" + testfall.id());
-			Div zeile = new Div(new Div(antwort, stufe), new HorizontalLayout(bearbeiten, entfernen));
-			zeile.addClassName("devace-assessment-zeile");
+			Div text = new Div(antwort, stufe);
+			text.addClassName("devace-testfall-text");
+			HorizontalLayout knoepfe = new HorizontalLayout(bearbeiten, entfernen);
+			knoepfe.setSpacing(false);
+			Div zeile = new Div(text, knoepfe);
+			zeile.addClassName("devace-testfall");
 			zeile.setId("testfall-" + testfall.id());
 			karte.add(zeile);
 		}
 		Button hinzufuegen = new Button("Testfall hinzufügen", (event) -> testfallDialog(frage, null));
 		hinzufuegen.setId("testfall-hinzufuegen-" + frage.frageId());
-		karte.add(hinzufuegen);
+		karte.add(new Aktionsleiste().links(hinzufuegen));
 		return karte;
 	}
 
@@ -172,7 +191,7 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		TextArea antwort = new TextArea("Vorgegebene Antwort");
 		antwort.setId("testfall-antwort");
 		antwort.setWidthFull();
-		antwort.setHelperText("Höchstens 500 Zeichen");
+		antwort.setHelperText("Pflichtangabe");
 		Select<Integer> stufe = new Select<>();
 		stufe.setLabel("Erwartete Stufe");
 		stufe.setId("testfall-stufe");
@@ -217,6 +236,9 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		speichern.addThemeVariants(ButtonVariant.PRIMARY);
 		speichern.setId("testfall-speichern");
 		dialog.getFooter().add(abbrechen, speichern);
+		// UC-009 BR-001, A2, ADR-006: Zähler an der Antwort; über 500 Zeichen der Hinweis am Feld und Speichern gesperrt
+		Zeichenzaehler.sperrt(speichern,
+				Zeichenzaehler.mitMeldung(antwort, 500, (zahl) -> "Höchstens 500 Zeichen."));
 		dialog.open();
 	}
 
@@ -327,7 +349,7 @@ public class KiBewertungMitTestfaellenAbsichernView extends VerticalLayout imple
 		List<PruefbarerKatalog> pruefbar = this.service.pruefbareKataloge();
 		this.uebersichtWirdErneuert = true;
 		try {
-			this.kataloge.setItems(pruefbar);
+			this.katalogListe.setItems(pruefbar);
 			if (vorher != null) {
 				pruefbar.stream().filter((k) -> k.id() == vorher.id()).findFirst().ifPresent((k) -> {
 					this.gewaehlt = k;

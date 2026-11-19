@@ -13,12 +13,12 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -38,6 +38,12 @@ import info.wylan.devace.service.FragenkatalogService;
 import info.wylan.devace.service.FreigabeZusammenfassung;
 import info.wylan.devace.service.KeinEntwurfZurFreigabeException;
 import info.wylan.devace.service.NotFoundException;
+import info.wylan.devace.ui.bausteine.Aktionsleiste;
+import info.wylan.devace.ui.bausteine.DevaceListe;
+import info.wylan.devace.ui.bausteine.DevaceListe.Aktion;
+import info.wylan.devace.ui.bausteine.Hinweis;
+import info.wylan.devace.ui.bausteine.Karte;
+import info.wylan.devace.ui.bausteine.Seitenkopf;
 import jakarta.annotation.security.RolesAllowed;
 import org.jspecify.annotations.Nullable;
 
@@ -88,34 +94,33 @@ public class FragenkatalogFreigebenView extends VerticalLayout implements Before
 			// UC-007 A1: Hinweis, dass kein Entwurf zur Freigabe vorliegt; der Use Case endet.
 			Div hinweis = meldungsBox("Kein Entwurf", ex.getMessage(), "warnung");
 			hinweis.setId("kein-entwurf");
-			setzeInhalt(seitentitel("Fragenkatalog freigeben"), hinweis);
+			removeClassName("devace-ansicht-fuellend");
+			Seitenkopf.titel(this, "Fragenkatalog freigeben");
+			setzeInhalt(hinweis);
 			return;
 		}
 
-		Grid<FreigabeKandidat> grid = new Grid<>();
-		grid.setId("freigabe-grid");
-		grid.addColumn(FreigabeKandidat::rolle).setHeader("Rolle").setAutoWidth(true);
-		grid.addComponentColumn((k) -> badge("Version " + k.entwurfVersion(), "entwurf"))
-			.setHeader("Entwurf")
+		// ADR-006: Liste mit Suche und Sortierung, füllt die Karte
+		DevaceListe<FreigabeKandidat> liste = new DevaceListe<>("freigabe-grid", "Kein Entwurf zur Freigabe.");
+		liste.spalte("Rolle", FreigabeKandidat::rolle).setAutoWidth(true);
+		liste.komponentenspalte("Entwurf", (k) -> badge("Version " + k.entwurfVersion(), "entwurf"),
+				(k) -> "Version " + k.entwurfVersion())
 			.setAutoWidth(true);
-		grid.addComponentColumn((k) -> (k.freigegebeneVersion() != null)
-				? badge("Version " + k.freigegebeneVersion(), "freigegeben") : new Span("–"))
-			.setHeader("Freigegebene Version")
+		liste.komponentenspalte("Freigegebene Version", (k) -> (k.freigegebeneVersion() != null)
+				? badge("Version " + k.freigegebeneVersion(), "freigegeben") : new Span("–"),
+				(k) -> (k.freigegebeneVersion() != null) ? "Version " + k.freigegebeneVersion() : "")
 			.setAutoWidth(true);
-		grid.addComponentColumn((k) -> {
-			Button pruefen = new Button("Prüfen", (event) -> rolleGewaehlt(k));
-			pruefen.addThemeVariants(ButtonVariant.TERTIARY);
-			pruefen.setAriaLabel("Entwurf der Rolle " + k.rolle() + " prüfen");
-			return pruefen;
-		}).setAutoWidth(true).setFlexGrow(0);
-		grid.addThemeVariants(GridVariant.NO_BORDER);
-		grid.setAllRowsVisible(true);
-		grid.setItems(kandidaten);
+		liste.aktionen(Aktion.von(VaadinIcon.SEARCH, "Prüfen",
+				(FreigabeKandidat k) -> "Entwurf der Rolle " + k.rolle() + " prüfen", this::rolleGewaehlt));
+		liste.setItems(kandidaten);
 
-		VerticalLayout karte = karte("Entwürfe zur Freigabe", "Rollen mit einem Entwurf, mit der bisher freigegebenen Version.");
-		karte.add(grid, fussnote("Mit der Freigabe wird die bisher freigegebene Version der Rolle archiviert. "
-				+ "Laufende Assessments behalten ihren Fragenkatalog."));
-		setzeInhalt(seitentitel("Fragenkatalog freigeben"), karte);
+		Karte karte = new Karte("Entwürfe zur Freigabe", "Rollen mit einem Entwurf, mit der bisher freigegebenen Version.");
+		karte.fuellen(liste)
+			.fussnote("Mit der Freigabe wird die bisher freigegebene Version der Rolle archiviert. "
+					+ "Laufende Assessments behalten ihren Fragenkatalog.");
+		addClassName("devace-ansicht-fuellend");
+		Seitenkopf.titel(this, "Fragenkatalog freigeben");
+		setzeInhalt(karte);
 	}
 
 	/** UC-007 step 3: der Administrator wählt eine Rolle. */
@@ -149,7 +154,8 @@ public class FragenkatalogFreigebenView extends VerticalLayout implements Before
 		karte.add(handlungsfelder(entwurf.fragen()), aktionen());
 
 		List<Component> teile = new ArrayList<>();
-		teile.add(seitentitel("Entwurf prüfen"));
+		removeClassName("devace-ansicht-fuellend");
+		Seitenkopf.titel(this, "Entwurf prüfen");
 		if (this.meldung != null) {
 			teile.add(this.meldung);
 		}
@@ -201,7 +207,7 @@ public class FragenkatalogFreigebenView extends VerticalLayout implements Before
 		return box;
 	}
 
-	private HorizontalLayout aktionen() {
+	private Aktionsleiste aktionen() {
 		// UC-007 A3: Abbruch vor der Anforderung; der Entwurf wird nicht freigegeben.
 		Button abbrechen = new Button("Abbrechen", (event) -> zeigeUebersicht());
 		abbrechen.addThemeVariants(ButtonVariant.TERTIARY);
@@ -209,10 +215,8 @@ public class FragenkatalogFreigebenView extends VerticalLayout implements Before
 		Button anfordern = new Button("Freigabe anfordern", (event) -> freigabeAnfordern());
 		anfordern.addThemeVariants(ButtonVariant.PRIMARY);
 		anfordern.setId("freigabe-anfordern");
-		HorizontalLayout leiste = new HorizontalLayout(abbrechen, anfordern);
-		leiste.setWidthFull();
-		leiste.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-		return leiste;
+		// ADR-006: Die Leiste bleibt beim Bildlauf durch den Entwurf sichtbar.
+		return new Aktionsleiste(abbrechen, anfordern).haftend();
 	}
 
 	/** UC-007 steps 5–6 und A2: prüft die Vollständigkeit und zeigt die Zusammenfassung. */
@@ -312,23 +316,13 @@ public class FragenkatalogFreigebenView extends VerticalLayout implements Before
 		this.inhalt.removeAll();
 		VerticalLayout spalte = new VerticalLayout(teile);
 		spalte.setPadding(false);
+		spalte.addClassName("devace-fuellkette");
+		this.inhalt.addClassName("devace-fuellkette");
 		this.inhalt.add(spalte);
 	}
 
-	private static H2 seitentitel(String text) {
-		H2 titel = new H2(text);
-		titel.addClassName("devace-seitentitel");
-		return titel;
-	}
-
 	private static VerticalLayout karte(String titel, String untertitel) {
-		Span unter = new Span(untertitel);
-		unter.addClassName("devace-untertitel");
-		VerticalLayout karte = new VerticalLayout(new Div(new H3(titel), unter));
-		karte.addClassName("devace-karte");
-		karte.setPadding(false);
-		karte.getStyle().set("padding", "1rem 1.25rem");
-		return karte;
+		return new Karte(titel, untertitel);
 	}
 
 	private static Span fussnote(String text) {
@@ -351,10 +345,7 @@ public class FragenkatalogFreigebenView extends VerticalLayout implements Before
 	}
 
 	private static Div meldungsBox(String titel, String text, String thema) {
-		Div box = new Div(hinweisTitel(titel), new Span(text));
-		box.addClassName("devace-hinweis");
-		box.getElement().setAttribute("theme", thema);
-		return box;
+		return Hinweis.meldung(titel, text, thema, null);
 	}
 
 	private static void fehler(String text) {

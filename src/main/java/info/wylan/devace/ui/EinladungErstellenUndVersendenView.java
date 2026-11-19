@@ -1,6 +1,7 @@
 package info.wylan.devace.ui;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -8,7 +9,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
@@ -18,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import info.wylan.devace.persistence.MagListItem;
@@ -29,9 +30,13 @@ import info.wylan.devace.service.EinladungService.Ergebnis;
 import info.wylan.devace.service.EinladungService.Zusammenfassung;
 import info.wylan.devace.service.EinladungsangabenUngueltigException;
 import info.wylan.devace.service.KeineRolleMitFreigabeException;
+import info.wylan.devace.ui.bausteine.Aktionsleiste;
+import info.wylan.devace.ui.bausteine.Karte;
+import info.wylan.devace.ui.bausteine.Seitenkopf;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import jakarta.annotation.security.RolesAllowed;
+import org.jspecify.annotations.Nullable;
 
 /**
  * UC-001 Einladung erstellen und versenden.
@@ -54,11 +59,21 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 
 	private final TextArea adressen = new TextArea("E-Mail-Adressen der Teilnehmer");
 
+	/** UC-001 BR-010: höchstens 50 Adressen je Durchgang. */
+	private static final int HOECHSTZAHL_ADRESSEN = 50;
+
+	private static final String ZU_VIELE_ADRESSEN = "Höchstens 50 Adressen je Durchgang.";
+
+	private @Nullable Button erstellen;
+
 	private final IntegerField gueltigkeit = new IntegerField("Gültigkeit in Tagen");
 
 	public EinladungErstellenUndVersendenView(EinladungService service) {
 		this.service = service;
 		setWidthFull();
+		// UC-001 BR-010, ADR-006: Die Zahl der Adressen erscheint beim Tippen; über 50 bleibt das Versenden gesperrt.
+		this.adressen.setValueChangeMode(ValueChangeMode.EAGER);
+		this.adressen.addValueChangeListener((event) -> zaehleAdressen());
 		add(this.inhalt);
 		this.inhalt.setWidthFull();
 	}
@@ -77,7 +92,8 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 		}
 		catch (KeineRolleMitFreigabeException ex) {
 			// UC-001 A2: Es gibt keine Rolle mit freigegebenem Fragenkatalog; der Use Case endet.
-			setzeInhalt(seitentitel(), meldung(KeineRolleMitFreigabeException.TITEL, ex.getMessage(), "warnung"));
+			Seitenkopf.titel(this, "Einladungen");
+		setzeInhalt(meldung(KeineRolleMitFreigabeException.TITEL, ex.getMessage(), "warnung"));
 			return;
 		}
 		this.mag.setLabel("MAG (Scrum Team · Linienteam)");
@@ -99,7 +115,7 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 		this.adressen.setMinHeight("8rem");
 		this.adressen.clear();
 		// UC-001 BR-004: Die Adressen dienen nur dem Versand und werden nicht gespeichert.
-		this.adressen.setHelperText("Eine Adresse pro Zeile. Die Adressen werden nur für den Versand verwendet und nicht gespeichert.");
+		zaehleAdressen();
 		this.gueltigkeit.setId("einladung-gueltigkeit");
 		this.gueltigkeit.setStepButtonsVisible(true);
 		this.gueltigkeit.setMin(1);
@@ -120,10 +136,9 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 		erstellen.addThemeVariants(ButtonVariant.PRIMARY);
 		erstellen.setId("einladung-erstellen");
 		// UC-001 Pre-2: Ohne zugeordnete MAG gibt es nichts zu erstellen; die Aktion bleibt deaktiviert.
-		erstellen.setEnabled(this.mag.getValue() != null);
-		HorizontalLayout aktionen = new HorizontalLayout(abbrechen, erstellen);
-		aktionen.setWidthFull();
-		aktionen.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+		this.erstellen = erstellen;
+		zaehleAdressen();
+		Aktionsleiste aktionen = new Aktionsleiste(abbrechen, erstellen);
 
 		VerticalLayout formular = karte("Einladungen erstellen",
 				"Laden Sie Teilnehmer Ihrer MAG zu einem Assessment ein. Die Einladung enthält keinen Hinweis auf die Person.");
@@ -136,7 +151,8 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 		HorizontalLayout spalten = new HorizontalLayout(formular, hinweis);
 		spalten.setWidthFull();
 		spalten.setAlignItems(FlexComponent.Alignment.START);
-		setzeInhalt(seitentitel(), spalten);
+		Seitenkopf.titel(this, "Einladungen");
+		setzeInhalt(spalten);
 	}
 
 	/** UC-001 steps 5–6: prüft die Angaben und zeigt die Zusammenfassung; A1 bei fehlenden oder ungültigen Angaben. */
@@ -202,7 +218,7 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 
 	private void zeigeErgebnis(Ergebnis ergebnis) {
 		List<Object> teile = new java.util.ArrayList<>();
-		teile.add(seitentitel());
+		Seitenkopf.titel(this, "Einladungen");
 		int versendet = ergebnis.versendet();
 		if (versendet > 0) {
 			Div erfolg = meldung((versendet == 1) ? "1 Einladung versendet" : versendet + " Einladungen versendet",
@@ -237,6 +253,35 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 		setzeInhalt(teile.toArray(new com.vaadin.flow.component.Component[0]));
 	}
 
+	/**
+	 * UC-001 BR-004, BR-005, BR-010: zählt die verschiedenen Adressen wie der Service (Groß- und Kleinschreibung zählt
+	 * nicht) und sperrt das Versenden über der Höchstzahl.
+	 */
+	private void zaehleAdressen() {
+		String eingabe = this.adressen.getValue();
+		long anzahl = (eingabe == null) ? 0 : eingabe.lines()
+			.map(String::strip)
+			.filter((zeile) -> !zeile.isEmpty())
+			.map((zeile) -> zeile.toLowerCase(Locale.ROOT))
+			.distinct()
+			.count();
+		boolean zuViele = anzahl > HOECHSTZAHL_ADRESSEN;
+		this.adressen.setHelperText("Eine Adresse pro Zeile · " + anzahl + " von höchstens " + HOECHSTZAHL_ADRESSEN
+				+ " Adressen. Die Adressen werden nur für den Versand verwendet und nicht gespeichert.");
+		if (zuViele) {
+			this.adressen.setErrorMessage(ZU_VIELE_ADRESSEN);
+			this.adressen.setInvalid(true);
+		}
+		else if (ZU_VIELE_ADRESSEN.equals(this.adressen.getErrorMessage())) {
+			this.adressen.setInvalid(false);
+		}
+		Button aktion = this.erstellen;
+		if (aktion != null) {
+			// UC-001 Pre-2: Ohne zugeordnete MAG gibt es nichts zu erstellen; die Aktion bleibt deaktiviert.
+			aktion.setEnabled(this.mag.getValue() != null && !zuViele);
+		}
+	}
+
 	private EinladungsAngaben angaben() {
 		String eingabe = this.adressen.getValue();
 		List<String> zeilen = (eingabe == null) ? List.of() : List.of(eingabe.split("\\R"));
@@ -257,20 +302,8 @@ public class EinladungErstellenUndVersendenView extends VerticalLayout implement
 		this.inhalt.add(spalte);
 	}
 
-	private static H2 seitentitel() {
-		H2 titel = new H2("Einladungen");
-		titel.addClassName("devace-seitentitel");
-		return titel;
-	}
-
 	private static VerticalLayout karte(String titel, String untertitel) {
-		Span unter = new Span(untertitel);
-		unter.addClassName("devace-untertitel");
-		VerticalLayout karte = new VerticalLayout(new Div(new H3(titel), unter));
-		karte.addClassName("devace-karte");
-		karte.setPadding(false);
-		karte.getStyle().set("padding", "1rem 1.25rem");
-		return karte;
+		return new Karte(titel, untertitel);
 	}
 
 	private static Div meldung(String titel, String text, String thema) {

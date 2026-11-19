@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.flow.component.Html;
+
 import info.wylan.devace.service.AssessmentService.FeldScore;
 
 /**
  * UC-003 step 5: das Radar-Chart der Scores als SVG, eine Achse je Handlungsfeld, Skala 0 bis 5 nur in Ganzzahlen
- * (UC-003 BR-001). Ein Handlungsfeld ohne Score hat keinen Punkt.
+ * (UC-003 BR-001). Ein Handlungsfeld ohne Score hat keinen Punkt. Der Rahmen lässt links und rechts Platz für die
+ * Beschriftungen, Breite und Höhe geben das Seitenverhältnis vor (ADR-006: nichts wird abgeschnitten).
  */
 final class RadarChart {
 
@@ -22,10 +25,24 @@ final class RadarChart {
 	private RadarChart() {
 	}
 
+	/** Ausschnitt des SVG: links und rechts Platz für die Beschriftungen. */
+	static final String AUSSCHNITT = "-100 0 600 340";
+
+	/**
+	 * Das Radar-Chart als Komponente. {@link Html} setzt Attributnamen in Kleinbuchstaben, und {@code viewbox} kennt
+	 * SVG nicht; ohne {@code viewBox} skaliert die Grafik nicht und wird abgeschnitten. Das Attribut setzt deshalb der
+	 * Browser selbst.
+	 */
+	static Html anzeige(List<FeldScore> scores) {
+		Html chart = new Html(svg(scores));
+		chart.getElement().executeJs("this.setAttribute('viewBox', $0)", AUSSCHNITT);
+		return chart;
+	}
+
 	static String svg(List<FeldScore> scores) {
 		int achsen = scores.size();
 		StringBuilder svg = new StringBuilder(
-				"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 340' role='img' aria-label='Radar-Chart der Scores je Handlungsfeld' class='devace-radar-svg'>");
+				"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-100 0 600 340' width='600' height='340' role='img' aria-label='Radar-Chart der Scores je Handlungsfeld' class='devace-radar-svg'>");
 		// UC-003 BR-001: Die Skala zeigt nur die Ganzzahlen 1 bis 5.
 		// UC-004 BR-001: Die Skala zeigt nur die Ganzzahlen.
 		// UC-005 BR-001: Die Skala zeigt nur die Ganzzahlen.

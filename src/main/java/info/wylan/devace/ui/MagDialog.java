@@ -10,6 +10,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
+import info.wylan.devace.ui.bausteine.Zeichenzaehler;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import info.wylan.devace.persistence.MagListItem;
@@ -47,8 +48,8 @@ class MagDialog extends Dialog {
 		this.teamleitung.setId("mag-teamleitung");
 		this.scrumTeam.setRequiredIndicatorVisible(true);
 		this.linienteam.setRequiredIndicatorVisible(true);
-		this.scrumTeam.setHelperText("Pflichtangabe, höchstens 100 Zeichen");
-		this.linienteam.setHelperText("Pflichtangabe, höchstens 100 Zeichen");
+		this.scrumTeam.setHelperText("Pflichtangabe");
+		this.linienteam.setHelperText("Pflichtangabe");
 		// UC-008 BR-004: Einer MAG ist höchstens eine Teamleitung zugeordnet, ausgewählt aus den vorhandenen.
 		this.teamleitung.setHelperText("Höchstens eine Teamleitung, ausgewählt aus den vorhandenen");
 		this.scrumTeam.setValueChangeMode(ValueChangeMode.EAGER);
@@ -89,6 +90,9 @@ class MagDialog extends Dialog {
 		Button abbrechen = new Button("Abbrechen", event -> close());
 		abbrechen.setId("mag-abbrechen");
 		getFooter().add(abbrechen, speichern);
+		// ADR-006: Zähler an beiden Pflichtfeldern; über der Grenze bleibt Speichern gesperrt.
+		Zeichenzaehler.sperrt(speichern, Zeichenzaehler.nurZaehlen(this.scrumTeam, 100),
+				Zeichenzaehler.nurZaehlen(this.linienteam, 100));
 	}
 
 	private void speichern(MagService service, @Nullable MagListItem vorhandene, Runnable nachSpeichern) {
