@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.textfield.TextField;
 import info.wylan.devace.TestcontainersConfiguration;
 import info.wylan.devace.persistence.MagListItem;
@@ -237,6 +238,21 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 			.single()).isZero();
 	}
 
+	@Test
+	@UseCase(id = "UC-008", scenario = "Steps 1-2: Übersicht", requirements = { "NFR-010" })
+	void uebersicht_ist_durchsuchbar_und_sortierbar() {
+		navigate(MagsUndRollenView.class);
+		Grid<MagListItem> magGrid = magGrid();
+		int alle = magGrid.getListDataView().getItemCount();
+
+		// ADR-006: Das Suchfeld filtert über alle Textspalten, die Anzeige nennt „x von y“.
+		test(find(TextField.class).withId("mag-grid-suche").single()).setValue("uc008-teamleitung-a");
+
+		assertThat(magGrid.getListDataView().getItems().map(MagListItem::scrumTeam).toList()).containsExactly("UC008 Alpha");
+		assertThat(find(Span.class).withId("mag-grid-anzahl").single().getText()).isEqualTo("1 von " + alle);
+		assertThat(magGrid.getColumns().subList(0, 3)).allMatch(Grid.Column::isSortable);
+	}
+
 	// ---------------------------------------------------------------- A1
 
 	@Test
@@ -282,8 +298,11 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 		test(find(Button.class).withId("mag-anlegen").single()).click();
 		test(find(TextField.class).withId("mag-scrum-team").single()).setValue(PRAEFIX + "z".repeat(96));
 		test(find(TextField.class).withId("mag-linienteam").single()).setValue(PRAEFIX + "w".repeat(96));
-		test(find(Button.class).withId("mag-speichern").single()).click();
 
+		// ADR-006: Der Hinweis steht beim Tippen am Feld, der Zähler zeigt die Zahl, Speichern bleibt gesperrt.
+		assertThat(find(TextField.class).withId("mag-scrum-team").single().getHelperText())
+			.isEqualTo("Pflichtangabe · 102 / 100 Zeichen");
+		assertThat(find(Button.class).withId("mag-speichern").single().isEnabled()).isFalse();
 		assertThat(find(TextField.class).withId("mag-scrum-team").single().getErrorMessage())
 			.isEqualTo("Höchstens 100 Zeichen.");
 		assertThat(find(TextField.class).withId("mag-linienteam").single().getErrorMessage())
@@ -305,7 +324,9 @@ class UC008MagsUndRollenVerwaltenTest extends SpringBrowserlessTest {
 
 		test(find(Button.class).withId("rolle-anlegen").single()).click();
 		test(find(TextField.class).withId("rolle-name").single()).setValue(PRAEFIX + "b".repeat(45));
-		test(find(Button.class).withId("rolle-speichern").single()).click();
+
+		// ADR-006: Hinweis beim Tippen, Speichern gesperrt
+		assertThat(find(Button.class).withId("rolle-speichern").single().isEnabled()).isFalse();
 
 		assertThat(find(TextField.class).withId("rolle-name").single().getErrorMessage())
 			.isEqualTo("Höchstens 50 Zeichen.");

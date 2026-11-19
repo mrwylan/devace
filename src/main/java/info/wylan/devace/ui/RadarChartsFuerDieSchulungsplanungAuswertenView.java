@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -40,6 +39,7 @@ public class RadarChartsFuerDieSchulungsplanungAuswertenView extends VerticalLay
 		setWidthFull();
 		this.rolle.setLabel("Rolle");
 		this.rolle.setId("schulung-rolle");
+		this.rolle.setWidth("24rem");
 		this.rolle.setItemLabelGenerator(RolleOption::name);
 		this.rolle.setEmptySelectionAllowed(false);
 		this.rolle.setPlaceholder("Rolle wählen");
@@ -54,18 +54,16 @@ public class RadarChartsFuerDieSchulungsplanungAuswertenView extends VerticalLay
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		removeAll();
-		H2 titel = new H2("Schulungsplanung");
-		titel.addClassName("devace-seitentitel");
 		List<RolleOption> rollen = this.service.rollen();
 		if (rollen.isEmpty()) {
 			// UC-005 A1: Es liegt noch kein Score vor; der Use Case endet.
 			Div hinweis = new Div(new Span(KEINE_SCORES));
 			hinweis.addClassName("devace-hinweis");
 			hinweis.setId("schulung-keine-scores");
-			add(titel, hinweis);
+			add(hinweis);
 			return;
 		}
-		add(titel, this.rolle, this.charts);
+		add(this.rolle, this.charts);
 		// UC-005 step 3: Die Schulungsverantwortliche wählt die Rolle selbst; die Ansicht wählt nichts vor.
 		this.rolle.setItems(rollen);
 		this.rolle.clear();

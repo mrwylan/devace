@@ -19,10 +19,10 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -46,6 +46,13 @@ import info.wylan.devace.service.KeinKiEntwurfException;
 import info.wylan.devace.service.KiAngaben;
 import info.wylan.devace.service.KiErgebnis;
 import info.wylan.devace.service.NotFoundException;
+import info.wylan.devace.ui.bausteine.Aktionsleiste;
+import info.wylan.devace.ui.bausteine.DevaceListe;
+import info.wylan.devace.ui.bausteine.Hinweis;
+import info.wylan.devace.ui.bausteine.Karte;
+import info.wylan.devace.ui.bausteine.Seitenkopf;
+import info.wylan.devace.ui.bausteine.Symbolknopf;
+import info.wylan.devace.ui.bausteine.Zeichenzaehler;
 import jakarta.annotation.security.RolesAllowed;
 import org.jspecify.annotations.Nullable;
 
@@ -79,7 +86,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 
 	private final List<Handlungsfeld> handlungsfelder;
 
-	private final Grid<RolleListItem> rolleGrid = new Grid<>();
+	private @Nullable Zeichenzaehler kiZaehler;
 
 	private final IntegerField kiAnzahl = new IntegerField("Fragen je Handlungsfeld");
 
@@ -100,6 +107,9 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 	private @Nullable Div meldung;
 
 	private int geoeffnetesHandlungsfeld;
+
+	/** UC-006 BR-001, BR-002: höchstens 500 Zeichen für Fragetext und Vorgabe. */
+	private static final int FRAGE_LAENGE = 500;
 
 	public FragenkatalogUndEntscheidungsmodellErstellenView(FragenkatalogService service, KiWarten kiWarten) {
 		this.service = service;
@@ -126,28 +136,36 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		this.pruefmeldungen.clear();
 		this.meldung = null;
 
-		this.rolleGrid.removeAllColumns();
-		this.rolleGrid.addColumn(RolleListItem::name).setHeader("Rolle").setAutoWidth(true);
-		this.rolleGrid
-			.addComponentColumn((rolle) -> versionsAnzeige(rolle, FragenkatalogRepository.FREIGEGEBEN, "freigegeben"))
-			.setHeader("Freigegebene Version")
+		// ADR-006: Liste mit Suche und Sortierung, füllt die Karte
+		DevaceListe<RolleListItem> rollen = new DevaceListe<>("rolle-grid", "Noch keine Rolle angelegt.");
+		rollen.spalte("Rolle", RolleListItem::name).setAutoWidth(true);
+		rollen.komponentenspalte("Freigegebene Version",
+				(rolle) -> versionsAnzeige(rolle, FragenkatalogRepository.FREIGEGEBEN, "freigegeben"),
+				(rolle) -> versionsText(rolle, FragenkatalogRepository.FREIGEGEBEN))
 			.setAutoWidth(true);
-		this.rolleGrid.addComponentColumn((rolle) -> versionsAnzeige(rolle, FragenkatalogRepository.ENTWURF, "entwurf"))
-			.setHeader("Entwurf")
+		rollen.komponentenspalte("Entwurf", (rolle) -> versionsAnzeige(rolle, FragenkatalogRepository.ENTWURF, "entwurf"),
+				(rolle) -> versionsText(rolle, FragenkatalogRepository.ENTWURF))
 			.setAutoWidth(true);
-		this.rolleGrid.addComponentColumn(this::aktion).setHeader("").setAutoWidth(true).setFlexGrow(0);
-		this.rolleGrid.addThemeVariants(GridVariant.NO_BORDER);
-		this.rolleGrid.setId("rolle-grid");
-		this.rolleGrid.setEmptyStateText("Noch keine Rolle angelegt.");
-		this.rolleGrid.setAllRowsVisible(true);
-		this.rolleGrid.setItems(this.service.rollen());
+		rollen.getGrid().addComponentColumn(this::aktion).setHeader("").setAutoWidth(true).setFlexGrow(0).setFrozenToEnd(true);
+		rollen.setItems(this.service.rollen());
 
-		VerticalLayout karte = karte("Fragenkataloge je Rolle",
+		Karte karte = new Karte("Fragenkataloge je Rolle",
 				"Version und Status je Rolle. Eine Rolle hat höchstens einen Entwurf.");
 		// UC-006 BR-005, BR-006: Nur der Entwurf ändert sich; er gilt erst nach der Freigabe in Assessments.
-		karte.add(this.rolleGrid, fussnote(
-				"Freigegebene und archivierte Fragenkataloge bleiben unverändert. Ein Entwurf gilt erst nach der Freigabe in Assessments."));
-		setzeInhalt(seitentitel("Fragenkatalog"), karte);
+		karte.fuellen(rollen)
+			.fussnote("Freigegebene und archivierte Fragenkataloge bleiben unverändert. Ein Entwurf gilt erst nach der Freigabe in Assessments.");
+		addClassName("devace-ansicht-fuellend");
+		Seitenkopf.titel(this, "Fragenkatalog");
+		setzeInhalt(karte);
+	}
+
+	private static String versionsText(RolleListItem rolle, String status) {
+		return rolle.fragenkataloge()
+			.stream()
+			.filter((katalog) -> status.equals(katalog.status()))
+			.findFirst()
+			.map((katalog) -> "Version " + katalog.version())
+			.orElse("");
 	}
 
 	private static Component versionsAnzeige(RolleListItem rolle, String status, String thema) {
@@ -288,6 +306,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 			zeigeUebersicht();
 			return;
 		}
+		removeClassName("devace-ansicht-fuellend");
 		VerticalLayout entwurfKarte = karte("Entwurf · Rolle " + rolle.name(), "Version " + this.entwurfVersion
 				+ " · Status Entwurf · jede Frage gehört zu genau einem Handlungsfeld");
 		entwurfKarte.getStyle().set("flex", "3");
@@ -301,7 +320,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		spalten.setAlignItems(FlexComponent.Alignment.START);
 
 		List<Component> teile = new ArrayList<>();
-		teile.add(seitentitel("Entwurf bearbeiten"));
+		Seitenkopf.titel(this, "Entwurf bearbeiten");
 		if (this.meldung != null) {
 			teile.add(this.meldung);
 		}
@@ -348,9 +367,9 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 			return badge(belegt + "/" + STUFEN.size() + " Stufen", fehlerhaft && belegt < STUFEN.size() ? "fehler" : "freigegeben");
 		}).setHeader("Stufen").setAutoWidth(true).setFlexGrow(0);
 		grid.addComponentColumn((zeile) -> {
-			Button bearbeiten = new Button("Bearbeiten", (event) -> zeigeFrage(zeile.index(), false));
-			bearbeiten.addThemeVariants(ButtonVariant.TERTIARY);
-			bearbeiten.setAriaLabel("Frage " + (zeile.index() + 1) + " bearbeiten");
+			Button bearbeiten = Symbolknopf.erstellen(VaadinIcon.EDIT, "Bearbeiten",
+					"Frage " + (zeile.index() + 1) + " bearbeiten");
+			bearbeiten.addClickListener((event) -> zeigeFrage(zeile.index(), false));
 			return bearbeiten;
 		}).setAutoWidth(true).setFlexGrow(0);
 		grid.addThemeVariants(GridVariant.NO_BORDER);
@@ -360,7 +379,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		return grid;
 	}
 
-	private HorizontalLayout aktionen() {
+	private Aktionsleiste aktionen() {
 		Button hinzufuegen = new Button("Frage hinzufügen", (event) -> frageHinzufuegen());
 		hinzufuegen.addThemeVariants(ButtonVariant.TERTIARY);
 		hinzufuegen.setId("frage-hinzufuegen");
@@ -370,11 +389,8 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		Button speichern = new Button("Entwurf speichern", (event) -> speichern());
 		speichern.addThemeVariants(ButtonVariant.PRIMARY);
 		speichern.setId("entwurf-speichern");
-		HorizontalLayout rechts = new HorizontalLayout(abbrechen, speichern);
-		HorizontalLayout leiste = new HorizontalLayout(hinzufuegen, rechts);
-		leiste.setWidthFull();
-		leiste.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
-		return leiste;
+		// ADR-006: Die Leiste bleibt beim Bildlauf durch lange Entwürfe sichtbar.
+		return new Aktionsleiste(abbrechen, speichern).links(hinzufuegen).haftend();
 	}
 
 	/** UC-006 step 8: ergänzt eine Frage im geöffneten Handlungsfeld (sonst im ersten). */
@@ -402,7 +418,12 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		// UC-006 BR-003: Die Zahl der Fragen je Handlungsfeld ist eine ganze Zahl von 1 bis 10, vorgeschlagen werden 3.
 		this.kiAnzahl.setHelperText("1 bis 10, vorgeschlagen sind " + VORSCHLAG_ANZAHL);
 		this.kiSchwerpunkte.setWidthFull();
-		this.kiSchwerpunkte.setHelperText("Höchstens 2000 Zeichen");
+		this.kiSchwerpunkte.setHelperText("Optional");
+		if (this.kiZaehler == null) {
+			// UC-006 BR-003, A3, ADR-006: Zähler; über 2000 Zeichen der Hinweis am Feld und die Anforderung gesperrt
+			this.kiZaehler = Zeichenzaehler.mitMeldung(this.kiSchwerpunkte, 2000, (zahl) -> "Höchstens 2000 Zeichen.");
+			Zeichenzaehler.sperrt(this.kiAnfordern, this.kiZaehler);
+		}
 
 		VerticalLayout karte = karte("KI-Entwurf anfordern", "Das KI-Modell ergänzt Fragen mit Entscheidungsmodell");
 		// UC-006 BR-006, BR-007, BR-010: Vorschlag; nur Rolle, Handlungsfelder, Schwerpunkte, Zahl; Vorhandenes bleibt.
@@ -452,7 +473,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 
 	/** NFR-012: Während das KI-Modell entwirft, ist die Anforderung gesperrt und der Wartehinweis sichtbar. */
 	private void kiWartet(boolean wartet) {
-		this.kiAnfordern.setEnabled(!wartet);
+		this.kiAnfordern.setEnabled(!wartet && (this.kiZaehler == null || this.kiZaehler.eingehalten()));
 		this.kiWartehinweis.setVisible(wartet);
 	}
 
@@ -590,7 +611,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		wortlaut.setWidthFull();
 		wortlaut.setMinHeight("3rem");
 		wortlaut.setValue(frage.text());
-		wortlaut.setHelperText("Pflichtangabe, höchstens 500 Zeichen");
+		wortlaut.setHelperText("Pflichtangabe");
 		markiere(wortlaut, meldungen.get(EntwurfUngueltigException.Fehler.WORTLAUT));
 
 		FormLayout stufen = new FormLayout();
@@ -630,17 +651,22 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		});
 		uebernehmen.addThemeVariants(ButtonVariant.PRIMARY);
 		uebernehmen.setId("frage-uebernehmen");
-		HorizontalLayout rechts = new HorizontalLayout(abbrechen, uebernehmen);
-		HorizontalLayout leiste = new HorizontalLayout(entfernen, rechts);
-		leiste.setWidthFull();
-		leiste.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+		// UC-006 BR-001, BR-002, ADR-006: Zähler an Fragetext und Vorgaben; über 500 Zeichen bleibt Übernehmen gesperrt.
+		List<Zeichenzaehler> zaehler = new ArrayList<>();
+		zaehler.add(Zeichenzaehler.mitMeldung(wortlaut, FRAGE_LAENGE, (zahl) -> "Höchstens 500 Zeichen."));
+		vorgaben.forEach((vorgabe) -> zaehler.add(
+				Zeichenzaehler.mitMeldung(vorgabe, FRAGE_LAENGE, (zahl) -> "Höchstens 500 Zeichen.")));
+		Zeichenzaehler.sperrt(uebernehmen, zaehler.toArray(Zeichenzaehler[]::new));
+		Aktionsleiste leiste = new Aktionsleiste(abbrechen, uebernehmen).links(entfernen).haftend();
 
+		removeClassName("devace-ansicht-fuellend");
 		VerticalLayout karte = karte("Frage " + (index + 1) + " · " + handlungsfeldName(index),
 				"Jede Frage hat genau eine Vorgabe je Stufe von 0 bis 5. Die KI ordnet Antworten diesen Vorgaben zu.");
 		karte.add(wortlaut, new H3("Entscheidungsmodell: Vorgabe je Stufe"), stufen, leiste);
 		Span pfad = fussnote("Fragenkatalog › " + ((rolle != null) ? rolle.name() : "") + " › Version "
 				+ this.entwurfVersion + " › Frage " + (index + 1));
-		setzeInhalt(seitentitel("Frage bearbeiten"), pfad, karte);
+		Seitenkopf.titel(this, "Frage bearbeiten");
+		setzeInhalt(pfad, karte);
 	}
 
 	private static void markiere(TextArea feld, @Nullable String meldung) {
@@ -656,23 +682,13 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 		this.inhalt.removeAll();
 		VerticalLayout spalte = new VerticalLayout(teile);
 		spalte.setPadding(false);
+		spalte.addClassName("devace-fuellkette");
+		this.inhalt.addClassName("devace-fuellkette");
 		this.inhalt.add(spalte);
 	}
 
-	private static H2 seitentitel(String text) {
-		H2 titel = new H2(text);
-		titel.addClassName("devace-seitentitel");
-		return titel;
-	}
-
 	private static VerticalLayout karte(String titel, String untertitel) {
-		Span unter = new Span(untertitel);
-		unter.addClassName("devace-untertitel");
-		VerticalLayout karte = new VerticalLayout(new Div(new H3(titel), unter));
-		karte.addClassName("devace-karte");
-		karte.setPadding(false);
-		karte.getStyle().set("padding", "1rem 1.25rem");
-		return karte;
+		return new Karte(titel, untertitel);
 	}
 
 	private static Span fussnote(String text) {
@@ -695,10 +711,7 @@ public class FragenkatalogUndEntscheidungsmodellErstellenView extends VerticalLa
 	}
 
 	private static Div meldungsBox(String titel, String text, String thema) {
-		Div box = new Div(hinweisTitel(titel), new Span(text));
-		box.addClassName("devace-hinweis");
-		box.getElement().setAttribute("theme", thema);
-		return box;
+		return Hinweis.meldung(titel, text, thema, null);
 	}
 
 	private static void fehler(String text) {

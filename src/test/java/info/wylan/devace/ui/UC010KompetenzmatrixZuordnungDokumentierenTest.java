@@ -195,8 +195,9 @@ class UC010KompetenzmatrixZuordnungDokumentierenTest extends SpringBrowserlessTe
 
 		test(button("matrix-anlegen")).click();
 		eingeben(zuLang, HF4, "");
-		test(button("matrix-speichern")).click();
 
+		// ADR-006: Hinweis beim Tippen, Speichern gesperrt
+		assertThat(button("matrix-speichern").isEnabled()).isFalse();
 		assertThat(zuLang).hasSize(201);
 		assertThat(feld("matrix-spalte").getErrorMessage()).isEqualTo("Höchstens 200 Zeichen.");
 		assertThat(anzahlSpalte(zuLang)).isZero();
@@ -223,7 +224,9 @@ class UC010KompetenzmatrixZuordnungDokumentierenTest extends SpringBrowserlessTe
 
 		test(button("matrix-anlegen")).click();
 		eingeben("UC010T Lange Begründung", HF4, "b".repeat(501));
-		test(button("matrix-speichern")).click();
+
+		// ADR-006: Hinweis beim Tippen, Speichern gesperrt
+		assertThat(button("matrix-speichern").isEnabled()).isFalse();
 
 		assertThat(textArea("matrix-begruendung").getErrorMessage()).isEqualTo("Höchstens 500 Zeichen.");
 		assertThat(anzahlSpalte("UC010T Lange Begründung")).isZero();

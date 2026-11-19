@@ -9,7 +9,9 @@ import java.util.UUID;
 import com.vaadin.browserless.SpringBrowserlessTest;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.textfield.TextArea;
 import info.wylan.devace.TestcontainersConfiguration;
 import info.wylan.devace.service.KiModellClient;
@@ -236,6 +238,24 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 	}
 
 	@Test
+	@UseCase(id = "UC-002", scenario = "Steps 4-8: Dialog", businessRules = { "BR-008" }, requirements = { "NFR-010" })
+	void fruehere_antworten_sind_eingeklappt_und_die_aktuelle_frage_bleibt_sichtbar() {
+		String referenz = einladung(LocalDate.now(), 30, "Versendet");
+		starten(referenz);
+		assertThat(find(Details.class).withId("assessment-verlauf").exists()).isFalse();
+
+		antworten("Erste Antwort.");
+
+		// ADR-006: Der Verlauf ist eingeklappt und zeigt keine Stufe, die aktuelle Frage steht offen darunter.
+		Details verlauf = find(Details.class).withId("assessment-verlauf").single();
+		assertThat(verlauf.isOpened()).isFalse();
+		assertThat(verlauf.getSummaryText()).isEqualTo("Bisherige Antworten (1)");
+		assertThat(verlauf.getElement().getTextRecursively()).contains("Erste Antwort.").doesNotContain("Stufe");
+		assertThat(find(Paragraph.class).withId("assessment-frage").single().getText()).isEqualTo(FRAGE_2);
+		assertThat(antwortFeld().getHelperText()).isEqualTo("0 / 500 Zeichen");
+	}
+
+	@Test
 	@UseCase(id = "UC-002", scenario = "A6: Teilnehmer unterbricht das Assessment")
 	void unterbrochenes_assessment_behaelt_die_gegebenen_antworten() {
 		String referenz = einladung(LocalDate.now(), 30, "Versendet");
@@ -291,9 +311,12 @@ class UC002AssessmentDurchfuehrenTest extends SpringBrowserlessTest {
 		String referenz = einladung(LocalDate.now(), 30, "Versendet");
 		starten(referenz);
 
-		antworten("a".repeat(501));
+		test(antwortFeld()).setValue("a".repeat(501));
 
+		// ADR-006: Der Hinweis aus A4 steht beim Tippen am Antwortfeld, der Zähler zeigt die Zahl, Senden bleibt gesperrt.
 		assertThat(antwortFeld().getErrorMessage()).isEqualTo("Die Antwort ist zu lang: 501 von höchstens 500 Zeichen.");
+		assertThat(antwortFeld().getHelperText()).isEqualTo("501 / 500 Zeichen");
+		assertThat(button("assessment-senden").isEnabled()).isFalse();
 		assertThat(stufen(referenz)).isEmpty();
 
 		// Schritt 5: genau 500 Zeichen sind zulässig

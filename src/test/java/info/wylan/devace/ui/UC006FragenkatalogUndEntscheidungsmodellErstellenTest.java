@@ -304,11 +304,11 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		test(aktion(LEER)).click();
 		test(find(Button.class).withId("frage-hinzufuegen").single()).click();
 		fuelleFrage("F".repeat(501), "v0", "v1", "v2", "v3", "v4", "V".repeat(501));
-		test(find(Button.class).withId("frage-uebernehmen").single()).click();
 
-		test(find(Button.class).withId("entwurf-speichern").single()).click();
-
-		test((Button) test(handlungsfeldGrids().get(0)).getCellComponent(0, 3)).click();
+		// ADR-006: Die Hinweise stehen beim Tippen an den Feldern, Übernehmen bleibt gesperrt, nichts wird gespeichert.
+		assertThat(find(Button.class).withId("frage-uebernehmen").single().isEnabled()).isFalse();
+		assertThat(find(TextArea.class).withId("frage-text").single().getHelperText())
+			.isEqualTo("Pflichtangabe · 501 / 500 Zeichen");
 		assertThat(find(TextArea.class).withId("frage-text").single().getErrorMessage())
 			.isEqualTo("Höchstens 500 Zeichen.");
 		assertThat(find(TextArea.class).withId("vorgabe-5").single().getErrorMessage())
@@ -435,9 +435,9 @@ class UC006FragenkatalogUndEntscheidungsmodellErstellenTest extends SpringBrowse
 		TextArea schwerpunkte = find(TextArea.class).withId("ki-schwerpunkte").single();
 
 		schwerpunkte.setValue("S".repeat(2001));
-		test(find(Button.class).withId("ki-anfordern").single()).click();
-		roundTrip();
 
+		// ADR-006: Der Hinweis steht beim Tippen am Feld, die Anforderung bleibt gesperrt.
+		assertThat(find(Button.class).withId("ki-anfordern").single().isEnabled()).isFalse();
 		assertThat(schwerpunkte.isInvalid()).isTrue();
 		assertThat(schwerpunkte.getErrorMessage()).isEqualTo("Höchstens 2000 Zeichen.");
 		assertThat(KI.anfragen()).isEmpty();

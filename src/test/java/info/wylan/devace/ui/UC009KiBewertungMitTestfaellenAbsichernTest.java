@@ -325,7 +325,8 @@ class UC009KiBewertungMitTestfaellenAbsichernTest extends SpringBrowserlessTest 
 
 		test(button("testfall-hinzufuegen-9804")).click();
 		fuelleTestfall("a".repeat(501), 2);
-		test(button("testfall-speichern")).click();
+		// ADR-006: Hinweis beim Tippen, Speichern gesperrt
+		assertThat(button("testfall-speichern").isEnabled()).isFalse();
 		assertThat(antwortFeld().getErrorMessage()).isEqualTo("Höchstens 500 Zeichen.");
 		assertThat(testfaelleDerFrage(9804)).hasSize(1);
 

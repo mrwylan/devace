@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -64,20 +63,18 @@ public class RadarChartEinerMagAuswertenView extends VerticalLayout implements B
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		removeAll();
-		H2 titel = new H2("Auswertung");
-		titel.addClassName("devace-seitentitel");
 		List<MagListItem> mags = this.service.mags();
 		if (mags.isEmpty()) {
 			// UC-004 A1: Zu keiner MAG der Teamleitung liegt ein Score vor; der Use Case endet.
 			Div hinweis = new Div(new Span(KEINE_SCORES));
 			hinweis.addClassName("devace-hinweis");
 			hinweis.setId("auswertung-keine-scores");
-			add(titel, hinweis);
+			add(hinweis);
 			return;
 		}
 		HorizontalLayout auswahl = new HorizontalLayout(this.mag, this.rolle);
 		auswahl.setWidthFull();
-		add(titel, auswahl, this.chart);
+		add(auswahl, this.chart);
 		// UC-004 step 3: Die Teamleitung wählt MAG und Rolle selbst; die Ansicht wählt nichts vor.
 		this.mag.setItems(mags);
 		this.mag.clear();

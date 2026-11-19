@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
+import info.wylan.devace.ui.bausteine.Zeichenzaehler;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import info.wylan.devace.persistence.RolleListItem;
@@ -36,7 +37,7 @@ class RolleDialog extends Dialog {
 
 		this.name.setId("rolle-name");
 		this.name.setRequiredIndicatorVisible(true);
-		this.name.setHelperText("Pflichtangabe, höchstens 50 Zeichen");
+		this.name.setHelperText("Pflichtangabe");
 		this.name.setValueChangeMode(ValueChangeMode.EAGER);
 
 		// UC-008 BR-001: Der Name einer Rolle ist Pflichtangabe mit höchstens 50 Zeichen.
@@ -67,6 +68,8 @@ class RolleDialog extends Dialog {
 		Button abbrechen = new Button("Abbrechen", event -> close());
 		abbrechen.setId("rolle-abbrechen");
 		getFooter().add(abbrechen, speichern);
+		// ADR-006: Zähler am Namen; über der Grenze bleibt Speichern gesperrt.
+		Zeichenzaehler.sperrt(speichern, Zeichenzaehler.nurZaehlen(this.name, 50));
 	}
 
 	private static Span hinweisTitel(String text) {

@@ -11,6 +11,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import info.wylan.devace.ui.bausteine.Zeichenzaehler;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import info.wylan.devace.persistence.Handlungsfeld;
@@ -48,10 +49,10 @@ class MatrixZuordnungDialog extends Dialog {
 		this.handlungsfeld.setRequiredIndicatorVisible(true);
 		this.spalte.setId("matrix-spalte");
 		this.spalte.setRequiredIndicatorVisible(true);
-		this.spalte.setHelperText("Pflichtangabe, höchstens 200 Zeichen");
+		this.spalte.setHelperText("Pflichtangabe");
 		this.spalte.setValueChangeMode(ValueChangeMode.EAGER);
 		this.begruendung.setId("matrix-begruendung");
-		this.begruendung.setHelperText("Höchstens 500 Zeichen");
+		this.begruendung.setHelperText("Optional");
 		this.begruendung.setValueChangeMode(ValueChangeMode.EAGER);
 
 		// UC-010 BR-001: Die Spalte gehört zu genau einem Handlungsfeld (OQ-096: Pflichtangabe).
@@ -89,6 +90,9 @@ class MatrixZuordnungDialog extends Dialog {
 		Button abbrechen = new Button("Abbrechen", (event) -> close());
 		abbrechen.setId("matrix-abbrechen");
 		getFooter().add(abbrechen, speichern);
+		// ADR-006: Zähler an Spalte und Begründung; über der Grenze bleibt Speichern gesperrt.
+		Zeichenzaehler.sperrt(speichern, Zeichenzaehler.nurZaehlen(this.spalte, 200),
+				Zeichenzaehler.nurZaehlen(this.begruendung, 500));
 	}
 
 	private void speichern(MatrixZuordnungService service, @Nullable MatrixZuordnungListItem vorhandene,
