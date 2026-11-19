@@ -435,9 +435,13 @@ vaadin-text-area {
   margin-top: 0.75rem;
 }
 
+.devace-radar > .devace-radar-svg {
+  flex: 1 1 24rem;
+}
+
 .devace-radar-svg {
   display: block;
-  flex: 1 1 24rem;
+  flex: none;
   width: 100%;
   max-width: 34rem;
   height: auto;

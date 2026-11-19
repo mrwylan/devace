@@ -13,7 +13,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
@@ -314,7 +313,7 @@ public class AssessmentView extends Div implements HasUrlParameter<String> {
 		}
 		Paragraph ohneFrage = new Paragraph("Handlungsfelder ohne Frage haben keinen Score.");
 		ohneFrage.addClassName("devace-fussnote");
-		Div diagramm = new Div(new Html(RadarChart.svg(auswertung.scores())), new Div(scores, ohneFrage));
+		Div diagramm = new Div(RadarChart.anzeige(auswertung.scores()), new Div(scores, ohneFrage));
 		diagramm.addClassName("devace-radar");
 		Div chartKarte = new Div(chartTitel, chartText, diagramm);
 		chartKarte.addClassName("devace-karte");

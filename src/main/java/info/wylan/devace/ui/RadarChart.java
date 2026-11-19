@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.flow.component.Html;
+
 import info.wylan.devace.service.AssessmentService.FeldScore;
 
 /**
@@ -21,6 +23,20 @@ final class RadarChart {
 	private static final double RADIUS = 110;
 
 	private RadarChart() {
+	}
+
+	/** Ausschnitt des SVG: links und rechts Platz für die Beschriftungen. */
+	static final String AUSSCHNITT = "-100 0 600 340";
+
+	/**
+	 * Das Radar-Chart als Komponente. {@link Html} setzt Attributnamen in Kleinbuchstaben, und {@code viewbox} kennt
+	 * SVG nicht; ohne {@code viewBox} skaliert die Grafik nicht und wird abgeschnitten. Das Attribut setzt deshalb der
+	 * Browser selbst.
+	 */
+	static Html anzeige(List<FeldScore> scores) {
+		Html chart = new Html(svg(scores));
+		chart.getElement().executeJs("this.setAttribute('viewBox', $0)", AUSSCHNITT);
+		return chart;
 	}
 
 	static String svg(List<FeldScore> scores) {

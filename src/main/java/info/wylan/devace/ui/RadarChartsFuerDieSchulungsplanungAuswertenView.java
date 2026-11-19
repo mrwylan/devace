@@ -2,7 +2,6 @@ package info.wylan.devace.ui;
 
 import java.util.List;
 
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
@@ -94,7 +93,7 @@ public class RadarChartsFuerDieSchulungsplanungAuswertenView extends VerticalLay
 			zahl.addClassName("devace-score-wert");
 			liste.add(new Div(name, zahl));
 		}
-		Div karte = new Div(titel, new Html(RadarChart.svg(chart.werte())), liste);
+		Div karte = new Div(titel, RadarChart.anzeige(chart.werte()), liste);
 		karte.addClassName("devace-karte");
 		karte.setId("schulung-mag-" + chart.mag().id());
 		return karte;
